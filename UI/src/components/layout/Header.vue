@@ -2,11 +2,11 @@
   <div class="MISAHeader">
     <div class="MISAHeader-Left">
       <div class="MISAHeader-Left-Toggle"></div>
-      <div class="MISAHeader-Left-Name">
+      <div class="MISAHeader-Left-Name" title="Công ty cổ phần MISA">
         <span class="name">CÔNG TY CỔ PHẦN MISA</span>
         <span class="icon"></span>
       </div>
-      <div class="MISAHeader-Left-DC d-flex">
+      <div class="MISAHeader-Left-DC d-flex" title="DC-02">
         <span class="cirlce"></span>
         DC-02
       </div>
@@ -21,19 +21,19 @@
         <div class="Search-Trigger"></div>
       </div>
       <div class="MISAHeader-Right-Button">
-        <div class="button d-flex">
+        <div class="button d-flex" title="Tính năng mở rộng">
           <div class="icon threedots"></div>
         </div>
-        <div class="button d-flex">
+        <div class="button d-flex" title="Thiết lập">
           <div class="icon setting"></div>
         </div>
-        <div class="button d-flex">
+        <div class="button d-flex" title="Tư vấn sử dụng">
           <div class="icon message"></div>
         </div>
-        <div class="button d-flex">
+        <div class="button d-flex" title="Giúp">
           <div class="icon question"></div>
         </div>
-        <div class="button d-flex">
+        <div class="button d-flex" title="Thông báo">
           <div class="icon noti"></div>
         </div>
       </div>

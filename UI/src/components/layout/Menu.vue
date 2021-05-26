@@ -10,19 +10,19 @@
       </div>
     </div>
     <ul class="MISAMenu-Category">
-      <li class="category">
+      <li class="category" title="Nhà cung cấp">
         <span class="icon"></span>
         <router-link to="/vendor">
           Nhà cung cấp
         </router-link>
       </li>
-      <li class="category">
+      <li class="category" title="Hệ thống tài khoản">
         <span class="icon"></span>
         <router-link to="/account">
           Hệ thống tài khoản
         </router-link>
       </li>
-      <li class="category">
+      <li class="category" title="Phiếu chi">
         <span class="icon"></span>
         <router-link to="/payment">
           Phiếu chi

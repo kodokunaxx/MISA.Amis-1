@@ -1,5 +1,5 @@
 <template>
-  <div class="MISAVendor">
+  <div class="MISAVendor" ref="content">
     <div class="MISAVendor-Head">
       <div class="MISAVendor-Head-VendorList">
         <div class="title">Danh sách nhà cung cấp</div>
@@ -69,14 +69,14 @@
               />
               <div class="icon"></div>
             </div>
-            <div class="Icon Feature-Reload"></div>
-            <div class="Icon Feature-Export-Excel"></div>
-            <div class="Icon Feature-Setting"></div>
+            <div class="Icon Feature-Reload" title="Lấy lại dữ liệu"></div>
+            <div class="Icon Feature-Export-Excel" title="Xuất ra Excel"></div>
+            <div class="Icon Feature-Setting" title="Tùy chỉnh giao diện"></div>
           </div>
         </div>
         <div class="Data">
           <div class="Flex-scroll">
-            <div class="Data-Head">
+            <div class="Data-Head" ref="dataHead">
               <div class="Row">
                 <div class="Column Column-SM Select-all Fixed">
                   <div class="checkbox"></div>
@@ -575,7 +575,27 @@
                 </div>
               </div>
             </div>
-            <div class="Data-Pagenav"></div>
+            <div class="Data-Pagenav">
+              <div class="Data-Pagenav-Left">
+                <div class="Total-Row">Tổng số: 21 bản ghi</div>
+              </div>
+              <div class="Data-Pagenav-Right">
+                <select class="Selection">
+                  <option value="10">10 bản ghi trên 1 trang</option>
+                  <option value="20">20 bản ghi trên 1 trang</option>
+                  <option value="30">30 bản ghi trên 1 trang</option>
+                  <option value="50">50 bản ghi trên 1 trang</option>
+                  <option value="100">100 bản ghi trên 1 trang</option>
+                </select>
+                <div class="Prev">Trước</div>
+                <div class="Page-Index">
+                  <div value="1" class="active">1</div>
+                  <div value="2">2</div>
+                  <div value="3">3</div>
+                </div>
+                <div class="Next">Sau</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -590,6 +610,29 @@
 export default {
   created() {
     document.title = "Nhà cung cấp";
+  },
+  mounted() {
+    this.handleTableScroll();
+  },
+  methods: {
+    handleTableScroll() {
+      const mainContent = this.$refs.content;
+      const dataHead = this.$refs.dataHead;
+      mainContent.addEventListener(
+        "scroll",
+        function() {
+          if (mainContent.scrollTop >= 107) {
+            dataHead.style.position = "fixed";
+            dataHead.style.top = "137px";
+            dataHead.style.zIndex = "101";
+          } else {
+            dataHead.style.position = "initial";
+            dataHead.style.zIndex = "1";
+          }
+        },
+        false
+      );
+    },
   },
 };
 </script>
@@ -697,6 +740,7 @@ export default {
     }
   }
   .MISAVendor-Content {
+    position: relative;
     .MISAVendor-Content-Head {
       display: flex;
       justify-content: space-between;
@@ -837,11 +881,9 @@ export default {
       }
 
       .Data {
-        position: relative;
         display: flex;
         width: 100%;
         min-height: 200px;
-        border: 1px solid black;
         overflow: auto;
         .Flex-scroll {
           .Data-Head,
@@ -897,6 +939,13 @@ export default {
               }
             }
           }
+          .Data-Head {
+            .Row {
+              .Feature {
+                border-right: none;
+              }
+            }
+          }
           .Data-Body {
             .Row {
               .Column {
@@ -914,11 +963,55 @@ export default {
           }
           .Data-Pagenav {
             position: fixed;
-            bottom: 100px;
+            bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             width: calc(100vw - 245px);
             height: 48px;
-            background-color: red;
+            padding: 0 16px;
+            background-color: #fff;
             z-index: 100;
+            .Data-Pagenav-Right {
+              display: flex;
+              .Selection {
+                height: 36px;
+                outline: none;
+                padding: 0 10px;
+                border: 1px solid #e0e0e0;
+                border-radius: 3px;
+                cursor: pointer;
+              }
+              .Page-Index,
+              .Prev,
+              .Next {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                &.Page-Index {
+                  div {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 24px;
+                    height: 24px;
+                    padding: 4px;
+                    // margin: 0 6.5px;
+                    &.active {
+                      margin-top: 5px;
+                      border: 1px solid #e0e0e0;
+                      font-weight: 600;
+                    }
+                  }
+                }
+                &.Prev {
+                  margin: 0 6.5px 0 20px;
+                }
+                &.Next {
+                  margin: 0 0 0 6.5px;
+                }
+              }
+            }
           }
         }
       }
@@ -944,6 +1037,11 @@ export default {
           background-position: -131px -355px;
         }
       }
+    }
+  }
+  @media screen and (max-width: 1366px) {
+    .Data-Pagenav {
+      width: calc(100vw - 260px) !important;
     }
   }
 }
