@@ -1,42 +1,76 @@
 <template>
   <div
-    class="MISAContext-Menu"
-    ref="contextMenu"
-    :valueX="this.$store.getters.getX"
-    :valueY="this.$store.getters.getY"
-  ></div>
+    class="Context-Menu"
+    v-show="show"
+    :style="style"
+    ref="context"
+    tabindex="0"
+    @blur="close"
+  >
+    <slot></slot>
+  </div>
 </template>
 
 <script>
+import Vue from "vue";
 export default {
+  name: "CmpContextMenu",
+  props: {
+    display: Boolean,
+  },
   data() {
     return {
-      x: 100,
-      y: 100,
+      left: 0, // left position
+      top: 0, // top position
+      show: false, // affect display of context menu
     };
   },
-  methods: {
-    setPosition(x, y) {
-      this.$refs.contextMenu.style.left = x + "px";
-      this.$refs.contextMenu.style.top = y + "px";
+  computed: {
+    // get position of context menu
+    style() {
+      return {
+        top: this.top + "px",
+        left: this.left + "px",
+      };
     },
   },
-  updated() {
-    let x = this.$store.getters.getX;
-    let y = this.$store.getters.getY;
-    this.setPosition(x, y);
+  methods: {
+    // closes context menu
+    close() {
+      this.show = false;
+      this.left = 0;
+      this.top = 0;
+    },
+    open(evt) {
+      // updates position of context menu
+      this.left = evt.pageX - 100 || evt.clientX - 100;
+      this.top = evt.pageY + 15 || evt.clientY + 15;
+
+      Vue.nextTick(() => this.$el.focus());
+      this.show = true;
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.MISAContext-Menu {
+.Context-Menu {
   position: fixed;
-  top: -10000px;
-  left: -10000px;
-  width: 100px;
-  height: 100px;
-  background-color: red;
-  z-index: 789;
+  background: white;
+  z-index: 999;
+  outline: none;
+  border: 1px solid #babec5;
+  cursor: pointer;
+  ul {
+    background-color: #fff;
+    li {
+      list-style: none;
+      padding: 5px 10px;
+      &:hover {
+        background-color: #e8e9ec;
+        color: #08bf1e;
+      }
+    }
+  }
 }
 </style>

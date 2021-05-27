@@ -1,4 +1,4 @@
-# misa.amis.ui
+# misa_amis
 
 ## Project setup
 ```
