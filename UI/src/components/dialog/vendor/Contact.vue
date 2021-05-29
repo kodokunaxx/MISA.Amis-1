@@ -9,14 +9,19 @@
             :placeHolder="'Xưng hô'"
             :numberOfIcons="1"
             :list="this.$store.getters.getX"
+            :field="'XungHo'"
           />
-          <Input :w="'260px'" :placeHolder="'Họ và tên'" />
+          <Input :w="'260px'" :placeHolder="'Họ và tên'" :field="'FullName'" />
         </div>
         <div class="Row Second-Row">
-          <Input :w="'100%'" :placeHolder="'Email'" />
+          <Input :w="'100%'" :placeHolder="'Email'" :field="'Email'" />
         </div>
         <div class="Row Third-Row">
-          <Input :w="'190px'" :placeHolder="'Số điện thoại'" />
+          <Input
+            :w="'190px'"
+            :placeHolder="'Số điện thoại'"
+            :field="'PhoneNumber'"
+          />
         </div>
         <div class="Row Fourth-Row">
           <Input
@@ -24,6 +29,7 @@
             :w="'100%'"
             :labelName="'Đại diện theo PL'"
             :placeHolder="'Đại diện theo PL'"
+            :field="'DaiDien'"
           />
         </div>
       </div>
@@ -33,6 +39,7 @@
             :w="'100%'"
             :labelName="'Đại diện theo PL'"
             :placeHolder="'Đại diện theo PL'"
+            :field="'DaiDien'"
           />
         </div>
         <div class="Row First-Row" v-if="this.$store.getters.getIsCustomer">
@@ -40,20 +47,21 @@
             :w="'100%'"
             :labelName="'Người nhận hóa đơn điện tử'"
             :placeHolder="'Họ và tên'"
+            :field="'Recipient'"
           />
         </div>
-        <div class="Row Second-Row">
+        <div class="Row Second-Row" v-if="this.$store.getters.getIsCustomer">
           <Input
-            v-if="this.$store.getters.getIsCustomer"
             :w="'100%'"
             :placeHolder="'Email, ngăn cách nhiều email bởi dấu ;'"
+            :field="'RecipientEmail'"
           />
         </div>
-        <div class="Row Third-Row">
+        <div class="Row Third-Row" v-if="this.$store.getters.getIsCustomer">
           <Input
-            v-if="this.$store.getters.getIsCustomer"
             :w="'190px'"
             :placeHolder="'Số điện thoại'"
+            :field="'RecipientPhone'"
           />
         </div>
       </div>
@@ -65,13 +73,22 @@
             :w="'100%'"
             :labelName="'Thông tin liên hệ'"
             :placeHolder="'Email'"
+            :field="'Email'"
           />
         </div>
         <div class="Row Second">
-          <Input :w="'50%'" :placeHolder="'Điện thoại di động'" />
+          <Input
+            :w="'50%'"
+            :placeHolder="'Điện thoại di động'"
+            :field="'PhoneNumber'"
+          />
         </div>
         <div class="Row Third">
-          <Input :w="'50%'" :placeHolder="'Điện thoại cố định'" />
+          <Input
+            :w="'50%'"
+            :placeHolder="'Điện thoại cố định'"
+            :field="'PhoneNumber'"
+          />
         </div>
         <div class="Row Fourth">
           <Input
@@ -87,6 +104,7 @@
             :w="'50%'"
             :placeHolder="'Số CMND/Thẻ căn cước'"
             :labelName="'Thông tin CMND/Thẻ căn cước'"
+            :field="'IdCard'"
           />
         </div>
         <div class="Row Second">

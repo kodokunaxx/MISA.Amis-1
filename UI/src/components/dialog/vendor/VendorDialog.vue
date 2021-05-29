@@ -21,6 +21,7 @@
               @click="setCustomer()"
               v-model="isCustomer"
               ref="customer"
+              field="IsCustomer"
             />
             Là khách hàng
           </div>
@@ -44,7 +45,12 @@
           />
         </div>
         <div class="Save">
-          <input class="btn btn-save" type="button" value="Cất" />
+          <input
+            class="btn btn-save"
+            type="button"
+            value="Cất"
+            @click="getDataInForm()"
+          />
           <input
             class="btn btn-save-and-add"
             type="button"
@@ -130,6 +136,31 @@ export default {
       const focusInput = document.querySelector(path);
 
       focusInput.focus();
+    },
+    /**
+     * Lấy dữ liệu từ form
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    getDataInForm() {
+      const inputPath = ".MISAVendor-Dialog .MISAInput input";
+      const textareaPath = ".MISAVendor-Dialog .MISATextarea textarea";
+      const selectionPath = ".MISAVendor-Dialog .MISASelection input";
+      // const info = {};
+
+      const inputs = document.querySelectorAll(inputPath);
+      const textareas = document.querySelectorAll(textareaPath);
+      const selections = document.querySelectorAll(selectionPath);
+      const customerInput = this.$refs.customer;
+
+      console.log(inputs);
+      console.log(textareas);
+      console.log(selections);
+      console.log(customerInput);
+      inputs.forEach( input => {
+        console.log(input)
+        const key = input.attributes.field.value;
+        console.log(key);
+      })
     },
   },
 };

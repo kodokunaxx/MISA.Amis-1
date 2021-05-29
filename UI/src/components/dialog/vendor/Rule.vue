@@ -5,10 +5,11 @@
         :labelName="'Điều khoản thanh toán'"
         :w="'188px'"
         :numberOfIcons="2"
+        :field="'PaymentRuleName'"
         :list="this.$store.getters.getRule"
       />
-      <Input :labelName="'Số ngày được nợ'" :w="'186px'" />
-      <Input :labelName="'Số nợ tối đa'" :w="'186px'" />
+      <Input :labelName="'Số ngày được nợ'" :w="'186px'" :field="'MaxDate'" />
+      <Input :labelName="'Số nợ tối đa'" :w="'186px'" :field="'MaxDebt'"/>
     </div>
     <div class="Second">
       <Selection
@@ -16,6 +17,7 @@
         :labelName="'Tài khoản công nợ phải thu'"
         :w="'188px'"
         :value="'131'"
+        :field="'ReceiveAccount'"
         :numberOfIcons="1"
         :list="this.$store.getters.getReceive"
       />
@@ -24,6 +26,7 @@
         :w="'188px'"
         :value="'331'"
         :numberOfIcons="1"
+        :field="'PaymentAccount'"
         :list="this.$store.getters.getPayment"
       />
     </div>

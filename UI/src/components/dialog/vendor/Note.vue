@@ -1,6 +1,6 @@
 <template>
   <div class="Note">
-    <Textarea  :w="'100%'" :height="'200px'" />
+    <Textarea  :w="'100%'" :height="'200px'" :field="'NoteContent'"/>
   </div>
 </template>
 

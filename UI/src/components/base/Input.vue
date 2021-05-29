@@ -5,10 +5,13 @@
     >
     <input
       type="text"
+      v-bind="$attrs"
+      v-on="$listeners"
       :style="inputStyle"
       :placeholder="[[placeHolder]]"
       :value="value"
       :class="[className]"
+      :field="field"
       @blur="checkEmpty()"
     />
   </div>
@@ -38,6 +41,9 @@ export default {
     value: {
       type: String,
     },
+    field: {
+      type: String,
+    }
   },
   computed: {
     parentStyle() {

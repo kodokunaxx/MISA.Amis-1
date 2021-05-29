@@ -7,6 +7,7 @@
       cols="30"
       rows="10"
       ref="input"
+      style="resize: none;"
       :style="inputStyle"
       :placeholder="[[placeHolder]]"
       :value="value"

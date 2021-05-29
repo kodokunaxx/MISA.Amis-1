@@ -3,7 +3,12 @@
     <div class="Common-Info">
       <div class="Common-Info-Left">
         <div class="Row First-Row">
-          <Input :w="'140px'" :labelName="'Mã số thuế'" :class="'TaxCode'" />
+          <Input
+            :w="'140px'"
+            :labelName="'Mã số thuế'"
+            :class="'TaxCode'"
+            :field="'TaxCode'"
+          />
           <Input
             :w="'240px'"
             :labelName="'Mã nhà cung cấp'"
@@ -11,6 +16,7 @@
             :value="'NCC00001'"
             :class="'VendorCode'"
             :refer="'autofocus'"
+            :field="'VendorCode'"
           />
         </div>
         <div class="Row Second-Row">
@@ -19,6 +25,7 @@
             :labelName="'Tên nhà cung cấp'"
             :isRequired="true"
             :class="'VendorName'"
+            :field="'VendorName'"
           />
         </div>
         <div class="Row Third-Row">
@@ -28,6 +35,7 @@
             :placeHolder="'VD: Số 82 Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội'"
             :h="'62px'"
             :class="'Address'"
+            :field="'Address'"
           />
         </div>
       </div>
@@ -37,8 +45,9 @@
             :w="'154px'"
             :labelName="'Điện thoại'"
             :class="'PhoneNumber'"
+            :field="'PhoneNumber'"
           />
-          <Input :w="'250px'" :labelName="'Website'" :class="'Website'" />
+          <Input :w="'250px'" :labelName="'Website'" :class="'Website'" :field="'Website'"/>
         </div>
         <div class="Row Second-Row">
           <Selection
@@ -47,6 +56,7 @@
             :class="'VendorGroup'"
             :numberOfIcons="2"
             :list="this.$store.getters.getVendorGroup"
+            :field="'VendorGroup'"
           />
         </div>
         <div class="Row Third-Row">
@@ -56,6 +66,7 @@
             :class="'Employee'"
             :numberOfIcons="2"
             :list="this.$store.getters.getEmployee"
+            :field="'Employee'"
           />
         </div>
       </div>

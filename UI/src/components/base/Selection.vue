@@ -25,7 +25,9 @@
         <span :title="list.title[1]">{{ list.title[1] }}</span>
       </li>
       <li v-for="(ele, index) in list.content" :key="index">
-        <span class="key" v-if="ele.key" :title="ele.key">{{ ele.key }}</span>
+        <span class="key" v-if="ele.key" :title="ele.key">
+          {{ ele.key }}
+        </span>
         <span class="value" :title="ele.value" :style="spanStyle">
           {{ ele.value }}
         </span>
