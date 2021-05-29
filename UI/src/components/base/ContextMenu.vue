@@ -56,6 +56,7 @@ export default {
 <style lang="scss">
 .Context-Menu {
   position: fixed;
+  min-width: 100px;
   background: white;
   z-index: 999;
   outline: none;

@@ -1,24 +1,64 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as data from './data'
+import axios from 'axios';
+
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
+    API_URL: 'https://localhost:44354/api/v1',
+    vendors: [],
+    isLoading: true,
     isShowMenuDetail: true,
-    x: -10000,
-    y: -10000,
+    isCustomer: false,
+    isOrganization: true,
+    vendorGroup: data.vendorGroup,
+    X: data.X,
+    employee: data.employee,
+    rule: data.rule,
+    receive: data.receive,
+    payment: data.payment,
   },
   getters: {
+    getApiUrl: state => state.API_URL,
+    getIsLoading: state => state.isLoading,
+    getVendors: state => state.vendors,
     getIsShowMenuDetail: state => state.isShowMenuDetail,
-    getX: state => state.x,
-    getY: state => state.y,
+    getIsCustomer: state => state.isCustomer,
+    getIsOrganization: state => state.isOrganization,
+    getVendorGroup: state => state.vendorGroup,
+    getX: state => state.X,
+    getEmployee: state => state.employee,
+    getRule: state => state.rule,
+    getReceive: state => state.receive,
+    getPayment: state => state.payment,
   },
   mutations: {
     setIsShowMenuDetail: (state, payload) => state.isShowMenuDetail = payload,
-    setX: (state, payload) => state.x = payload,
-    setY: (state, payload) => state.y = payload,
+    setIsCustomer: (state, payload) => state.isCustomer = payload,
+    setIsOrganization: (state, payload) => state.isOrganization = payload,
+    setVendorGroup: (state, payload) => state.vendorGroup = payload,
+    setX: (state, payload) => state.X = payload,
+    setEmployee: (state, payload) => state.employee = payload,
+    setVendors: (state, payload) => state.vendors = payload,
+    setIsLoading: (state, payload) => state.isLoading = payload,
   },
   actions: {
-
+    setVendors: context => {
+      const API_URL = context.getters.getApiUrl + '/vendors';
+      try {
+        axios.get(API_URL)
+          .then(async response => {
+            context.commit('setVendors', response.data.Data);
+            context.commit('setIsLoading', false);
+          })
+          .catch(error => {
+            console.log('%c[ERROR][From Vuex]:', 'font-color: red', error);
+          })
+      } catch (error) {
+        console.log('%c[ERROR][From Vuex]:', 'font-color: red', error);
+      }
+    }
   }
 });

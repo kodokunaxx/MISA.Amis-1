@@ -76,7 +76,7 @@ input[type="checkbox"]:checked:after {
   display: block;
   width: 5px;
   height: 10px;
-  border: solid rgb(219, 61, 61);
+  border: solid #08bf1e;
   border-width: 0 2px 2px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);

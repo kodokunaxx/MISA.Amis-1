@@ -2,11 +2,6 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import { store } from "./store";
-import { func } from "./common/js/mUtils.js";
-import { Const } from "./common/js/mConsts.js";
-
-Vue.prototype.$fn = func;
-Vue.prototype.$Const = Const;
 
 Vue.config.productionTip = false;
 

@@ -1,21 +1,21 @@
-table {
+.table {
   display: grid;
   /* min-width: 100%; */
   /* width: max-content; */
   grid-template-columns:
     minmax(16px, 16px) minmax(40px, 40px) minmax(180px, 1fr)
     minmax(250px, 1.67fr) minmax(250px, 0.5fr) minmax(150px, 1fr) minmax(150px, 2fr)
-    minmax(150px, 1.67fr) minmax(150px, 1.67fr) minmax(30px, 30px) minmax(30px, 30px);
+    minmax(150px, 1.67fr) minmax(150px, 1.67fr) minmax(150px, 1.67fr) minmax(30px, 30px) minmax(30px, 30px);
 }
 
-thead,
+.table thead,
 tbody,
 tr {
   display: contents;
   width: 100%;
 }
 
-table td {
+td {
   border-bottom: 1px solid #e8e8e8;
   align-items: center;
   display: flex;
@@ -29,12 +29,12 @@ td {
 
 th.sticky-right {
   background: #eceef1 !important;
-  z-index: 5;
+  z-index: 100;
 }
 
 th.sticky-left {
   background: #eceef1 !important;
-  z-index: 5;
+  z-index: 100;
 }
 
 th {

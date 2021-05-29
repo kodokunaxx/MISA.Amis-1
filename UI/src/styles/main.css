@@ -4,15 +4,13 @@
 @import url(./base/paging.css);
 @import url(./base/scrollbar.css);
 @import url(./base/icon.css);
-@import url(./base/dialog.css);
 
 body {
   padding: 0;
   margin: 0;
 }
 body * {
-  font-family: notosans-regular, notosans-bold, notosans-italic,
-    notosans-semibold;
+  font-family: notosans-regular, notosans-bold, notosans-italic, notosans-semibold;
   font-size: 13px;
   margin: 0;
   padding: 0;
@@ -39,6 +37,5 @@ button:focus {
 
 @font-face {
   font-family: "notosans-semibold";
-  src: url("../assets/fonts/notosans-semibold.df3e6dc4.woff2")
-    format("opentype");
+  src: url("../assets/fonts/notosans-semibold.df3e6dc4.woff2") format("opentype");
 }

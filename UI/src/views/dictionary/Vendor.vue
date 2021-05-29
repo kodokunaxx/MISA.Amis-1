@@ -1,6 +1,5 @@
 <template>
-  <div class="MISAVendor" ref="content">
-    <!-- <BaseLoading :showLoading="isLoading" /> -->
+  <div class="MISAVendor">
     <div class="MISAVendor-Head flex items-center">
       <div class="MISAVendor-Head-VendorList">
         <div class="title">Danh sách nhà cung cấp</div>
@@ -20,7 +19,7 @@
           Tiện ích
           <span class="icon utility"></span>
         </div>
-        <div class="btn">
+        <div class="btn" @click="openDialog()">
           Thêm
           <div class="line"></div>
           <span class="icon add"></span>
@@ -76,8 +75,14 @@
             <div class="Icon Feature-Setting" title="Tùy chỉnh giao diện"></div>
           </div>
         </div>
-        <table border="0" cellspacing="0" width="100%" id="Data-Table">
-          <thead ref="dataHead">
+        <table
+          border="0"
+          cellspacing="0"
+          width="100%"
+          id="Data-Table"
+          class="table"
+        >
+          <thead>
             <th class="td-left-16"></th>
             <th class="Checbox sticky-left left-16 justify-center">
               <input type="checkbox" class="right-5 m-b-5" />
@@ -88,22 +93,29 @@
             <th class="Debt text-right">Công nợ</th>
             <th class="TaxCode">Mã số thuế</th>
             <th class="PhoneNumber">Điện thoại</th>
+            <th class="IdCard">Số CMND</th>
             <th class="Feature sticky-right text-center">Chức năng</th>
             <th class="td-white-30"></th>
             <th class="td-grey-30"></th>
           </thead>
           <tbody>
-            <tr v-for="i in 20" :key="i">
+            <tr
+              v-for="vendor in this.$store.getters.getVendors"
+              :key="vendor.VendorId"
+              @dblclick="openDialog()"
+              :id="vendor.VendorId"
+            >
               <td class="td-left-16"></td>
               <td class="Checkbox sticky-left left-16 justify-center">
                 <input type="checkbox" class="right-5" />
               </td>
-              <td class="VendorCode">123</td>
-              <td class="VendorName">123</td>
-              <td class="Address">Ngõ 10000000000000000000</td>
-              <td class="Debt text-right">123</td>
-              <td class="TaxCode">123</td>
-              <td class="PhoneNumber">03332495959</td>
+              <td class="VendorCode">{{ vendor.VendorCode }}</td>
+              <td class="VendorName">{{ vendor.VendorName }}</td>
+              <td class="Address">{{ vendor.Address }}</td>
+              <td class="Debt text-right">{{ vendor.Debt | formatMoney }}</td>
+              <td class="TaxCode">{{ vendor.TaxCode }}</td>
+              <td class="PhoneNumber">{{ vendor.PhoneNumber }}</td>
+              <td class="IdCard">{{ vendor.IdCard }}</td>
               <td
                 class="Feature sticky-right flex text-center items-center justify-center"
               >
@@ -142,33 +154,56 @@
           <div class="icon" ref="arrow"></div>
         </div>
       </div>
+      <BaseLoading v-if="this.$store.getters.getIsLoading" />
     </div>
     <ContextMenu ref="menu">
       <ul>
-        <li>Nhân bản</li>
-        <li>Xoá</li>
-        <li>Ngưng sử dụng</li>
+        <li>Xem</li>
+        <li>Sửa</li>
+        <li>Xóa</li>
       </ul>
     </ContextMenu>
+    <VendorDialog v-if="isShowVendorDialog" @closeDialog="closeDialog()" />
   </div>
 </template>
 
 <script>
 import ContextMenu from "../../components/base/ContextMenu";
+import BaseLoading from "../../components/base/BaseLoading";
+import VendorDialog from "../../components/dialog/vendor/VendorDialog";
+
 export default {
   components: {
     ContextMenu,
+    BaseLoading,
+    VendorDialog,
   },
   created() {
     document.title = "Nhà cung cấp";
+    this.getVendors(); // Lấy dữ liệu vendors
   },
   mounted() {},
   data() {
     return {
       isShowContenHead: true,
+      isShowVendorDialog: false,
     };
   },
+  filters: {
+    formatMoney(value) {
+      const regex = /\B(?=(\d{3})+(?!\d))/g;
+      return value.toString().replace(regex, ".");
+    },
+  },
   methods: {
+    /**
+     * Lấy dữ liệu nhà cung cấp
+     * CreateBy: nvcuong(29/05/2021)
+     */
+    getVendors() {
+      this.$store.dispatch("setVendors");
+    },
+
     /**
      * Handle click ẩn/hiện Content head
      * CreateBy: nvcuong(26/05/2021)
@@ -192,14 +227,33 @@ export default {
       this.dataContext = item;
       this.$refs.menu.open(e);
     },
+
+    /**
+     * Mở dialog
+     * CreatedBy: nvcuong(26/05/2021)
+     */
+    openDialog() {
+      this.isShowVendorDialog = true;
+      this.$store.commit("setIsOrganization", true); // mặc định là mode tổ chức
+    },
+    /**
+     * Đóng dialog
+     * CreatedBy: nvcuong(26/05/2021)
+     */
+    closeDialog() {
+      this.isShowVendorDialog = false;
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .MISAVendor {
+  position: relative;
   overflow: scroll;
   flex-direction: column;
+  height: calc(100vh - 50px);
+  padding: 0px 30px 0px 20px;
 }
 
 .MISAVendor .MISAVendor-Head {
@@ -443,15 +497,23 @@ export default {
       }
     }
     #Data-Table {
+      position: relative;
       th {
         height: 34.6px;
         padding: 5px 10px 3px;
-        z-index: 1;
+        z-index: 999;
+      }
+      tr {
+        cursor: pointer;
+        &:hover {
+          td {
+            background-color: #f3f8f8 !important;
+          }
+        }
       }
       td {
-        height: 46px;
+        min-height: 48px !important;
         padding: 5px 10px 3px;
-        z-index: 1;
       }
       .Debt {
         text-align: right !important;
@@ -467,10 +529,10 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
             .text {
               color: #0075c0;
               margin-right: 10px;
+              cursor: pointer;
             }
             .icon {
               display: inline-block;
@@ -479,6 +541,7 @@ export default {
               background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
                 no-repeat;
               background-position: -894px -359px;
+              cursor: pointer;
             }
           }
         }
