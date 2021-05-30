@@ -142,25 +142,34 @@ export default {
      * CreatedBy: nvcuong (28/05/2021)
      */
     getDataInForm() {
-      const inputPath = ".MISAVendor-Dialog .MISAInput input";
-      const textareaPath = ".MISAVendor-Dialog .MISATextarea textarea";
-      const selectionPath = ".MISAVendor-Dialog .MISASelection input";
-      // const info = {};
+      try {
+        const inputPath = ".MISAVendor-Dialog .MISAInput input";
+        const textareaPath = ".MISAVendor-Dialog .MISATextarea textarea";
+        const selectionPath = ".MISAVendor-Dialog .MISASelection input";
+        const info = {};
 
-      const inputs = document.querySelectorAll(inputPath);
-      const textareas = document.querySelectorAll(textareaPath);
-      const selections = document.querySelectorAll(selectionPath);
-      const customerInput = this.$refs.customer;
-
-      console.log(inputs);
-      console.log(textareas);
-      console.log(selections);
-      console.log(customerInput);
-      inputs.forEach( input => {
-        console.log(input)
-        const key = input.attributes.field.value;
-        console.log(key);
-      })
+        const inputs = document.querySelectorAll(inputPath);
+        const textareas = document.querySelectorAll(textareaPath);
+        const selections = document.querySelectorAll(selectionPath);
+        const customerInput = this.$refs.customer;
+        info["IsCustomer"] = customerInput.checked;
+        inputs.forEach((input) => {
+          const key = input.attributes.field.value;
+          info[[key]] = input.value;
+        });
+        // debugger;
+        textareas.forEach((textarea) => {
+          const key = textarea.attributes.field.value;
+          info[[key]] = textarea.value;
+        });
+        selections.forEach((input) => {
+          const key = input.attributes.field.value;
+          info[[key]] = input.value;
+        });
+        console.log(info);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

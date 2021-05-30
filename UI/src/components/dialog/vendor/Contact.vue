@@ -6,21 +6,21 @@
           <Selection
             :w="'120px'"
             :labelName="'Người liên hệ'"
-            :placeHolder="'Xưng hô'"
+            placeholder="Xưng hô"
             :numberOfIcons="1"
             :list="this.$store.getters.getX"
-            :field="'XungHo'"
+            :field="'ContactXungHo'"
           />
-          <Input :w="'260px'" :placeHolder="'Họ và tên'" :field="'FullName'" />
+          <Input :w="'260px'" placeholder="Họ và tên" :field="'ContactFullName'" />
         </div>
         <div class="Row Second-Row">
-          <Input :w="'100%'" :placeHolder="'Email'" :field="'Email'" />
+          <Input :w="'100%'" placeholder="Email" :field="'ContactEmail'" />
         </div>
         <div class="Row Third-Row">
           <Input
             :w="'190px'"
-            :placeHolder="'Số điện thoại'"
-            :field="'PhoneNumber'"
+            placeholder="Số điện thoại"
+            :field="'ContactPhoneNumber'"
           />
         </div>
         <div class="Row Fourth-Row">
@@ -28,8 +28,8 @@
             v-if="this.$store.getters.getIsCustomer"
             :w="'100%'"
             :labelName="'Đại diện theo PL'"
-            :placeHolder="'Đại diện theo PL'"
-            :field="'DaiDien'"
+            placeholder="Đại diện theo PL"
+            :field="'DDPL'"
           />
         </div>
       </div>
@@ -38,29 +38,29 @@
           <Input
             :w="'100%'"
             :labelName="'Đại diện theo PL'"
-            :placeHolder="'Đại diện theo PL'"
-            :field="'DaiDien'"
+            placeholder="Đại diện theo PL"
+            :field="'DDPL'"
           />
         </div>
         <div class="Row First-Row" v-if="this.$store.getters.getIsCustomer">
           <Input
             :w="'100%'"
             :labelName="'Người nhận hóa đơn điện tử'"
-            :placeHolder="'Họ và tên'"
+            placeholder="Họ và tên"
             :field="'Recipient'"
           />
         </div>
         <div class="Row Second-Row" v-if="this.$store.getters.getIsCustomer">
           <Input
             :w="'100%'"
-            :placeHolder="'Email, ngăn cách nhiều email bởi dấu ;'"
+            placeholder="Email, ngăn cách nhiều email bởi dấu ;"
             :field="'RecipientEmail'"
           />
         </div>
         <div class="Row Third-Row" v-if="this.$store.getters.getIsCustomer">
           <Input
             :w="'190px'"
-            :placeHolder="'Số điện thoại'"
+            placeholder="Số điện thoại"
             :field="'RecipientPhone'"
           />
         </div>
@@ -72,29 +72,30 @@
           <Input
             :w="'100%'"
             :labelName="'Thông tin liên hệ'"
-            :placeHolder="'Email'"
-            :field="'Email'"
+            placeholder="Email"
+            :field="'ContactEmail'"
           />
         </div>
         <div class="Row Second">
           <Input
             :w="'50%'"
-            :placeHolder="'Điện thoại di động'"
-            :field="'PhoneNumber'"
+            placeholder="Điện thoại di động"
+            :field="'ContactPhoneNumber'"
           />
         </div>
         <div class="Row Third">
           <Input
             :w="'50%'"
-            :placeHolder="'Điện thoại cố định'"
-            :field="'PhoneNumber'"
+            placeholder="Điện thoại cố định"
+            :field="'ContactTele'"
           />
         </div>
         <div class="Row Fourth">
           <Input
             :w="'100%'"
             :labelName="'Đại diện theo PL'"
-            :placeHolder="'Đại diện theo PL'"
+            :field="'DDPL'"
+            placeholder="Đại diện theo PL"
           />
         </div>
       </div>
@@ -102,19 +103,19 @@
         <div class="Row First">
           <Input
             :w="'50%'"
-            :placeHolder="'Số CMND/Thẻ căn cước'"
+            placeholder="Số CMND/Thẻ căn cước"
             :labelName="'Thông tin CMND/Thẻ căn cước'"
             :field="'IdCard'"
           />
         </div>
         <div class="Row Second">
-          <!-- <Input :w="'50%'" :placeHolder="'Ngày cấp'" /> -->
+          <!-- <Input :w="'50%'" placeholder="Ngày cấp'" /> -->
           <div class="MISAInput Date">
-            <input type="date" />
+            <input type="date" :field="'IssuedOn'"/>
           </div>
         </div>
         <div class="Row First">
-          <Input :w="'100%'" :placeHolder="'Nơi cấp'" />
+          <Input :w="'100%'" placeholder="Nơi cấp" :field="'Place'"/>
         </div>
       </div>
     </div>

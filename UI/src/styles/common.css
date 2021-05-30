@@ -9,8 +9,6 @@
   height: calc(100% - 66px);
   overflow: hidden;
 }
-.mask-loading div {
-}
 
 /* -------------------------OPTION--------------------------------*/
 .flex {

@@ -13,7 +13,7 @@
             :w="'240px'"
             :labelName="'Mã nhà cung cấp'"
             :isRequired="true"
-            :value="'NCC00001'"
+            value="NCC00001"
             :class="'VendorCode'"
             :refer="'autofocus'"
             :field="'VendorCode'"
@@ -32,7 +32,7 @@
           <Textarea
             :w="'100%'"
             :labelName="'Địa chỉ'"
-            :placeHolder="'VD: Số 82 Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội'"
+            placeholder="VD: Số 82 Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội"
             :h="'62px'"
             :class="'Address'"
             :field="'Address'"
@@ -47,7 +47,12 @@
             :class="'PhoneNumber'"
             :field="'PhoneNumber'"
           />
-          <Input :w="'250px'" :labelName="'Website'" :class="'Website'" :field="'Website'"/>
+          <Input
+            :w="'250px'"
+            :labelName="'Website'"
+            :class="'Website'"
+            :field="'Website'"
+          />
         </div>
         <div class="Row Second-Row">
           <Selection

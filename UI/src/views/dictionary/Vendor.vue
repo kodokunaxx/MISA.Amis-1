@@ -77,59 +77,46 @@
       </div>
     </div>
     <div class="MISAVendor-Content-Body">
-      <table
-        border="0"
-        cellspacing="0"
-        width="100%"
-        id="Data-Table"
-        class="table"
-      >
-        <thead>
-          <th class="td-left-16"></th>
-          <th class="Checbox sticky-left left-16 justify-center">
-            <input type="checkbox" class="right-5 m-b-5" />
-          </th>
-          <th class="VendorCode">Mã nhà cung cấp</th>
-          <th class="VendorName">Tên nhà cung cấp</th>
-          <th class="Address">Địa chỉ</th>
-          <th class="Debt text-right">Công nợ</th>
-          <th class="TaxCode">Mã số thuế</th>
-          <th class="PhoneNumber">Điện thoại</th>
-          <th class="IdCard">Số CMND</th>
-          <th class="Feature sticky-right text-center">Chức năng</th>
-          <th class="td-white-30"></th>
-          <th class="td-grey-30"></th>
-        </thead>
-        <tbody>
-          <tr
+      <div id="Data-Table">
+        <div class="Thead">
+          <div class="Row">
+            <div class="Column Checkbox"><input type="checkbox" /></div>
+            <div class="Column VendorCode">Mã nhà cung cấp</div>
+            <div class="Column VendorName">Tên nhà cung cấp</div>
+            <div class="Column Address">Địa chỉ</div>
+            <div class="Column Debt text-right">Công nợ</div>
+            <div class="Column TaxCode">Mã số thuế</div>
+            <div class="Column PhoneNumber">Điện thoại</div>
+            <div class="Column IdCard">Số CMND</div>
+            <div class="Column Feature">Chức năng</div>
+          </div>
+        </div>
+        <div class="Tbody">
+          <div
             v-for="vendor in this.$store.getters.getVendors"
             :key="vendor.VendorId"
             @dblclick="openDialog()"
             :id="vendor.VendorId"
+            class="Row"
           >
-            <td class="td-left-16"></td>
-            <td class="Checkbox sticky-left left-16 justify-center">
-              <input type="checkbox" class="right-5" />
-            </td>
-            <td class="VendorCode">{{ vendor.VendorCode }}</td>
-            <td class="VendorName">{{ vendor.VendorName }}</td>
-            <td class="Address">{{ vendor.Address }}</td>
-            <td class="Debt text-right">{{ vendor.Debt | formatMoney }}</td>
-            <td class="TaxCode">{{ vendor.TaxCode }}</td>
-            <td class="PhoneNumber">{{ vendor.PhoneNumber }}</td>
-            <td class="IdCard">{{ vendor.IdCard }}</td>
-            <td
-              class="Feature sticky-right flex text-center items-center justify-center"
-            >
+            <div class="Column Checkbox"><input type="checkbox" /></div>
+            <div class="Column VendorCode">{{ vendor.VendorCode }}</div>
+            <div class="Column VendorName">{{ vendor.VendorName }}</div>
+            <div class="Column Address">{{ vendor.Address }}</div>
+            <div class="Column Debt text-right">
+              {{ vendor.Debt | formatMoney }}
+            </div>
+            <div class="Column TaxCode">{{ vendor.TaxCode }}</div>
+            <div class="Column PhoneNumber">{{ vendor.PhoneNumber }}</div>
+            <div class="Column IdCard">{{ vendor.IdCard }}</div>
+            <div class="Column Feature ">
               <div class="wrapper">
-                <div class="text">Sửa</div>
+                <div class="text">Lập CT mua hàng</div>
                 <div class="icon" @click="openContextMenu($event)"></div>
               </div>
-            </td>
-            <td class="td-white-30"></td>
-            <td class="td-grey-30"></td>
-          </tr>
-        </tbody>
+            </div>
+          </div>
+        </div>
         <div class="Data-Pagenav">
           <div class="Data-Pagenav-Left">
             <div class="Total-Row">Tổng số: 21 bản ghi</div>
@@ -151,7 +138,7 @@
             <div class="Next">Sau</div>
           </div>
         </div>
-      </table>
+      </div>
     </div>
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
     <ContextMenu ref="menu">
@@ -254,16 +241,17 @@ export default {
   padding: 0px 30px 0px 20px;
 }
 
-.MISAVendor .MISAVendor-Head {
-  justify-content: space-between;
-  left: 0;
-  width: 100%;
-  padding: 15px 0px 15px 0px;
-  margin-bottom: 20px;
+.MISAVendor-Head {
   position: sticky;
   top: 0;
-  z-index: 10;
+  left: 0;
+  justify-content: space-between;
+  width: 100%;
+  height: 83px;
+  padding: 15px 0px 15px 0px;
+  margin-bottom: 20px;
   background-color: #f4f5f6;
+  z-index: 10;
 }
 
 .MISAVendor-Head-VendorList {
@@ -359,7 +347,6 @@ export default {
   position: sticky;
   left: 0;
   display: flex;
-  // width: 100vw;
   justify-content: space-between;
   padding-bottom: 16px;
   background-color: #f4f5f6;
@@ -519,35 +506,93 @@ export default {
 }
 
 .MISAVendor-Content-Body {
-  position: relative;
   #Data-Table {
-    position: relative;
-    th {
-      height: 34.6px;
-      padding: 5px 10px 3px;
-      z-index: 999;
-    }
-    tr {
-      cursor: pointer;
-      &:hover {
-        td {
-          background-color: #f3f8f8 !important;
+    // margin: 0 32px 0 16px;
+    .Thead,
+    .Tbody {
+      .Row {
+        height: 34.6px;
+        .Column {
+          display: inline-block;
+          height: 100%;
+          padding: 5px 10px 3px;
+          border-right: 1px solid #c7c7c7;
+          border-bottom: 1px solid #c7c7c7;
+          z-index: 999;
+          &.Checkbox {
+            position: sticky;
+            left: 0;
+            width: 40px;
+            z-index: 5;
+            input {
+              display: inline-block;
+              width: 18px;
+              height: 16px;
+            }
+          }
+          &.VendorCode {
+            width: 180px;
+          }
+          &.VendorName,
+          &.Address {
+            width: 250px;
+          }
+          &.Debt,
+          &.TaxCode,
+          &.PhoneNumber,
+          &.IdCard {
+            width: 150px;
+          }
+          &.Feature {
+            position: sticky;
+            right: 0;
+            width: 192px;
+            text-align: right;
+            z-index: 5;
+          }
         }
       }
     }
-    td {
-      min-height: 48px !important;
-      padding: 5px 10px 3px;
+    .Thead {
+      white-space: nowrap;
+      position: sticky;
+      top: 83px;
+      z-index: 998;
+      .Column {
+        line-height: 26.6px;
+        background-color: #eceef1;
+        font-weight: 700;
+        &.Checkbox,
+        &.Feature {
+          z-index: 6;
+        }
+        &.Feature {
+          padding-right: 22px;
+        }
+      }
     }
-    .Debt {
-      text-align: right !important;
-    }
-    .Feature {
-      border-left: 1px solid #e0e0e0 !important;
-    }
-    tbody {
+    .Tbody {
+      background-color: #fff;
+      .Row {
+        height: 48px;
+        white-space: nowrap;
+        .Column {
+          line-height: 40px;
+          background-color: #fff;
+          overflow: hidden;
+          cursor: pointer;
+        }
+        &:hover {
+          .Column {
+            background-color: #f3f8f8 !important;
+          }
+        }
+      }
+
       .Feature {
         border-left: 1px solid #e0e0e0 !important;
+        font-family: inherit;
+        font-weight: 600;
         .wrapper {
           position: relative;
           display: flex;
@@ -570,58 +615,57 @@ export default {
         }
       }
     }
-    .Data-Pagenav {
-      position: fixed;
-      bottom: 10px;
+  }
+  .Data-Pagenav {
+    position: fixed;
+    bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100vw - 245px);
+    height: 48px;
+    padding: 0 16px;
+    background-color: #fff;
+    z-index: 100;
+    .Data-Pagenav-Right {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: calc(100vw - 245px);
-      height: 48px;
-      padding: 0 16px;
-      background-color: #fff;
-      z-index: 100;
-      .Data-Pagenav-Right {
+      .Selection {
+        height: 36px;
+        outline: none;
+        padding: 0 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .Page-Index,
+      .Prev,
+      .Next {
         display: flex;
-        .Selection {
-          height: 36px;
-          outline: none;
-          padding: 0 10px;
-          border: 1px solid #e0e0e0;
-          border-radius: 3px;
-          cursor: pointer;
-        }
-        .Page-Index,
-        .Prev,
-        .Next {
-          display: flex;
-          align-items: center;
-          cursor: pointer;
-          &.Page-Index {
-            div {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 24px;
-              height: 24px;
-              padding: 4px;
-              &.active {
-                margin-top: 5px;
-                border: 1px solid #e0e0e0;
-                font-weight: 600;
-              }
+        align-items: center;
+        cursor: pointer;
+        &.Page-Index {
+          div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 24px;
+            height: 24px;
+            padding: 4px;
+            &.active {
+              margin-top: 5px;
+              border: 1px solid #e0e0e0;
+              font-weight: 600;
             }
           }
-          &.Prev {
-            margin: 0 6.5px 0 20px;
-          }
-          &.Next {
-            margin: 0 0 0 6.5px;
-          }
+        }
+        &.Prev {
+          margin: 0 6.5px 0 20px;
+        }
+        &.Next {
+          margin: 0 0 0 6.5px;
         }
       }
     }
   }
 }
-// }
 </style>

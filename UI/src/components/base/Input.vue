@@ -6,14 +6,13 @@
     <input
       type="text"
       v-bind="$attrs"
-      v-on="$listeners"
       :style="inputStyle"
-      :placeholder="[[placeHolder]]"
-      :value="value"
       :class="[className]"
       :field="field"
       @blur="checkEmpty()"
     />
+    <!-- @input="$emit('input', $event.target.value)" -->
+    <!-- v-on="$listeners" -->
   </div>
 </template>
 
@@ -32,18 +31,12 @@ export default {
     isRequired: {
       type: Boolean,
     },
-    placeHolder: {
-      type: String,
-    },
     className: {
-      type: String,
-    },
-    value: {
       type: String,
     },
     field: {
       type: String,
-    }
+    },
   },
   computed: {
     parentStyle() {

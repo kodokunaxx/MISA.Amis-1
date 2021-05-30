@@ -5,22 +5,20 @@
         <Selection
           :labelName="'Vị trí địa lí'"
           :w="'190px'"
-          :value="'Việt Nam'"
+          value="Việt Nam"
+          :field="'Country'"
           :numberOfIcons="1"
         />
         <Selection
           :w="'190px'"
-          :placeHolder="'Tỉnh/Thành phố'"
+          placeholder="Tỉnh/Thành phố"
+          :field="'Province'"
           :numberOfIcons="1"
         />
       </div>
       <div class="Second-Row">
-        <Selection
-          :w="'190px'"
-          :placeHolder="'Quận/Huyện'"
-          :numberOfIcons="1"
-        />
-        <Selection :w="'190px'" :placeHolder="'Xã/Phường'" :numberOfIcons="1" />
+        <Selection :w="'190px'" placeholder="Quận/Huyện" :numberOfIcons="1"  :field="'District'"/>
+        <Selection :w="'190px'" placeholder="Xã/Phường" :numberOfIcons="1"  :field="'Ward'"/>
       </div>
     </div>
     <div class="Right">

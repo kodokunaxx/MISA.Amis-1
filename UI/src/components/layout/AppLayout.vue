@@ -3,7 +3,9 @@
     <Menu></Menu>
     <div class="body-right">
       <Header> </Header>
+      <div class="Fixed Left"></div>
       <router-view />
+      <div class="Fixed Right"></div>
     </div>
   </div>
 </template>
@@ -35,6 +37,20 @@ div {
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  .Fixed {
+    position: fixed;
+    top: 50px;
+    bottom: 0;
+    background-color: #f4f5f8;
+    z-index: 999;
+    &.Left {
+      left: 178px;
+      width: 20px;
+    }
+    &.Right {
+      right: 10px;
+      width: 37px;
+    }
+  }
 }
-
 </style>

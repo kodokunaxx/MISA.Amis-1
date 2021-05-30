@@ -6,31 +6,95 @@ namespace MISA.Core.Entities
 {
     public class Vendor : BaseEntity
     {
+        #region Properties
+        #region Common
         public Guid VendorId { get; set; }
-        public string VendorCode { get; set; }
-        public string VendorName { get; set; }
-
-        public string TaxCode { get; set; }
-
-        public string Address { get; set; }
-
-        public int Debt { get; set; }
-        public string IdCard { get; set; }
-        public string PhoneNumber { get; set; }
-
-        public string Website { get; set; }
-
-        public Guid VendorGroupId { get; set; }
-
-        public string VendorGroupName { get; set; }
-
-        public Guid EmployeeId { get; set; }
-
-        public string EmployeeName { get; set; }
 
         public int IsCustomer { get; set; }
-        public string XungHo { get; set; }
 
-        public string FullName { get; set; }
+        public string TaxCode { get; set; }
+        
+        public string VendorCode { get; set; }
+        
+        public string VendorName { get; set; }
+        
+        public string Address { get; set; }
+        
+        public string PhoneNumber { get; set; }
+        
+        public string Website { get; set; }
+        
+        public string VendorGroup { get; set; }
+        
+        public string Employee { get; set; }
+
+        public string VendorXungHo { get; set; }
+
+        public string VendorFullName { get; set; }
+        #endregion
+
+        #region Contact
+
+        public string ContactXungHo { get; set; }
+
+        public string ContactFullName { get; set; }
+
+        public string ContactEmail { get; set; }
+
+        public string ContactPhoneNumber { get; set; }
+
+        public string DDPL { get; set; }
+
+        public string RecipientFullName { get; set; }
+
+        public string RecipientEmail { get; set; }
+
+        public string RecipientPhoneNumber { get; set; }
+
+        public string ContactTele { get; set; }
+
+        public string IdCard { get; set; }
+
+        public DateTime IssuedOn { get; set; }
+
+        public string Place { get; set; }
+
+        #endregion
+
+        #region PaymentRule
+
+        public string PaymentRule { get; set; }
+
+        public int MaxDate { get; set; }
+
+        public int MaxDebt { get; set; }
+
+        public string ReceiveAccount { get; set; }
+
+        public string ReceiveAccountName { get; set; }
+        public string PaymentAccount { get; set; }
+        public string PaymentAccountName { get; set; }
+        #endregion
+
+        #region Address
+
+        public string Country { get; set; }
+
+        public string Province { get; set; }
+
+        public string District { get; set; }
+
+        public string Ward { get; set; }
+
+        #endregion
+
+        #region Note
+
+        public string NoteContent { get; set; }
+
+        #endregion
+
+
+        #endregion
     }
 }

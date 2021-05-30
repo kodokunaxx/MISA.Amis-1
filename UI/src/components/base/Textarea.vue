@@ -8,9 +8,8 @@
       rows="10"
       ref="input"
       style="resize: none;"
+      v-bind="$attrs"
       :style="inputStyle"
-      :placeholder="[[placeHolder]]"
-      :value="value"
       :class="[className]"
       @blur="checkEmpty()"
     ></textarea>
@@ -32,13 +31,7 @@ export default {
     isRequired: {
       type: Boolean,
     },
-    placeHolder: {
-      type: String,
-    },
     className: {
-      type: String,
-    },
-    value: {
       type: String,
     },
   },

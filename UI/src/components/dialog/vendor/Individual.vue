@@ -7,26 +7,33 @@
             :w="'220px'"
             :labelName="'Mã nhà cung cấp'"
             :isRequired="true"
-            :value="'NCC00001'"
+            :field="'VendorCode'"
+            value="NCC0001"
           />
-          <Input :w="'160px'" :labelName="'Mã số thuế'" />
+          <Input :w="'160px'" :labelName="'Mã số thuế'" :field="'TaxCode'" />
         </div>
         <div class="Row Second-Row">
           <Selection
             :w="'120px'"
             :labelName="'Tên nhà cung cấp'"
-            :placeHolder="'Xưng hô'"
+            placeholder="Xưng hô"
+            :field="'VendorXungHo'"
             :numberOfIcons="1"
             :list="this.$store.getters.getX"
           />
-          <Input :w="'260px'" :placeHolder="'Họ và tên'" />
+          <Input
+            :w="'260px'"
+            placeholder="Họ và tên"
+            :field="'VendorFullName'"
+          />
         </div>
         <div class="Row Third-Row">
           <Textarea
             :w="'100%'"
             :labelName="'Địa chỉ'"
-            :placeHolder="'VD: Số 82 Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội'"
+            placeholder="VD: Số 82 Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội"
             :h="'62px'"
+            :field="'Address'"
             :class="'Address'"
           />
         </div>
@@ -37,6 +44,7 @@
             :w="'100%'"
             :labelName="'Nhóm nhà cung cấp'"
             :class="'VendorGroup'"
+            :field="'VendorGroup'"
             :numberOfIcons="2"
             :list="this.$store.getters.getVendorGroup"
           />
@@ -45,6 +53,7 @@
           <Selection
             :w="'100%'"
             :labelName="'Nhân viên mua hàng'"
+            :field="'Employee'"
             :class="'Employee'"
             :numberOfIcons="2"
             :list="this.$store.getters.getEmployee"

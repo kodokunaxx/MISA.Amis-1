@@ -6,10 +6,8 @@
     <div class="Wrapper">
       <input
         type="text"
-        ref="input"
         :style="inputStyle"
-        :placeholder="[[placeHolder]]"
-        :value="value"
+        v-bind="$attrs"
         :class="[className]"
       />
       <div class="Icon-1" @click="toggleList()">
@@ -55,13 +53,7 @@ export default {
     isRequired: {
       type: Boolean,
     },
-    placeHolder: {
-      type: String,
-    },
     className: {
-      type: String,
-    },
-    value: {
       type: String,
     },
     numberOfIcons: {
