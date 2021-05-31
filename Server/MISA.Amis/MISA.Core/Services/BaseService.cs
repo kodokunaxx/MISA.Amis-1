@@ -25,7 +25,9 @@ namespace MISA.Core.Services
 
         public ServiceResult Delete(Guid id)
         {
-            throw new NotImplementedException();
+            ServiceResult serviceResult = new ServiceResult();
+            serviceResult.Data = _baseRepository.Delete(id);
+            return serviceResult;
         }
 
         public virtual ServiceResult GetAll()
@@ -72,7 +74,27 @@ namespace MISA.Core.Services
 
         public virtual ServiceResult Update(Guid id, T entity)
         {
-            throw new NotImplementedException();
+            ServiceResult serviceResult = new ServiceResult();
+            T isExsitsEntity = _baseRepository.GetById(id);
+            try
+            {
+
+                if (isExsitsEntity == null)
+                {
+                    serviceResult.ResultCode = (int)EnumServiceResult.Fail;
+
+                }
+                else
+                {
+                    serviceResult.Data = _baseRepository.Update(id, entity);
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResult.ResultCode = (int)EnumServiceResult.NotValid;
+                serviceResult.DevMessage.Add(ex.Message);
+            }
+            return serviceResult;
         }
 
         public ServiceResult CheckValidate(T entity)

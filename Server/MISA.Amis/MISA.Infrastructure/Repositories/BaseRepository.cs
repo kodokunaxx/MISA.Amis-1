@@ -33,7 +33,12 @@ namespace MISA.Infrastructure.Repositories
 
         public virtual int Delete(Guid id)
         {
-            throw new NotImplementedException();
+            string sqlCommand = $"Proc_Delete{_tableName}ById";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add($"@{_tableName}Id", id.ToString());
+
+            int rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            return rowAffects;
         }
 
         public virtual IEnumerable<T> GetAll()
@@ -70,7 +75,16 @@ namespace MISA.Infrastructure.Repositories
 
         public virtual int Update(Guid id, T entity)
         {
-            throw new NotImplementedException();
+            string sqlCommand = $"Proc_Update{_tableName}";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+
+            foreach (PropertyInfo prop in entity.GetType().GetProperties())
+            {
+                dynamicParameters.Add($"@{prop.Name}", prop.GetValue(entity));
+            }
+            dynamicParameters.Add($"@{_tableName}Id", id.ToString());
+
+            return _dbConnection.Execute(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
         }
 
         public T GetByProperty(string column, object value)
@@ -81,5 +95,6 @@ namespace MISA.Infrastructure.Repositories
 
             return _dbConnection.QueryFirstOrDefault<T>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
         }
+
     }
 }

@@ -68,7 +68,11 @@
           />
           <div class="icon"></div>
         </div>
-        <div class="Icon Feature-Reload" title="Lấy lại dữ liệu" @click="reload()"></div>
+        <div
+          class="Icon Feature-Reload"
+          title="Lấy lại dữ liệu"
+          @click="reload()"
+        ></div>
         <div class="Icon Feature-Export-Excel" title="Xuất ra Excel"></div>
         <div class="Icon Feature-Setting" title="Tùy chỉnh giao diện"></div>
       </div>
@@ -96,6 +100,7 @@
             v-for="vendor in this.$store.getters.getVendors"
             :key="vendor.VendorId"
             @dblclick="openDialog(vendor.VendorId, 'UPDATE')"
+            @click="handleSelectRow(vendor.VendorId)"
             :id="vendor.VendorId"
             class="Row"
           >
@@ -141,11 +146,11 @@
       </div>
     </div>
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
-    <ContextMenu ref="menu">
+    <ContextMenu ref="menu" v-show="isShowContextMenu">
       <ul>
-        <li>Xem</li>
-        <li>Sửa</li>
-        <li>Xóa</li>
+        <li @click="closeContextMenu()">Xem</li>
+        <li @click="closeContextMenu(), openDialog(getId(), 'UPDATE')">Sửa</li>
+        <li @click="closeContextMenu(), deleteVendor()">Xóa</li>
       </ul>
     </ContextMenu>
     <VendorDialog
@@ -180,6 +185,7 @@ export default {
       isShowVendorDialog: false,
       API_URL: this.$store.getters.getApiUrl + "/vendors",
       vendor: null,
+      isShowContextMenu: false,
     };
   },
   filters: {
@@ -197,6 +203,21 @@ export default {
      */
     getVendors() {
       this.$store.dispatch("setVendors");
+    },
+
+    /**
+     * Xử lí khi chọn 1 row
+     * CreateBy: nvcuong(29/05/2021)
+     */
+    handleSelectRow(id) {
+      let path = ".MISAVendor #Data-Table .selected";
+      const currentRowSelected = document.querySelector(path);
+
+      if (currentRowSelected) {
+        currentRowSelected.classList.remove("selected");
+      }
+      path = `.MISAVendor #Data-Table div[id="${id}"]`;
+      document.querySelector(path).classList.add("selected");
     },
 
     /**
@@ -220,6 +241,7 @@ export default {
     openContextMenu(e, item) {
       this.dataContext = {};
       this.dataContext = item;
+      this.isShowContextMenu = true;
       this.$refs.menu.open(e);
     },
 
@@ -296,6 +318,43 @@ export default {
       this.getVendors();
     },
 
+    /**
+     * Xóa NCC
+     * CreatedBy: nvcuong(31/05/2021)
+     */
+    deleteVendor(id) {
+      const vm = this;
+      try {
+        this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+        if (!id) {
+          const path = ".MISAVendor #Data-Table .Row.selected";
+          id = document.querySelector(path).attributes.id.value;
+        }
+        const API_URL = this.API_URL + "/" + id;
+        axios
+          .delete(API_URL)
+          .then(() => {
+            vm.reload(); // Load lại khi xóa thành công
+          })
+          .catch((error) => console.log(error.response));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    /**
+     * Đóng context menu
+     * CreatedBy: nvcuong(31/05/2021)
+     */
+    closeContextMenu() {
+      this.isShowContextMenu = false;
+    },
+
+    getId() {
+      const path = '.MISAVendor #Data-Table .Row.selected';
+      const selectedInput = document.querySelector(path);
+
+      return selectedInput.attributes.id.value;
+    }
   },
 };
 </script>
@@ -653,6 +712,11 @@ export default {
         &:hover {
           .Column {
             background-color: #f3f8f8 !important;
+          }
+        }
+        &.selected {
+          .Column {
+            background-color: #f8f8f8 !important;
           }
         }
       }

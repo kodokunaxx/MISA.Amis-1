@@ -53,12 +53,13 @@
             class="btn btn-save"
             type="button"
             value="Cất"
-            @click="addOrUpdate(getDataInForm())"
+            @click="addOrUpdate(getDataInForm(), 'save')"
           />
           <input
             class="btn btn-save-and-add"
             type="button"
             value="Cất và thêm"
+            @click="addOrUpdate(getDataInForm(), 'save-and-add')"
           />
         </div>
       </div>
@@ -203,6 +204,30 @@ export default {
     },
 
     /**
+     * Xóa form khi chọn cất và thêm
+     * CreatedBy: nvcuong (30/05/2021)
+     */
+    clearForm() {
+      try {
+        const inputPath = ".MISAVendor-Dialog .MISAInput input";
+        const textareaPath = ".MISAVendor-Dialog .MISATextarea textarea";
+        const selectionPath = ".MISAVendor-Dialog .MISASelection input";
+
+        const inputs = document.querySelectorAll(inputPath);
+        const textareas = document.querySelectorAll(textareaPath);
+        const selections = document.querySelectorAll(selectionPath);
+        const customerInput = this.$refs.customer;
+
+        customerInput.checked = false;
+        inputs.forEach((input) => (input.value = ""));
+        textareas.forEach((textarea) => (textarea.value = ""));
+        selections.forEach((input) => (input.value = ""));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    /**
      * Bind lại dữ liệu khi chọn loại là tổ chức, cá nhân hoặc chọn là khách hàng
      * CreatedBy: nvcuong (28/05/2021)
      */
@@ -218,30 +243,44 @@ export default {
      * Thêm hoặc sửa thông tin NCC
      * CreatedBy: nvcuong (29/05/2021)
      */
-    addOrUpdate(vendor) {
+    async addOrUpdate(vendor, type) {
       const vm = this;
+      const enableSubmit = this.$store.getters.getEnableSubmit;
 
-      this.checkValidate();
-      console.log(
-        "[MSG][From VendorDialog] Submittable:",
-        this.$store.getters.getEnableSubmit
-      );
+      await this.checkValidate();
+      console.log("[MSG][From VendorDialog] Submittable:", enableSubmit);
 
-      if (this.$store.getters.getEnableSubmit) {
+      if (enableSubmit) {
         try {
+          let url = this.$store.getters.getApiUrl + "/vendors";
+          const method = this.$store.getters.getMODE === "ADD" ? "POST" : "PUT";
+
+          if (method == "PUT") {
+            // Sửa lại url nếu method là PUT
+            const path = ".MISAVendor .Row.selected";
+            const id = document.querySelector(path).attributes.id.value;
+
+            url += `/${id}`;
+          }
+
           // Config
           const config = {
-            url: this.$store.getters.getApiUrl + "/vendors",
-            method: this.$store.getters.getMODE === "ADD" ? "POST" : "PUT",
+            url: url,
+            method: method,
             data: JSON.stringify(vendor),
             headers: {
               "Content-Type": "application/json",
             },
           };
+
           axios // Send request
             .request(config)
             .then(() => {
-              vm.closeDialog(); // Đóng form khi thêm thành công
+              if (type == "save") {
+                vm.closeDialog(); // Đóng form khi thêm thành công
+              } else {
+                vm.clearForm();
+              }
               vm.$emit("reloadData"); // Load lại dữ liệu
             })
             .catch((error) => {
@@ -253,7 +292,7 @@ export default {
               if (error.response.data.ResultCode == 41) {
                 // Set error
                 vm.isDuplicate = true;
-                vm.errorDuplicateMsg = error.response.data.DevMessage[0];
+                vm.errorDuplicateMsg = `Mã NCC '${vendor.VendorCode}' đã tồn tại trên hệ thống.`;
                 vm.focusFirstElement(); // focus
                 document
                   .querySelector('.MISAVendor-Dialog input[field="VendorCode"]')
@@ -269,7 +308,7 @@ export default {
         }
       }
     },
-    checkValidate() {
+    async checkValidate() {
       const vm = this;
       const requiredInputs = document.querySelectorAll(
         ".MISAVendor-Dialog input.Required"
@@ -293,6 +332,7 @@ export default {
         vm.$store.commit("setEnableSubmit", true); // Enable submit
       }
     },
+
     /**
      * Check rỗng
      * CreatedBy: nvcuong (28/05/2021)

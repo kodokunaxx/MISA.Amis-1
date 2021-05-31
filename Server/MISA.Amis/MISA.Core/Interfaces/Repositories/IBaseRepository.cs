@@ -53,5 +53,6 @@ namespace MISA.Core.Interfaces.Repositories
         /// <param name="value">Giá trị cần lấy</param>
         /// <returns>entity</returns>
         public T GetByProperty(string column, object value);
+
     }
 }

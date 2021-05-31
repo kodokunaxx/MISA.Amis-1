@@ -16,3 +16,5 @@ D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Core\obj\Debug\netcoreapp3.1\MISA.Core.p
 D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Core\bin\Debug\netcoreapp3.1\MISA.Core.deps.json
 D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Core\bin\Debug\netcoreapp3.1\MISA.Core.dll
 D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Core\bin\Debug\netcoreapp3.1\MISA.Core.pdb
+D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Core\obj\Debug\netcoreapp3.1\MISA.Core.Properties.Resources.resources
+D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Core\obj\Debug\netcoreapp3.1\MISA.Core.csproj.GenerateResource.cache

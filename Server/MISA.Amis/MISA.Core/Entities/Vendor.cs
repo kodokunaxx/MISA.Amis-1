@@ -35,7 +35,7 @@ namespace MISA.Core.Entities
 
         public string VendorFullName { get; set; }
 
-        public int? Debt { get; set; }
+        public string Debt { get; set; }
         #endregion
 
         #region Contact
@@ -70,9 +70,9 @@ namespace MISA.Core.Entities
 
         public string PaymentRule { get; set; }
 
-        public int? MaxDate { get; set; }
+        public string MaxDate { get; set; }
 
-        public int? MaxDebt { get; set; }
+        public string MaxDebt { get; set; }
 
         public string ReceiveAccount { get; set; }
 
