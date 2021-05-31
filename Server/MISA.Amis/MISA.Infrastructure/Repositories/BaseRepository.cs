@@ -5,6 +5,7 @@ using System.Data;
 using System.Text;
 using Dapper;
 using MySqlConnector;
+using System.Reflection;
 
 namespace MISA.Infrastructure.Repositories
 {
@@ -30,12 +31,12 @@ namespace MISA.Infrastructure.Repositories
         }
         #endregion
 
-        public int Delete(Guid id)
+        public virtual int Delete(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             var sqlCommand = $"Proc_Get{_tableName}s";
 
@@ -44,17 +45,41 @@ namespace MISA.Infrastructure.Repositories
 
         public T GetById(Guid id)
         {
-            throw new NotImplementedException();
+            string sqlCommand = $"Proc_Get{_tableName}ById";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add($"@{_tableName}Id", id.ToString());
+
+            return _dbConnection.QueryFirstOrDefault<T>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
         }
 
-        public int Insert(T entity)
+        public virtual int Insert(T entity)
+        {
+            string sqlCommand = $"Proc_Insert{_tableName}";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+
+            // Đọc các properties và thêm vào param
+            foreach (PropertyInfo prop in entity.GetType().GetProperties())
+            {
+                var value = prop.GetValue(entity) == "" ? null : prop.GetValue(entity);
+                dynamicParameters.Add($"@{prop.Name}", value);
+            }
+
+            int rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            return rowAffects;
+        }
+
+        public virtual int Update(Guid id, T entity)
         {
             throw new NotImplementedException();
         }
 
-        public int Update(Guid id, T entity)
+        public T GetByProperty(string column, object value)
         {
-            throw new NotImplementedException();
+            string sqlCommand = $"Proc_Get{_tableName}By{column}";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            dynamicParameters.Add($"@{column}", value);
+
+            return _dbConnection.QueryFirstOrDefault<T>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
         }
     }
 }

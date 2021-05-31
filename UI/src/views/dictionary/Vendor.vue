@@ -68,7 +68,7 @@
           />
           <div class="icon"></div>
         </div>
-        <div class="Icon Feature-Reload" title="Lấy lại dữ liệu"></div>
+        <div class="Icon Feature-Reload" title="Lấy lại dữ liệu" @click="reload()"></div>
         <div class="Icon Feature-Export-Excel" title="Xuất ra Excel"></div>
         <div class="Icon Feature-Setting" title="Tùy chỉnh giao diện"></div>
       </div>
@@ -95,7 +95,7 @@
           <div
             v-for="vendor in this.$store.getters.getVendors"
             :key="vendor.VendorId"
-            @dblclick="openDialog()"
+            @dblclick="openDialog(vendor.VendorId, 'UPDATE')"
             :id="vendor.VendorId"
             class="Row"
           >
@@ -148,7 +148,12 @@
         <li>Xóa</li>
       </ul>
     </ContextMenu>
-    <VendorDialog v-if="isShowVendorDialog" @closeDialog="closeDialog()" />
+    <VendorDialog
+      v-if="isShowVendorDialog"
+      @closeDialog="closeDialog()"
+      @rebind="bindDataToForm(vendor.data.Data)"
+      @reloadData="reload()"
+    />
   </div>
 </template>
 
@@ -156,6 +161,7 @@
 import ContextMenu from "../../components/base/ContextMenu";
 import BaseLoading from "../../components/base/BaseLoading";
 import VendorDialog from "../../components/dialog/vendor/VendorDialog";
+import axios from "axios";
 
 export default {
   components: {
@@ -172,10 +178,14 @@ export default {
     return {
       isShowContenHead: true,
       isShowVendorDialog: false,
+      API_URL: this.$store.getters.getApiUrl + "/vendors",
+      vendor: null,
     };
   },
   filters: {
     formatMoney(value) {
+      if (!value) return "";
+
       const regex = /\B(?=(\d{3})+(?!\d))/g;
       return value.toString().replace(regex, ".");
     },
@@ -217,9 +227,29 @@ export default {
      * Mở dialog
      * CreatedBy: nvcuong(26/05/2021)
      */
-    openDialog() {
-      this.isShowVendorDialog = true;
-      this.$store.commit("setIsOrganization", true); // mặc định là mode tổ chức
+    async openDialog(id, MODE) {
+      if (MODE == null) {
+        // null nếu mở bằng nút thêm
+        this.$store.commit("setMODE", "ADD"); // set MODE là ADD
+      } else {
+        this.$store.commit("setMODE", "UPDATE");
+      }
+
+      // const vm = this;
+      if (id != null) {
+        this.isShowVendorDialog = true; // Mở dialog
+        this.$store.commit("setIsLoading", true); // Bật loading effect
+        this.$store.commit("setIsOrganization", true); // Mặc định là mode tổ chức
+
+        this.vendor = await this.getVendorById(id);
+        const data = this.vendor.data.Data;
+
+        this.bindDataToForm(data); // Đẩy dữ liệu lên form
+        this.$store.commit("setIsLoading", false); // Tắt loading effect
+      } else {
+        await this.$store.commit("setIsOrganization", true); // mặc định là mode tổ chức
+        this.isShowVendorDialog = true; // Mở dialog
+      }
     },
     /**
      * Đóng dialog
@@ -228,6 +258,44 @@ export default {
     closeDialog() {
       this.isShowVendorDialog = false;
     },
+
+    /**
+     * Lấy dữ liệu qua id
+     * CreatedBy: nvcuong(29/05/2021)
+     */
+    async getVendorById(id) {
+      console.log("%c[MSG][From Vendor]: GET BY ID", "color: blue");
+      try {
+        return axios.get(this.API_URL + `/${id}`);
+      } catch (error) {
+        console.log("%c[ERROR][From Vendor]:", "color: red", error);
+      }
+    },
+
+    /**
+     * Bind dữ liệu lên form
+     * CreatedBy: nvcuong(29/05/2021)
+     */
+    bindDataToForm(data) {
+      const keys = Object.keys(data);
+
+      keys.forEach((key) => {
+        const path = `.MISAVendor-Dialog input[field="${key}"], textarea[field="${key}"]`;
+        const input = document.querySelector(path);
+        if (input) {
+          input.value = data[key];
+        }
+      });
+    },
+    /**
+     * Reload lại dữ liệu
+     * CreatedBy: nvcuong(29/05/2021)
+     */
+    reload() {
+      this.$store.commit("setIsLoading", true);
+      this.getVendors();
+    },
+
   },
 };
 </script>

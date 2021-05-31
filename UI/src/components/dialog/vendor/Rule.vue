@@ -9,7 +9,7 @@
         :list="this.$store.getters.getRule"
       />
       <Input :labelName="'Số ngày được nợ'" :w="'186px'" :field="'MaxDate'" />
-      <Input :labelName="'Số nợ tối đa'" :w="'186px'" :field="'MaxDebt'"/>
+      <Input :labelName="'Số nợ tối đa'" :w="'186px'" :field="'MaxDebt'" />
     </div>
     <div class="Second">
       <Selection
@@ -19,6 +19,7 @@
         value="131"
         :field="'ReceiveAccount'"
         :numberOfIcons="1"
+        :column="'key'"
         :list="this.$store.getters.getReceive"
       />
       <Selection
@@ -26,6 +27,7 @@
         :w="'188px'"
         value="331"
         :numberOfIcons="1"
+        :column="'key'"
         :field="'PaymentAccount'"
         :list="this.$store.getters.getPayment"
       />
@@ -42,6 +44,14 @@ export default {
     Input,
     Selection,
   },
+  // filters: {
+  //   formatMoney(value) {
+  //     if (!value) return "";
+
+  //     const regex = /\B(?=(\d{3})+(?!\d))/g;
+  //     return value.toString().replace(regex, ".");
+  //   },
+  // },
 };
 </script>
 

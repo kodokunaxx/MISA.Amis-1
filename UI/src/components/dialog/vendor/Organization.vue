@@ -13,7 +13,6 @@
             :w="'240px'"
             :labelName="'Mã nhà cung cấp'"
             :isRequired="true"
-            value="NCC00001"
             :class="'VendorCode'"
             :refer="'autofocus'"
             :field="'VendorCode'"

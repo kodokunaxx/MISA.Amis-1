@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "gcyeS0nlQ1unhOoCJ9+/9+oPGlEY9VHHzZXPgchD/nXZ5KWVRSV9LkgarWzJ2q8JhaF2LkCYTOrYro4Vp0h6CQ==",
+  "dgSpecHash": "9W6zXtPs1e0i9AnzRN2nb3UaTuEXsx7dJkxmqxII05jdtfvepFRcMlbU/XBE8jIiqpVjlvTYr2o2uwMUYW/VMQ==",
   "success": true,
   "projectFilePath": "D:\\MISA\\MISA.Amis\\Server\\MISA.Amis\\MISA.Core\\MISA.Core.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\admin\\.nuget\\packages\\dapper\\2.0.90\\dapper.2.0.90.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\system.reflection.emit.lightweight\\4.7.0\\system.reflection.emit.lightweight.4.7.0.nupkg.sha512"
+  ],
   "logs": []
 }

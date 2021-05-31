@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MISA.Core.Entities;
+using MISA.Core.Enumerations;
 using MISA.Core.Interfaces.Services;
 using MISA.Core.Services;
 using System;
@@ -41,15 +42,22 @@ namespace MISA.Amis.API.Controllers
 
         // GET api/<BaseController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(Guid id)
         {
-            return "value";
+            var entity = _baseService.GetById(id);
+            return Ok(entity);
         }
 
         // POST api/<BaseController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] T enitty)
         {
+            ServiceResult serviceResult = _baseService.Insert(enitty);
+            if( serviceResult.ResultCode == (int)EnumServiceResult.NotValid)
+            {
+                return BadRequest(serviceResult);
+            }
+            return Ok(serviceResult);
         }
 
         // PUT api/<BaseController>/5

@@ -9,16 +9,20 @@
               type="radio"
               name="type"
               checked
-              @click="setOrganization(true)"
+              @click="setOrganization(true), rebind()"
             />
             Tổ chức
-            <input type="radio" name="type" @click="setOrganization(false)" />
+            <input
+              type="radio"
+              name="type"
+              @click="setOrganization(false), rebind()"
+            />
             Cá nhân
           </div>
           <div class="Customer">
             <input
               type="checkbox"
-              @click="setCustomer()"
+              @click="setCustomer(), rebind()"
               v-model="isCustomer"
               ref="customer"
               field="IsCustomer"
@@ -49,7 +53,7 @@
             class="btn btn-save"
             type="button"
             value="Cất"
-            @click="getDataInForm()"
+            @click="addOrUpdate(getDataInForm())"
           />
           <input
             class="btn btn-save-and-add"
@@ -58,6 +62,22 @@
           />
         </div>
       </div>
+      <BaseLoading v-if="this.$store.getters.getIsLoading" />
+      <Popup v-if="isShowErrorPopup">
+        <template v-slot:Head>
+          <div class="icon-popup icon-warning"></div>
+          <div class="text">{{ emptyFieldName }} không được để trống</div>
+        </template>
+        <template v-slot:Button>
+          <div class="btn-close">
+            <button @click="closePopup()">Đóng</button>
+          </div>
+        </template>
+      </Popup>
+    </div>
+    <div class="Error-Duplicate" v-if="isDuplicate">
+      <div class="icon-popup icon-warning"></div>
+      <div class="text-popup">{{ errorDuplicateMsg }}</div>
     </div>
   </div>
 </template>
@@ -65,14 +85,24 @@
 <script>
 import Organziation from "./Organization";
 import Individual from "./Individual";
+import BaseLoading from "../../base/BaseLoading";
+import Popup from "../../base/Popup";
+import axios from "axios";
+
 export default {
   components: {
     Organziation,
     Individual,
+    BaseLoading,
+    Popup,
   },
   data() {
     return {
       isCustomer: this.$store.getters.getIsCustomer,
+      isShowErrorPopup: false,
+      emptyFieldName: null,
+      errorDuplicateMsg: null,
+      isDuplicate: false,
     };
   },
   updated() {
@@ -152,24 +182,134 @@ export default {
         const textareas = document.querySelectorAll(textareaPath);
         const selections = document.querySelectorAll(selectionPath);
         const customerInput = this.$refs.customer;
-        info["IsCustomer"] = customerInput.checked;
+        info["IsCustomer"] = customerInput.checked ? 1 : 0;
         inputs.forEach((input) => {
           const key = input.attributes.field.value;
-          info[[key]] = input.value;
+          info[[key]] = input.value == "" ? null : input.value;
         });
         // debugger;
         textareas.forEach((textarea) => {
           const key = textarea.attributes.field.value;
-          info[[key]] = textarea.value;
+          info[[key]] = textarea.value == "" ? null : textarea.value;
         });
         selections.forEach((input) => {
           const key = input.attributes.field.value;
-          info[[key]] = input.value;
+          info[[key]] = input.value == "" ? null : input.value;
         });
-        console.log(info);
+        return info;
       } catch (error) {
         console.log(error);
       }
+    },
+
+    /**
+     * Bind lại dữ liệu khi chọn loại là tổ chức, cá nhân hoặc chọn là khách hàng
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    rebind() {
+      if (this.$store.getters.getMODE == "ADD") return;
+      const vm = this;
+      setTimeout(function() {
+        vm.$emit("rebind");
+      }, 0);
+    },
+
+    /**
+     * Thêm hoặc sửa thông tin NCC
+     * CreatedBy: nvcuong (29/05/2021)
+     */
+    addOrUpdate(vendor) {
+      const vm = this;
+
+      this.checkValidate();
+      console.log(
+        "[MSG][From VendorDialog] Submittable:",
+        this.$store.getters.getEnableSubmit
+      );
+
+      if (this.$store.getters.getEnableSubmit) {
+        try {
+          // Config
+          const config = {
+            url: this.$store.getters.getApiUrl + "/vendors",
+            method: this.$store.getters.getMODE === "ADD" ? "POST" : "PUT",
+            data: JSON.stringify(vendor),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          };
+          axios // Send request
+            .request(config)
+            .then(() => {
+              vm.closeDialog(); // Đóng form khi thêm thành công
+              vm.$emit("reloadData"); // Load lại dữ liệu
+            })
+            .catch((error) => {
+              console.log(
+                "%c[ERROR][From VendorDialog]:",
+                "color: red",
+                error.response
+              );
+              if (error.response.data.ResultCode == 41) {
+                // Set error
+                vm.isDuplicate = true;
+                vm.errorDuplicateMsg = error.response.data.DevMessage[0];
+                vm.focusFirstElement(); // focus
+                document
+                  .querySelector('.MISAVendor-Dialog input[field="VendorCode"]')
+                  .classList.add("error");
+                // xóa error duplicate msg đi sau 4s hiển thị
+                setTimeout(function() {
+                  vm.isDuplicate = false;
+                }, 4000);
+              }
+            });
+        } catch (error) {
+          console.log("%c[ERROR][From VendorDialog]:", "color: red", error);
+        }
+      }
+    },
+    checkValidate() {
+      const vm = this;
+      const requiredInputs = document.querySelectorAll(
+        ".MISAVendor-Dialog input.Required"
+      );
+      let isValid = true;
+
+      requiredInputs.forEach((requiredInput) => {
+        if (!vm.checkEmpty(requiredInput)) {
+          requiredInput.classList.add("error"); // Gán class error cho input
+          vm.$store.commit("setEnableSubmit", false); // Disable submit
+          isValid = false;
+          vm.isShowErrorPopup = true; // Hiển thị popup thông báo lỗi
+
+          let errorField = requiredInput.parentElement.children[0].innerHTML;
+          vm.emptyFieldName = errorField.slice(0, errorField.length - 15); // Gán tên trường bị lỗi
+        } else {
+          requiredInput.classList.remove("error"); // Xóa class error cho input
+        }
+      });
+      if (isValid) {
+        vm.$store.commit("setEnableSubmit", true); // Enable submit
+      }
+    },
+    /**
+     * Check rỗng
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    checkEmpty(input) {
+      if (input.value.trim() == "") return false;
+      return true;
+    },
+
+    /**
+     * Close popup
+     * CreatedBy: nvcuong(29/05/2021)
+     */
+    closePopup() {
+      // const firstErrorField = document.querySelector('.MISAVendor-Dialog input.error');
+      this.isShowErrorPopup = false; // đóng popup
+      this.focusFirstElement();
     },
   },
 };
@@ -185,9 +325,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba($color: #000000, $alpha: 0.8);
+  background-color: rgba($color: #000000, $alpha: 0.3);
   z-index: 1001;
   .MISAVendor-Dialog-Content {
+    position: relative !important;
     width: 900px;
     height: 625px;
     background-color: #fff;
@@ -328,5 +469,34 @@ export default {
       }
     }
   }
+  .Error-Duplicate {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    min-width: 200px;
+    padding: 10px 20px;
+    border: 1px solid rgb(241, 57, 57);
+    border-radius: 5px;
+    background-color: #fff;
+    z-index: 9999;
+  }
+}
+.icon-popup {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  margin-right: 20px;
+  background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
+    no-repeat;
+  cursor: pointer;
+  // background-color: red;
+}
+.icon-warning {
+  background-position: -24px -954px;
+}
+.icon-question {
+  background-position: -826px -456px;
 }
 </style>

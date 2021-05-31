@@ -6,6 +6,7 @@
     <div class="Wrapper">
       <input
         type="text"
+        ref="input"
         :style="inputStyle"
         v-bind="$attrs"
         :class="[className]"
@@ -22,7 +23,11 @@
         <span :title="list.title[0]">{{ list.title[0] }}</span>
         <span :title="list.title[1]">{{ list.title[1] }}</span>
       </li>
-      <li v-for="(ele, index) in list.content" :key="index">
+      <li
+        v-for="(ele, index) in list.content"
+        :key="index"
+        @click="chooseOption( column == null ? ele.value : ele[column])"
+      >
         <span class="key" v-if="ele.key" :title="ele.key">
           {{ ele.key }}
         </span>
@@ -62,6 +67,9 @@ export default {
     list: {
       type: Object,
     },
+    column: {
+      type: String,
+    }
   },
   computed: {
     parentStyle() {
@@ -81,9 +89,13 @@ export default {
       };
     },
   },
+  updated() {
+    this.$refs.input.value = this.valueBeforeUpdate;
+  },
   data() {
     return {
       isShowList: false,
+      valueBeforeUpdate: null,
     };
   },
   methods: {
@@ -93,6 +105,18 @@ export default {
      */
     toggleList() {
       this.isShowList = !this.isShowList;
+    },
+    /**
+     * Chọn dữ liệu
+     * CreateBy: nvcuong (28/05/2021)
+     */
+    chooseOption(value) {
+      this.valueBeforeUpdate = value;
+      this.$refs.input.value = value; // Gán giá trị cho input
+      this.closeList(); // Đóng list
+    },
+    closeList() {
+      this.isShowList = false;
     },
   },
 };

@@ -7,5 +7,6 @@ namespace MISA.Core.Interfaces.Services
 {
     public interface IVendorService : IBaseService<Vendor>
     {
+
     }
 }

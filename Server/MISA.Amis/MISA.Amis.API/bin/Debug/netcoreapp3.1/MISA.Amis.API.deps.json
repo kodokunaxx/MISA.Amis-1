@@ -415,6 +415,9 @@
       "System.Runtime.CompilerServices.Unsafe/4.5.1": {},
       "System.Text.Encodings.Web/4.5.0": {},
       "MISA.Core/1.0.0": {
+        "dependencies": {
+          "Dapper": "2.0.90"
+        },
         "runtime": {
           "MISA.Core.dll": {}
         },

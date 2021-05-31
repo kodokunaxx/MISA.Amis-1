@@ -8,7 +8,6 @@
             :labelName="'Mã nhà cung cấp'"
             :isRequired="true"
             :field="'VendorCode'"
-            value="NCC0001"
           />
           <Input :w="'160px'" :labelName="'Mã số thuế'" :field="'TaxCode'" />
         </div>

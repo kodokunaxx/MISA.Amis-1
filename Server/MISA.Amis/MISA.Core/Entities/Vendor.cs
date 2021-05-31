@@ -10,12 +10,15 @@ namespace MISA.Core.Entities
         #region Common
         public Guid VendorId { get; set; }
 
-        public int IsCustomer { get; set; }
+        public int? IsCustomer { get; set; }
 
         public string TaxCode { get; set; }
         
+        [Required]
+        [Duplication]
         public string VendorCode { get; set; }
         
+        [Required]
         public string VendorName { get; set; }
         
         public string Address { get; set; }
@@ -31,6 +34,8 @@ namespace MISA.Core.Entities
         public string VendorXungHo { get; set; }
 
         public string VendorFullName { get; set; }
+
+        public int? Debt { get; set; }
         #endregion
 
         #region Contact
@@ -55,7 +60,7 @@ namespace MISA.Core.Entities
 
         public string IdCard { get; set; }
 
-        public DateTime IssuedOn { get; set; }
+        public DateTime? IssuedOn { get; set; }
 
         public string Place { get; set; }
 
@@ -65,9 +70,9 @@ namespace MISA.Core.Entities
 
         public string PaymentRule { get; set; }
 
-        public int MaxDate { get; set; }
+        public int? MaxDate { get; set; }
 
-        public int MaxDebt { get; set; }
+        public int? MaxDebt { get; set; }
 
         public string ReceiveAccount { get; set; }
 

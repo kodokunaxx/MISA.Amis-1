@@ -45,5 +45,13 @@ namespace MISA.Core.Interfaces.Repositories
         /// <param name="id">Id của thực thể cần xóa</param>
         /// <returns>Số dòng trong DB bị ảnh hưởng</returns>
         public int Delete(Guid id);
+
+        /// <summary>
+        /// Lấy ra ị 1 thực thể qua property name
+        /// </summary>
+        /// <param name="column">Column cần lấy</param>
+        /// <param name="value">Giá trị cần lấy</param>
+        /// <returns>entity</returns>
+        public T GetByProperty(string column, object value);
     }
 }

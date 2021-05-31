@@ -7,5 +7,6 @@ namespace MISA.Core.Interfaces.Repositories
 {
     public interface IVendorRepository : IBaseRepository<Vendor>
     {
+        public Vendor GetByCode(string vendorCode);
     }
 }

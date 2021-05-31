@@ -5,9 +5,10 @@
     >
     <input
       type="text"
+      ref="input"
       v-bind="$attrs"
       :style="inputStyle"
-      :class="[className]"
+      :class="[className, isRequired ? 'Required' : '']"
       :field="field"
       @blur="checkEmpty()"
     />
@@ -56,6 +57,7 @@ export default {
      * CreatedBy: nvcuong (28/05/2021)
      */
     checkEmpty() {
+      
       const input = this.$refs.input;
       if (!input) return;
       if (this.isRequired) {
@@ -69,6 +71,7 @@ export default {
 
 <style lang="scss">
 .MISAInput {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

@@ -47,7 +47,7 @@
             :w="'100%'"
             :labelName="'Người nhận hóa đơn điện tử'"
             placeholder="Họ và tên"
-            :field="'Recipient'"
+            :field="'RecipientFullName'"
           />
         </div>
         <div class="Row Second-Row" v-if="this.$store.getters.getIsCustomer">

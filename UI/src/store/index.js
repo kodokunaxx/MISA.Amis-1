@@ -8,9 +8,12 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     API_URL: 'https://localhost:44354/api/v1',
+    MODE: 'ADD',
     vendors: [],
+    enableSubmit: true,
     isLoading: true,
     isShowMenuDetail: true,
+    isShowVendorDialog: false,
     isCustomer: false,
     isOrganization: true,
     vendorGroup: data.vendorGroup,
@@ -22,6 +25,7 @@ export const store = new Vuex.Store({
   },
   getters: {
     getApiUrl: state => state.API_URL,
+    getMODE: state => state.MODE,
     getIsLoading: state => state.isLoading,
     getVendors: state => state.vendors,
     getIsShowMenuDetail: state => state.isShowMenuDetail,
@@ -33,6 +37,8 @@ export const store = new Vuex.Store({
     getRule: state => state.rule,
     getReceive: state => state.receive,
     getPayment: state => state.payment,
+    getEnableSubmit: state => state.enableSubmit,
+    getIsShowVendorDialog: state => state.isShowVendorDialog,
   },
   mutations: {
     setIsShowMenuDetail: (state, payload) => state.isShowMenuDetail = payload,
@@ -43,6 +49,9 @@ export const store = new Vuex.Store({
     setEmployee: (state, payload) => state.employee = payload,
     setVendors: (state, payload) => state.vendors = payload,
     setIsLoading: (state, payload) => state.isLoading = payload,
+    setMODE: (state, payload) => state.MODE = payload,
+    setEnableSubmit: (state, payload) => state.enableSubmit = payload,
+    setIsShowVendorDialog: (state, payload) => state.isShowVendorDialog = payload,
   },
   actions: {
     setVendors: context => {
@@ -54,10 +63,10 @@ export const store = new Vuex.Store({
             context.commit('setIsLoading', false);
           })
           .catch(error => {
-            console.log('%c[ERROR][From Vuex]:', 'font-color: red', error);
+            console.log('%c[ERROR][From Vuex]:', 'color: red', error);
           })
       } catch (error) {
-        console.log('%c[ERROR][From Vuex]:', 'font-color: red', error);
+        console.log('%c[ERROR][From Vuex]:', 'color: red', error);
       }
     }
   }

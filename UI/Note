@@ -6,10 +6,10 @@ DANH MỤC NHÀ CUNG CẤP:
  + Cho phép tìm kiếm theo tất cả các cột trên
  + Thực hiện các chức năng ở cột chức năng:
 
-    ● Xem: View lại toàn bộ thông tin NCC lên 
+    ● Xem: View lại toàn bộ thông tin NCC lên
     form NCC và readOnly toàn bộ thông tin
 
-    ● Sửa: View lại toàn bộ thông tin NCC lên 
+    ● Sửa: View lại toàn bộ thông tin NCC lên                           --- XONG
     form, tự động focus vào ô nhập liệu đầu tiên
 
     ● Xóa: Xóa NCC này khỏi danh sách
@@ -30,7 +30,7 @@ DANH MỤC NHÀ CUNG CẤP:
     ● Nhân viên mua hàng: Load từ danh mục nhân viên chỉ được chọn
     một (Dấu + chỉ cần vẽ không cần làm tính năng)
     
-    ● Sử dụng được phím tắt ESC: để đóng form, Ctrl + S: Cất
+    ● Sử dụng được phím tắt ESC: để đóng form, Ctrl + S: Cất           --- XONG
 
 HỆ THỐNG TÀI KHOẢN
  + 
