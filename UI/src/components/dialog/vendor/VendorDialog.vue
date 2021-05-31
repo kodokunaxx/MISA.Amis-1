@@ -54,12 +54,14 @@
             type="button"
             value="Cất"
             @click="addOrUpdate(getDataInForm(), 'save')"
+            :disabled="this.$store.getters.getIsReadOnly"
           />
           <input
             class="btn btn-save-and-add"
             type="button"
             value="Cất và thêm"
             @click="addOrUpdate(getDataInForm(), 'save-and-add')"
+            :disabled="this.$store.getters.getIsReadOnly"
           />
         </div>
       </div>
@@ -245,9 +247,9 @@ export default {
      */
     async addOrUpdate(vendor, type) {
       const vm = this;
-      const enableSubmit = this.$store.getters.getEnableSubmit;
-
       await this.checkValidate();
+
+      const enableSubmit = this.$store.getters.getEnableSubmit;
       console.log("[MSG][From VendorDialog] Submittable:", enableSubmit);
 
       if (enableSubmit) {
@@ -280,6 +282,7 @@ export default {
                 vm.closeDialog(); // Đóng form khi thêm thành công
               } else {
                 vm.clearForm();
+                vm.$store.commit("setMODE", "ADD"); // Sửa lại method thành POST
               }
               vm.$emit("reloadData"); // Load lại dữ liệu
             })
@@ -422,8 +425,7 @@ export default {
           width: 24px;
           height: 24px;
           margin: 0 2px;
-          background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-            no-repeat;
+          background: url("../../../assets/img/Sprites.64af8f61.svg") no-repeat;
           cursor: pointer;
           &.Help {
             background-position: -89px -144px;
@@ -528,8 +530,7 @@ export default {
   min-width: 48px;
   height: 48px;
   margin-right: 20px;
-  background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-    no-repeat;
+  background: url("../../../assets/img/Sprites.64af8f61.svg") no-repeat;
   cursor: pointer;
   // background-color: red;
 }

@@ -148,13 +148,13 @@
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
     <ContextMenu ref="menu" v-show="isShowContextMenu">
       <ul>
-        <li @click="closeContextMenu()">Xem</li>
+        <li @click="closeContextMenu(), viewVendorInfo()">Xem</li>
         <li @click="closeContextMenu(), openDialog(getId(), 'UPDATE')">Sửa</li>
         <li @click="closeContextMenu(), deleteVendor()">Xóa</li>
       </ul>
     </ContextMenu>
     <VendorDialog
-      v-if="isShowVendorDialog"
+      v-if="this.$store.getters.getIsShowVendorDialog"
       @closeDialog="closeDialog()"
       @rebind="bindDataToForm(vendor.data.Data)"
       @reloadData="reload()"
@@ -182,7 +182,6 @@ export default {
   data() {
     return {
       isShowContenHead: true,
-      isShowVendorDialog: false,
       API_URL: this.$store.getters.getApiUrl + "/vendors",
       vendor: null,
       isShowContextMenu: false,
@@ -259,7 +258,7 @@ export default {
 
       // const vm = this;
       if (id != null) {
-        this.isShowVendorDialog = true; // Mở dialog
+        this.$store.commit("setIsShowVendorDialog", true); // Mở dialog
         this.$store.commit("setIsLoading", true); // Bật loading effect
         this.$store.commit("setIsOrganization", true); // Mặc định là mode tổ chức
 
@@ -270,7 +269,7 @@ export default {
         this.$store.commit("setIsLoading", false); // Tắt loading effect
       } else {
         await this.$store.commit("setIsOrganization", true); // mặc định là mode tổ chức
-        this.isShowVendorDialog = true; // Mở dialog
+        this.$store.commit("setIsShowVendorDialog", true); // Mở dialog
       }
     },
     /**
@@ -278,7 +277,8 @@ export default {
      * CreatedBy: nvcuong(26/05/2021)
      */
     closeDialog() {
-      this.isShowVendorDialog = false;
+      this.$store.commit("setIsShowVendorDialog", false); // Mở dialog
+      this.$store.commit("setIsReadOnly", false);
     },
 
     /**
@@ -350,11 +350,19 @@ export default {
     },
 
     getId() {
-      const path = '.MISAVendor #Data-Table .Row.selected';
+      const path = ".MISAVendor #Data-Table .Row.selected";
       const selectedInput = document.querySelector(path);
 
       return selectedInput.attributes.id.value;
-    }
+    },
+    /**
+     * Read only
+     * CreatedBy: nvcuong(31/05/2021)
+     */
+    async viewVendorInfo() {
+      await this.$store.commit("setIsReadOnly", true);
+      this.openDialog(this.getId());
+    },
   },
 };
 </script>
@@ -392,8 +400,7 @@ export default {
       display: inline-block;
       width: 16px;
       height: 16px;
-      background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-        no-repeat;
+      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
       background-position: -226px -357px;
       cursor: pointer;
     }
@@ -453,8 +460,7 @@ export default {
       display: inline-block;
       width: 24px;
       height: 24px;
-      background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-        no-repeat;
+      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
       &.guide {
         margin-right: 6px;
         background-position: -984px -144px;
@@ -528,13 +534,14 @@ export default {
     .Feature-Arrow {
       width: 24px;
       height: 100%;
-      background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-        no-repeat;
+      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
       background-position: -256px -130px;
       cursor: pointer;
     }
     .Feature-Execute,
     .Feature-Multiple-Filter {
+      display: flex;
+      align-items: center;
       padding: 0 16px;
       height: 36px;
       margin: 0 10px;
@@ -548,9 +555,8 @@ export default {
         display: inline-block;
         width: 16px;
         height: 16px;
-        background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-          no-repeat;
-        background-position: -560px -355px;
+        background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
+        background-position: -556px -358px;
       }
       &.Feature-Multiple-Filter {
         margin-left: 0;
@@ -585,8 +591,7 @@ export default {
         transform: translateY(-50%);
         width: 16px;
         height: 16px;
-        background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-          no-repeat;
+        background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
         background-position: -992px -360px;
         cursor: pointer;
       }
@@ -595,8 +600,7 @@ export default {
       width: 24px;
       height: 100%;
       margin: 0 6px;
-      background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-        no-repeat;
+      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
       cursor: pointer;
     }
     .Feature-Reload {
@@ -625,8 +629,7 @@ export default {
       right: 0;
       width: 16px;
       height: 16px;
-      background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-        no-repeat;
+      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
       background-position: -131px -355px;
     }
   }
@@ -739,8 +742,7 @@ export default {
             display: inline-block;
             width: 16px;
             height: 16px;
-            background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-              no-repeat;
+            background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
             background-position: -894px -359px;
             cursor: pointer;
           }

@@ -11,6 +11,7 @@
       :class="[className, isRequired ? 'Required' : '']"
       :field="field"
       @blur="checkEmpty()"
+      :disabled="this.$store.getters.getIsReadOnly"
     />
     <!-- @input="$emit('input', $event.target.value)" -->
     <!-- v-on="$listeners" -->

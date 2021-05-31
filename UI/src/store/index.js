@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     MODE: 'ADD',
     vendors: [],
     enableSubmit: true,
+    isReadOnly: true,
     isLoading: true,
     isShowMenuDetail: true,
     isShowVendorDialog: false,
@@ -22,6 +23,7 @@ export const store = new Vuex.Store({
     rule: data.rule,
     receive: data.receive,
     payment: data.payment,
+
   },
   getters: {
     getApiUrl: state => state.API_URL,
@@ -39,6 +41,7 @@ export const store = new Vuex.Store({
     getPayment: state => state.payment,
     getEnableSubmit: state => state.enableSubmit,
     getIsShowVendorDialog: state => state.isShowVendorDialog,
+    getIsReadOnly: state => state.isReadOnly,
   },
   mutations: {
     setIsShowMenuDetail: (state, payload) => state.isShowMenuDetail = payload,
@@ -52,6 +55,7 @@ export const store = new Vuex.Store({
     setMODE: (state, payload) => state.MODE = payload,
     setEnableSubmit: (state, payload) => state.enableSubmit = payload,
     setIsShowVendorDialog: (state, payload) => state.isShowVendorDialog = payload,
+    setIsReadOnly: (state, payload) => state.isReadOnly = payload,
   },
   actions: {
     setVendors: context => {

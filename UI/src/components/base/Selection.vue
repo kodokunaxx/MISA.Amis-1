@@ -10,6 +10,7 @@
         :style="inputStyle"
         v-bind="$attrs"
         :class="[className]"
+        :disabled="this.$store.getters.getIsReadOnly"
       />
       <div class="Icon-1" @click="toggleList()">
         <div class="icon" ref="arrow"></div>
@@ -26,7 +27,7 @@
       <li
         v-for="(ele, index) in list.content"
         :key="index"
-        @click="chooseOption( column == null ? ele.value : ele[column])"
+        @click="chooseOption(column == null ? ele.value : ele[column])"
       >
         <span class="key" v-if="ele.key" :title="ele.key">
           {{ ele.key }}
@@ -69,7 +70,7 @@ export default {
     },
     column: {
       type: String,
-    }
+    },
   },
   computed: {
     parentStyle() {
@@ -104,7 +105,9 @@ export default {
      * CreateBy: nvcuong (28/05/2021)
      */
     toggleList() {
-      this.isShowList = !this.isShowList;
+      if (!this.$store.getters.getIsReadOnly) {
+        this.isShowList = !this.isShowList;
+      }
     },
     /**
      * Chọn dữ liệu
@@ -179,8 +182,7 @@ export default {
       .icon {
         width: 16px;
         height: 16px;
-        background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-          no-repeat;
+        background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
         background-position: -560px -359px;
       }
       &.Icon-2 {
@@ -256,8 +258,7 @@ export default {
         div {
           width: 16px;
           height: 16px;
-          background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-            no-repeat;
+          background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
           background-position: -896px -312px;
         }
       }

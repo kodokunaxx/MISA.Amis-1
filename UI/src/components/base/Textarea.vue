@@ -12,6 +12,7 @@
       :style="inputStyle"
       :class="[className]"
       @blur="checkEmpty()"
+       :disabled="this.$store.getters.getIsReadOnly"
     ></textarea>
   </div>
 </template>

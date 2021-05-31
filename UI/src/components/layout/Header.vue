@@ -58,7 +58,10 @@
 export default {
   methods: {
     shortenMenu() {
-      this.$store.commit("setIsShowMenuDetail", !this.$store.getters.getIsShowMenuDetail);
+      this.$store.commit(
+        "setIsShowMenuDetail",
+        !this.$store.getters.getIsShowMenuDetail
+      );
     },
   },
 };
@@ -160,8 +163,7 @@ export default {
       transform: translateY(-50%);
       width: 16px;
       height: 16px;
-      background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-        no-repeat;
+      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
       background-position: -317px -148px;
       cursor: pointer;
     }
@@ -180,8 +182,7 @@ export default {
       .icon {
         width: 24px;
         height: 24px;
-        background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-          no-repeat;
+        background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
         cursor: pointer;
         &.threedots {
           background-position: -568px -30px;
@@ -224,8 +225,7 @@ export default {
       .User-Name-Trigger {
         width: 16px;
         height: 16px;
-        background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-          no-repeat;
+        background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
         background-position: -1077px -30px;
       }
     }

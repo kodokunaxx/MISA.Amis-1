@@ -129,8 +129,7 @@ export default {};
             .icon {
               width: 90px;
               height: 65px;
-              background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-                no-repeat;
+              background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
             }
             .text {
               text-align: center;
@@ -206,8 +205,7 @@ export default {};
           .icon {
             width: 24px;
             height: 24px;
-            background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
-              no-repeat;
+            background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
           }
           .text {
             flex-basis: 100%;

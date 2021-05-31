@@ -100,7 +100,7 @@ export default {
       display: block;
       width: 100%;
       height: 100%;
-      background: url("https://actappg1.misacdn.net/img/Sprites.f6ab0897.svg")
+      background: url("../../../assets/img/Sprites.64af8f61.svg")
         no-repeat;
       background-position: -464px -306px;
       cursor: pointer;
