@@ -72,6 +72,22 @@ export const store = new Vuex.Store({
       } catch (error) {
         console.log('%c[ERROR][From Vuex]:', 'color: red', error);
       }
+    },
+    setVendorFilter: (context, keywords) => {
+      try {
+        const API_URL = context.getters.getApiUrl + `/vendors/filter?keywords=${keywords}`;
+        axios.get(API_URL)
+          .then(response => {
+            console.log(response.data.Data);
+            context.commit('setVendors', response.data.Data);
+            context.commit('setIsLoading', false);
+          })
+          .catch(error => {
+            console.log('%c[ERROR][From Vuex]:', 'color: red', error);
+          })
+      } catch (error) {
+        console.log('%c[ERROR][From Vuex]:', 'color: red', error);
+      }
     }
   }
 });

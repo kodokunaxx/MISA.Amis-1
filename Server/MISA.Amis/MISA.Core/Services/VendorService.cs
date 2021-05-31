@@ -14,5 +14,13 @@ namespace MISA.Core.Services
         {
             _vendorRepository = vendorRepository;
         }
+
+        public ServiceResult GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard)
+        {
+            ServiceResult serviceResult = new ServiceResult();
+            serviceResult.Data = _vendorRepository.GetFilter(VendorCode, VendorName, Address, Debt, TaxCode, PhoneNumber, IdCard);
+
+            return serviceResult;
+        }
     }
 }

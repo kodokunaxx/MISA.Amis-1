@@ -65,6 +65,8 @@
             type="text"
             class="Search-input"
             placeholder="Nhập để tìm kiếm"
+            ref="search"
+            @keyup="searchVendor($event.target.value)"
           />
           <div class="icon"></div>
         </div>
@@ -185,6 +187,7 @@ export default {
       API_URL: this.$store.getters.getApiUrl + "/vendors",
       vendor: null,
       isShowContextMenu: false,
+      delayTimer: null,
     };
   },
   filters: {
@@ -202,6 +205,20 @@ export default {
      */
     getVendors() {
       this.$store.dispatch("setVendors");
+    },
+
+    /**
+     * Tìm kiếm qua keywords
+     * CreateBy: nvcuong(31/05/2021)
+     */
+    searchVendor(keywords) {
+      const vm = this;
+      clearTimeout(this.delayTimer);
+
+      this.delayTimer = setTimeout(function() {
+        vm.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+        vm.$store.dispatch("setVendorFilter", keywords); // Tìm kiếm
+      }, 500);
     },
 
     /**
@@ -314,8 +331,14 @@ export default {
      * CreatedBy: nvcuong(29/05/2021)
      */
     reload() {
+      const searchInput = this.$refs.search;
+
       this.$store.commit("setIsLoading", true);
-      this.getVendors();
+      if (searchInput.value != "") {
+        this.searchVendor(searchInput.value);
+      } else {
+        this.getVendors();
+      }
     },
 
     /**

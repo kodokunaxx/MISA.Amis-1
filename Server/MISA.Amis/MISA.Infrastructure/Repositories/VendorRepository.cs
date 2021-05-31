@@ -22,5 +22,20 @@ namespace MISA.Infrastructure.Repositories
             return _dbConnection.QueryFirstOrDefault<Vendor>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
         }
 
+        public IEnumerable<Vendor> GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard)
+        {
+            string sqlCommand = "Proc_GetVendorFilter";
+            DynamicParameters dynamicParameters = new DynamicParameters();
+
+            dynamicParameters.Add("@VendorCode", VendorCode);
+            dynamicParameters.Add("@VendorName", VendorName);
+            dynamicParameters.Add("@Address", Address);
+            dynamicParameters.Add("@Debt", Debt);
+            dynamicParameters.Add("@TaxCode", TaxCode);
+            dynamicParameters.Add("@PhoneNumber", PhoneNumber);
+            dynamicParameters.Add("@IdCard", IdCard);
+
+            return _dbConnection.Query<Vendor>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+        }
     }
 }

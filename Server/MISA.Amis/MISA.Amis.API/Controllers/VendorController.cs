@@ -19,5 +19,12 @@ namespace MISA.Amis.API.Controllers
         {
             _vendorService = vendorService;
         }
+
+        [HttpGet("filter")]
+        public IActionResult Get(string keywords)
+        {
+            ServiceResult serviceResult = _vendorService.GetFilter(keywords, keywords, keywords, keywords, keywords, keywords, keywords);
+            return Ok(serviceResult);
+        }
     }
 }
