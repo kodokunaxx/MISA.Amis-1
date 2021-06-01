@@ -263,6 +263,56 @@ export default {
     document.title = "Nhà cung cấp";
     this.getVendors(); // Lấy dữ liệu vendors
   },
+  mounted() {
+    // Bắt sự kiện shortcuts
+    let keysPressed = {};
+    try {
+      document.addEventListener("keydown", (event) => {
+        if (keysPressed["Control"]) {
+          if (
+            event.key == "1" ||
+            event.key == "d" ||
+            event.key == "D" ||
+            event.key == "y" ||
+            event.key == "Y"
+          ) {
+            event.preventDefault(); // hủy sự kiện mặc định
+          }
+        }
+        keysPressed[event.key] = true;
+        // Mở dialog
+        if (keysPressed["Control"]) {
+          if (event.key == "1") {
+            this.openDialog();
+          }
+        }
+        // Xóa
+        if (keysPressed["Control"]) {
+          if (event.key == "d" || event.key == "D") {
+            this.confirmDelete();
+          }
+        }
+
+        // Reload
+        if (keysPressed["Control"]) {
+          if (event.key == "y" || event.key == "Y") {
+            this.reload();
+          }
+        }
+
+        // Đóng confirm xóa
+        if (event.key == "Escape") {
+          this.closeConfirmDelete();
+        }
+      });
+      // xóa sự kiện keydown
+      document.addEventListener("keyup", (event) => {
+        delete keysPressed[event.key];
+      });
+    } catch (ex) {
+      console.log(ex);
+    }
+  },
   data() {
     return {
       isShowContenHead: true,
@@ -508,15 +558,17 @@ export default {
     getId() {
       const path = ".MISAVendor #Data-Table .Row.selected";
       const selectedInput = document.querySelector(path);
-
-      return selectedInput.attributes.id.value;
+      if (selectedInput) {
+        return selectedInput.attributes.id.value;
+      }
     },
 
     getVendorCode() {
       const path = ".MISAVendor #Data-Table .Row.selected .VendorCode";
       const selectedInput = document.querySelector(path);
-
-      return selectedInput.innerHTML;
+      if (selectedInput) {
+        return selectedInput.innerHTML;
+      }
     },
 
     /**

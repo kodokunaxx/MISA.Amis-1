@@ -141,6 +141,42 @@ export default {
   },
   mounted() {
     this.focusFirstElement();
+
+    // Bắt sự kiện shortcuts
+    const dialog = document.querySelector(".MISAVendor-Dialog");
+    let keysPressed = {};
+    try {
+      dialog.addEventListener("keydown", (event) => {
+        if (keysPressed["Control"]) {
+          if (event.key == "s" || event.key == "S") {
+            event.preventDefault(); // hủy sự kiện mặc định
+          }
+        } else if (event.key == "Shift") {
+          event.preventDefault();
+          keysPressed["Shift"] = true;
+        }
+
+        keysPressed[event.key] = true;
+        // Lưu
+        if (keysPressed["Control"] && !keysPressed["Shift"]) {
+          if (event.key == "s" || event.key == "S") {
+            this.addOrUpdate(this.getDataInForm(), "save");
+          }
+        }
+
+        // Lưu và thêm mới
+        if (keysPressed["Control"] && keysPressed["Shift"]) {
+          if (event.key == "s" || event.key == "S")
+            this.addOrUpdate(this.getDataInForm(), "save-and-add");
+        }
+      });
+      // xóa sự kiện keydown
+      dialog.addEventListener("keyup", (event) => {
+        delete keysPressed[event.key];
+      });
+    } catch (ex) {
+      console.log(ex);
+    }
   },
   watch: {
     isCustomer() {
@@ -330,8 +366,13 @@ export default {
               if (type == "save") {
                 vm.closeDialog(); // Đóng form khi thêm thành công
               } else {
+                // debugger;
                 vm.clearForm();
                 vm.$store.commit("setMODE", "ADD"); // Sửa lại method thành POST
+                vm.focusFirstElement();
+                document
+                  .querySelector('.MISAVendor-Dialog input[field="VendorName"]')
+                  .classList.remove("error");
               }
               vm.$emit("reloadData"); // Load lại dữ liệu
             })
@@ -393,7 +434,6 @@ export default {
       if (input.value.trim() == "") return false;
       return true;
     },
-
     /**
      * Close popup
      * CreatedBy: nvcuong(29/05/2021)
