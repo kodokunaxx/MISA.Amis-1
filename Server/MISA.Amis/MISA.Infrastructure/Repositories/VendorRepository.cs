@@ -14,6 +14,12 @@ namespace MISA.Infrastructure.Repositories
         {
         }
 
+        public string GetLastestCode()
+        {
+            string sqlCommand = "Proc_GetLastestVendorCode";
+            return _dbConnection.QueryFirstOrDefault<string>(sqlCommand, commandType: CommandType.StoredProcedure);
+        }
+
         public Vendor GetByCode(string vendorCode)
         {
             string sqlCommand = "Proc_GetVendorByCode";

@@ -1,41 +1,42 @@
 * Rule chung: Tự động focus vào ô nhập liệu đầu tiên, có validate các trường require, có sử dụng
 phím tắt trên các form chi tiết
 
-DANH MỤC NHÀ CUNG CẤP: 
+====================== DANH MỤC NHÀ CUNG CẤP ======================
+
  + Sắp xếp tăng dần theo mã NCC                                        --- XONG
- + Cho phép tìm kiếm theo tất cả các cột trên                   
+ + Cho phép tìm kiếm theo tất cả các cột trên                          --- XONG                   
  + Thực hiện các chức năng ở cột chức năng:                            --- XONG
 
-    ● Xem: View lại toàn bộ thông tin NCC lên                          --- XONG
-    form NCC và readOnly toàn bộ thông tin
+    ● Xem: View lại toàn bộ thông tin NCC lên                          |--- XONG
+    form NCC và readOnly toàn bộ thông tin                             |
 
-    ● Sửa: View lại toàn bộ thông tin NCC lên                          --- XONG
-    form, tự động focus vào ô nhập liệu đầu tiên
+    ● Sửa: View lại toàn bộ thông tin NCC lên                          |--- XONG
+    form, tự động focus vào ô nhập liệu đầu tiên                       |
 
     ● Xóa: Xóa NCC này khỏi danh sách                                  --- XONG
- + Phân trang
+ + Phân trang                                                          --- 
  + Chức năng Thêm                                                      --- XONG
  + Sửa                                                                 --- XONG
  + Xóa                                                                 --- XONG
  + Form: 
     ● Thêm mới form sẽ tự động focus vào ô nhập liệu đầu tiên          --- XONG
 
-    ● Tên nhà cung cấp, Mã nhà cung cấp không được phép bỏ trống
+    ● Tên nhà cung cấp, Mã nhà cung cấp không được phép bỏ trống       --- XONG
     và mã tự động tăng theo cấu trúc NCC00001. Lần thêm tiếp theo
     NCC00002
 
-    ● Nhóm Nhà cung cấp cho phép chọn nhiều (Dấu + chỉ cần vẽ
+    ● Nhóm Nhà cung cấp cho phép chọn nhiều (Dấu + chỉ cần vẽ          --- 
     không cần làm tính năng)
 
-    ● Nhân viên mua hàng: Load từ danh mục nhân viên chỉ được chọn
+    ● Nhân viên mua hàng: Load từ danh mục nhân viên chỉ được chọn     --- XONG
     một (Dấu + chỉ cần vẽ không cần làm tính năng)
     
-    ● Sử dụng được phím tắt ESC: để đóng form, Ctrl + S: Cất           --- XONG
+    ● Sử dụng được phím tắt ESC: để đóng form, Ctrl + S: Cất           --- 
 
-HỆ THỐNG TÀI KHOẢN
+
+---------------- AutoComplete                                          --- 
+---------------- HỎI KHI XÓA                                           --- XONG
+---------------- HỎI KHI ĐÓNG                                          --- XONG
+
+====================== HỆ THỐNG TÀI KHOẢN ======================
  + 
-
----------------- XÓA NHIỀU
----------------- AutoComplete
----------------- HỎI KHI XÓA
----------------- HỎI KHI ĐÓNG

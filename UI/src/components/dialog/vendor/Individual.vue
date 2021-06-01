@@ -8,6 +8,7 @@
             :labelName="'Mã nhà cung cấp'"
             :isRequired="true"
             :field="'VendorCode'"
+            :value="this.$store.getters.getNewVendorCode"
           />
           <Input :w="'160px'" :labelName="'Mã số thuế'" :field="'TaxCode'" />
         </div>

@@ -32,7 +32,7 @@
         </div>
         <div class="Content-Head-Right">
           <div class="Help"></div>
-          <div class="Close" @click="closeDialog()"></div>
+          <div class="Close" @click="confirmClose()"></div>
         </div>
       </div>
       <div class="Content-Body">
@@ -74,6 +74,34 @@
         <template v-slot:Button>
           <div class="btn-close">
             <button @click="closePopup()">Đóng</button>
+          </div>
+        </template>
+      </Popup>
+      <Popup v-if="this.$store.getters.getIsShowConfirmClose">
+        <template v-slot:Head>
+          <div class="icon-popup icon-question"></div>
+          <div class="text">
+            Dữ liệu đã bị thay đổi. Bạn có muốn cất không?
+          </div>
+        </template>
+        <template v-slot:Button>
+          <div class="wrapper">
+            <div class="btn-cancel">
+              <button class="btn" @click="closeConfirmClose()">Hủy</button>
+            </div>
+            <div class="btn-confirm">
+              <button class="btn" @click="closeConfirmClose(), closeDialog()">
+                Không
+              </button>
+              <button
+                class="btn"
+                @click="
+                  closeConfirmClose(), addOrUpdate(getDataInForm(), 'save')
+                "
+              >
+                Có
+              </button>
+            </div>
           </div>
         </template>
       </Popup>
@@ -137,6 +165,25 @@ export default {
       this.$store.commit("setIsCustomer", !isCustomer);
       this.triggerAnimation();
     },
+
+    /**
+     * Hiện thông báo confirm trước khi đóng form
+     * CreatedBy: nvcuong (31/05/2021)
+     * */
+
+    confirmClose() {
+      this.$store.commit("setIsShowConfirmClose", true);
+    },
+
+    /**
+     * Đóng thông báo confirm đóng form
+     * CreatedBy: nvcuong (31/05/2021)
+     * */
+
+    closeConfirmClose() {
+      this.$store.commit("setIsShowConfirmClose", false);
+    },
+
     /**
      * Cài đặt là tổ chức
      * CreatedBy: nvcuong (27/05/2021)
@@ -224,6 +271,8 @@ export default {
         inputs.forEach((input) => (input.value = ""));
         textareas.forEach((textarea) => (textarea.value = ""));
         selections.forEach((input) => (input.value = ""));
+
+        this.$store.dispatch("setNewVendorCode");
       } catch (error) {
         console.log(error);
       }

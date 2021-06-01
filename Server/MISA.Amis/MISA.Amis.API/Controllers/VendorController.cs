@@ -26,5 +26,14 @@ namespace MISA.Amis.API.Controllers
             ServiceResult serviceResult = _vendorService.GetFilter(keywords, keywords, keywords, keywords, keywords, keywords, keywords);
             return Ok(serviceResult);
         }
+
+        [HttpGet("new-code")]
+        public IActionResult Gets()
+        {
+            ServiceResult serviceResult = _vendorService.GenerateNewCode();
+            if (serviceResult.Data != null)
+                return Ok(serviceResult);
+            return NoContent();
+        }
     }
 }

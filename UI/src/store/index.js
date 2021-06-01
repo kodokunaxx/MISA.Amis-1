@@ -10,20 +10,23 @@ export const store = new Vuex.Store({
     API_URL: 'https://localhost:44354/api/v1',
     MODE: 'ADD',
     vendors: [],
+    newVendorCode: null,
     enableSubmit: true,
-    isReadOnly: true,
+    isReadOnly: false,
     isLoading: true,
     isShowMenuDetail: true,
     isShowVendorDialog: false,
     isCustomer: false,
     isOrganization: true,
+    isShowConfirmDelete: false,
+    isShowConfirmClose: false,
     vendorGroup: data.vendorGroup,
     X: data.X,
     employee: data.employee,
     rule: data.rule,
     receive: data.receive,
     payment: data.payment,
-
+    pageSize: 0,
   },
   getters: {
     getApiUrl: state => state.API_URL,
@@ -42,6 +45,11 @@ export const store = new Vuex.Store({
     getEnableSubmit: state => state.enableSubmit,
     getIsShowVendorDialog: state => state.isShowVendorDialog,
     getIsReadOnly: state => state.isReadOnly,
+    getPageSize: state => state.pageSize,
+    getNewVendorCode: state => state.newVendorCode,
+    getIsShowConfirmDelete: state => state.isShowConfirmDelete,
+    getIsShowConfirmClose: state => state.isShowConfirmClose,
+
   },
   mutations: {
     setIsShowMenuDetail: (state, payload) => state.isShowMenuDetail = payload,
@@ -56,6 +64,10 @@ export const store = new Vuex.Store({
     setEnableSubmit: (state, payload) => state.enableSubmit = payload,
     setIsShowVendorDialog: (state, payload) => state.isShowVendorDialog = payload,
     setIsReadOnly: (state, payload) => state.isReadOnly = payload,
+    setPageSize: (state, payload) => state.pageSize = payload,
+    setNewVendorCode: (state, payload) => state.newVendorCode = payload,
+    setIsShowConfirmDelete: (state, payload) => state.isShowConfirmDelete = payload,
+    setIsShowConfirmClose: (state, payload) => state.isShowConfirmClose = payload,
   },
   actions: {
     setVendors: context => {
@@ -64,7 +76,8 @@ export const store = new Vuex.Store({
         axios.get(API_URL)
           .then(async response => {
             context.commit('setVendors', response.data.Data);
-            context.commit('setIsLoading', false);
+            context.commit('setIsLoading', false); // Tắt hiệu ứng loading
+            context.commit('setPageSize', response.data.Data.length); // set page size
           })
           .catch(error => {
             console.log('%c[ERROR][From Vuex]:', 'color: red', error);
@@ -78,9 +91,23 @@ export const store = new Vuex.Store({
         const API_URL = context.getters.getApiUrl + `/vendors/filter?keywords=${keywords}`;
         axios.get(API_URL)
           .then(response => {
-            console.log(response.data.Data);
             context.commit('setVendors', response.data.Data);
-            context.commit('setIsLoading', false);
+            context.commit('setIsLoading', false); // Tắt hiệu ứng loading
+            context.commit('setPageSize', response.data.Data.length); // set page size
+          })
+          .catch(error => {
+            console.log('%c[ERROR][From Vuex]:', 'color: red', error);
+          })
+      } catch (error) {
+        console.log('%c[ERROR][From Vuex]:', 'color: red', error);
+      }
+    },
+    setNewVendorCode: context => {
+      try {
+        const API_URL = context.getters.getApiUrl + '/vendors/new-code';
+        axios.get(API_URL)
+          .then(response => {
+            context.commit('setNewVendorCode', response.data.Data);
           })
           .catch(error => {
             console.log('%c[ERROR][From Vuex]:', 'color: red', error);

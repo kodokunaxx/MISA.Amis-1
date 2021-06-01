@@ -16,6 +16,7 @@
             :class="'VendorCode'"
             :refer="'autofocus'"
             :field="'VendorCode'"
+            :value="this.$store.getters.getNewVendorCode"
           />
         </div>
         <div class="Row Second-Row">

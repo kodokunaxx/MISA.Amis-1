@@ -126,7 +126,9 @@
         </div>
         <div class="Data-Pagenav">
           <div class="Data-Pagenav-Left">
-            <div class="Total-Row">Tổng số: 21 bản ghi</div>
+            <div class="Total-Row">
+              Tổng số: {{ $store.getters.getPageSize }} bản ghi
+            </div>
           </div>
           <div class="Data-Pagenav-Right">
             <select class="Selection">
@@ -152,7 +154,7 @@
       <ul>
         <li @click="closeContextMenu(), viewVendorInfo()">Xem</li>
         <li @click="closeContextMenu(), openDialog(getId(), 'UPDATE')">Sửa</li>
-        <li @click="closeContextMenu(), deleteVendor()">Xóa</li>
+        <li @click="closeContextMenu(), confirmDelete()">Xóa</li>
       </ul>
     </ContextMenu>
     <VendorDialog
@@ -161,6 +163,29 @@
       @rebind="bindDataToForm(vendor.data.Data)"
       @reloadData="reload()"
     />
+    <Popup v-if="this.$store.getters.getIsShowConfirmDelete">
+      <template v-slot:Head>
+        <div class="icon-popup icon-dangerous"></div>
+        <div class="text">
+          Bạn có thực sự muốn xóa Nhà cung cấp {{getVendorCode()}} không?
+        </div>
+      </template>
+      <template v-slot:Button>
+        <div class="wrapper">
+          <div class="btn-cancel">
+            <button class="btn" @click="closeConfirmDelete()">Không</button>
+          </div>
+          <div class="btn-confirm">
+            <button
+              class="btn"
+              @click="deleteVendor(getId()), closeConfirmDelete()"
+            >
+              Có
+            </button>
+          </div>
+        </div>
+      </template>
+    </Popup>
   </div>
 </template>
 
@@ -168,6 +193,7 @@
 import ContextMenu from "../../components/base/ContextMenu";
 import BaseLoading from "../../components/base/BaseLoading";
 import VendorDialog from "../../components/dialog/vendor/VendorDialog";
+import Popup from "../../components/base/Popup";
 import axios from "axios";
 
 export default {
@@ -175,6 +201,7 @@ export default {
     ContextMenu,
     BaseLoading,
     VendorDialog,
+    Popup,
   },
   created() {
     document.title = "Nhà cung cấp";
@@ -205,6 +232,22 @@ export default {
      */
     getVendors() {
       this.$store.dispatch("setVendors");
+    },
+
+    /**
+     * Hiện thông báo confirm trước khi xóa
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    confirmDelete() {
+      this.$store.commit("setIsShowConfirmDelete", true);
+    },
+
+    /**
+     * Đóng thông báo confirm sau khi xóa
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    closeConfirmDelete() {
+      this.$store.commit("setIsShowConfirmDelete", false);
     },
 
     /**
@@ -269,6 +312,7 @@ export default {
       if (MODE == null) {
         // null nếu mở bằng nút thêm
         this.$store.commit("setMODE", "ADD"); // set MODE là ADD
+        this.$store.dispatch("setNewVendorCode");
       } else {
         this.$store.commit("setMODE", "UPDATE");
       }
@@ -364,6 +408,7 @@ export default {
         console.log(error);
       }
     },
+
     /**
      * Đóng context menu
      * CreatedBy: nvcuong(31/05/2021)
@@ -378,6 +423,14 @@ export default {
 
       return selectedInput.attributes.id.value;
     },
+
+    getVendorCode() {
+      const path = ".MISAVendor #Data-Table .Row.selected .VendorCode";
+      const selectedInput = document.querySelector(path);
+
+      return selectedInput.innerHTML;
+    },
+    
     /**
      * Read only
      * CreatedBy: nvcuong(31/05/2021)
@@ -659,6 +712,9 @@ export default {
 }
 
 .MISAVendor-Content-Body {
+  // position: sticky;
+  // top: 0;
+  // bottom: 48px;
   #Data-Table {
     // margin: 0 32px 0 16px;
     .Thead,

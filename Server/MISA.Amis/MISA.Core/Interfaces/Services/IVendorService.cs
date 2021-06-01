@@ -20,5 +20,12 @@ namespace MISA.Core.Interfaces.Services
         /// <param name="IdCard"></param>
         /// <returns></returns>
         public ServiceResult GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard);
+
+        /// <summary>
+        /// Tạo ra mã NCC mới
+        /// CreatedBy: nvcuong (31/05/2021)
+        /// </summary>
+        /// <returns>Mã NCC mới</returns>
+        public ServiceResult GenerateNewCode();
     }
 }
