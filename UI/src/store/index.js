@@ -26,7 +26,9 @@ export const store = new Vuex.Store({
     rule: data.rule,
     receive: data.receive,
     payment: data.payment,
-    pageSize: 0,
+    pageIndex: 1,
+    pageSize: 20,
+    total: 0,
   },
   getters: {
     getApiUrl: state => state.API_URL,
@@ -45,10 +47,12 @@ export const store = new Vuex.Store({
     getEnableSubmit: state => state.enableSubmit,
     getIsShowVendorDialog: state => state.isShowVendorDialog,
     getIsReadOnly: state => state.isReadOnly,
+    getPageIndex: state => state.pageIndex,
     getPageSize: state => state.pageSize,
     getNewVendorCode: state => state.newVendorCode,
     getIsShowConfirmDelete: state => state.isShowConfirmDelete,
     getIsShowConfirmClose: state => state.isShowConfirmClose,
+    getTotal: state => state.total,
 
   },
   mutations: {
@@ -64,20 +68,25 @@ export const store = new Vuex.Store({
     setEnableSubmit: (state, payload) => state.enableSubmit = payload,
     setIsShowVendorDialog: (state, payload) => state.isShowVendorDialog = payload,
     setIsReadOnly: (state, payload) => state.isReadOnly = payload,
+    setPageIndex: (state, payload) => state.pageIndex = payload,
     setPageSize: (state, payload) => state.pageSize = payload,
     setNewVendorCode: (state, payload) => state.newVendorCode = payload,
     setIsShowConfirmDelete: (state, payload) => state.isShowConfirmDelete = payload,
     setIsShowConfirmClose: (state, payload) => state.isShowConfirmClose = payload,
+    setTotal: (state, payload) => state.total = payload,
   },
   actions: {
     setVendors: context => {
-      const API_URL = context.getters.getApiUrl + '/vendors';
+      const pageIndex = context.getters.getPageIndex;
+      const pageSize = context.getters.getPageSize;
+      const API_URL = context.getters.getApiUrl + `/vendors/paging?pageIndex=${pageIndex}&pageSize=${pageSize}`;
+
       try {
         axios.get(API_URL)
           .then(async response => {
             context.commit('setVendors', response.data.Data);
             context.commit('setIsLoading', false); // Tắt hiệu ứng loading
-            context.commit('setPageSize', response.data.Data.length); // set page size
+            context.commit('setTotal', response.data.Total); // set page size
           })
           .catch(error => {
             console.log('%c[ERROR][From Vuex]:', 'color: red', error);
@@ -88,12 +97,14 @@ export const store = new Vuex.Store({
     },
     setVendorFilter: (context, keywords) => {
       try {
-        const API_URL = context.getters.getApiUrl + `/vendors/filter?keywords=${keywords}`;
+        const pageIndex = context.getters.getPageIndex;
+        const pageSize = context.getters.getPageSize;
+        const API_URL = context.getters.getApiUrl + `/vendors/filter?keywords=${keywords}&pageIndex=${pageIndex}&pageSize=${pageSize}`;
         axios.get(API_URL)
-          .then(response => {
+          .then(async response => {
+            context.commit('setTotal', response.data.Total); // set page size
             context.commit('setVendors', response.data.Data);
             context.commit('setIsLoading', false); // Tắt hiệu ứng loading
-            context.commit('setPageSize', response.data.Data.length); // set page size
           })
           .catch(error => {
             console.log('%c[ERROR][From Vuex]:', 'color: red', error);

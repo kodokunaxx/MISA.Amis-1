@@ -127,24 +127,80 @@
         <div class="Data-Pagenav">
           <div class="Data-Pagenav-Left">
             <div class="Total-Row">
-              Tổng số: {{ $store.getters.getPageSize }} bản ghi
+              Tổng số: {{ $store.getters.getTotal }} bản ghi
             </div>
           </div>
           <div class="Data-Pagenav-Right">
-            <select class="Selection">
-              <option value="10">10 bản ghi trên 1 trang</option>
-              <option value="20">20 bản ghi trên 1 trang</option>
-              <option value="30">30 bản ghi trên 1 trang</option>
-              <option value="50">50 bản ghi trên 1 trang</option>
-              <option value="100">100 bản ghi trên 1 trang</option>
+            <select
+              class="Selection"
+              @change="setPageSize(pageSize)"
+              v-model="pageSize"
+            >
+              <option :value="20" @change="setPageSize(20)">
+                20 bản ghi trên 1 trang
+              </option>
+              <option :value="10" @change="setPageSize(10)">
+                10 bản ghi trên 1 trang
+              </option>
+              <option :value="30" @change="setPageSize(30)">
+                30 bản ghi trên 1 trang
+              </option>
+              <option :value="50" @change="setPageSize(50)">
+                50 bản ghi trên 1 trang
+              </option>
+              <option :value="100" @change="setPageSize(100)">
+                100 bản ghi trên 1 trang
+              </option>
             </select>
-            <div class="Prev">Trước</div>
-            <div class="Page-Index">
-              <div value="1">1</div>
-              <div value="2" class="active">2</div>
-              <div value="3">3</div>
+            <div
+              class="Prev"
+              @click="decreasePageIndex()"
+              :class="[this.$store.getters.getPageIndex == 1 ? 'disable' : '']"
+            >
+              Trước
             </div>
-            <div class="Next">Sau</div>
+            <div class="Page-Index">
+              <div
+                v-show="parseInt(this.$store.getters.getPageIndex) - 1 > 0"
+                @click="setPageIndex($event.target.innerHTML)"
+              >
+                {{ parseInt(this.$store.getters.getPageIndex) - 1 }}
+              </div>
+
+              <div
+                class="active"
+                @click="setPageIndex($event.target.innerHTML)"
+              >
+                {{ this.$store.getters.getPageIndex }}
+              </div>
+
+              <div
+                v-show="
+                  Math.ceil(
+                    this.$store.getters.getTotal /
+                      this.$store.getters.getPageSize
+                  ) >=
+                    parseInt(this.$store.getters.getPageIndex) + 1
+                "
+                @click="setPageIndex($event.target.innerHTML)"
+              >
+                {{ parseInt(this.$store.getters.getPageIndex) + 1 }}
+              </div>
+            </div>
+            <div
+              class="Next"
+              @click="increasePageIndex()"
+              :class="[
+                this.$store.getters.getPageIndex ==
+                Math.ceil(
+                  this.$store.getters.getTotal / this.$store.getters.getPageSize
+                )
+                  ? 'disable'
+                  : '',
+              ]"
+            >
+              Sau
+            </div>
           </div>
         </div>
       </div>
@@ -167,7 +223,7 @@
       <template v-slot:Head>
         <div class="icon-popup icon-dangerous"></div>
         <div class="text">
-          Bạn có thực sự muốn xóa Nhà cung cấp {{getVendorCode()}} không?
+          Bạn có thực sự muốn xóa Nhà cung cấp {{ getVendorCode() }} không?
         </div>
       </template>
       <template v-slot:Button>
@@ -207,7 +263,6 @@ export default {
     document.title = "Nhà cung cấp";
     this.getVendors(); // Lấy dữ liệu vendors
   },
-  mounted() {},
   data() {
     return {
       isShowContenHead: true,
@@ -215,6 +270,7 @@ export default {
       vendor: null,
       isShowContextMenu: false,
       delayTimer: null,
+      pageSize: 20,
     };
   },
   filters: {
@@ -232,6 +288,39 @@ export default {
      */
     getVendors() {
       this.$store.dispatch("setVendors");
+    },
+    /**
+     * Cài đặt page size
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    async setPageSize(size) {
+      await this.$store.commit("setPageSize", size);
+      this.getVendors();
+    },
+
+    /**
+     * Cài đặt page index
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    async setPageIndex(index) {
+      await this.$store.commit("setPageIndex", index);
+      this.getVendors();
+    },
+
+    increasePageIndex() {
+      const currentPageIndex = parseInt(this.$store.getters.getPageIndex);
+
+      const max = Math.ceil(
+        this.$store.getters.getTotal / this.$store.getters.getPageSize
+      );
+      if (currentPageIndex < max)
+        this.$store.commit("setPageIndex", currentPageIndex + 1);
+    },
+
+    decreasePageIndex() {
+      const currentPageIndex = parseInt(this.$store.getters.getPageIndex);
+      if (currentPageIndex > 1)
+        this.$store.commit("setPageIndex", currentPageIndex - 1);
     },
 
     /**
@@ -430,7 +519,7 @@ export default {
 
       return selectedInput.innerHTML;
     },
-    
+
     /**
      * Read only
      * CreatedBy: nvcuong(31/05/2021)
@@ -438,6 +527,11 @@ export default {
     async viewVendorInfo() {
       await this.$store.commit("setIsReadOnly", true);
       this.openDialog(this.getId());
+    },
+
+    renderPageIndex(value) {
+      let currentIndex = this.$store.getters.getPageIndex;
+      if (currentIndex + value <= 0);
     },
   },
 };
@@ -874,8 +968,16 @@ export default {
         &.Prev {
           margin: 0 6.5px 0 20px;
         }
+        &.Prev.disable {
+          cursor: default !important;
+          color: #9e9e9e;
+        }
         &.Next {
           margin: 0 0 0 6.5px;
+        }
+        &.Next.disable {
+          cursor: default !important;
+          color: #9e9e9e;
         }
       }
     }

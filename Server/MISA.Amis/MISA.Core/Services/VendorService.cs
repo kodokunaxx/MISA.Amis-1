@@ -51,10 +51,23 @@ namespace MISA.Core.Services
             return serviceResult;
         }
 
-        public ServiceResult GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard)
+        public ServiceResult GetAll(int PageIndex, int PageSize)
         {
             ServiceResult serviceResult = new ServiceResult();
-            serviceResult.Data = _vendorRepository.GetFilter(VendorCode, VendorName, Address, Debt, TaxCode, PhoneNumber, IdCard);
+            if (PageIndex <= 0) PageIndex = 1;
+            if (PageSize <= 0) PageSize = 20;
+
+            serviceResult.Data = _vendorRepository.GetAll(PageIndex, PageSize);
+            serviceResult.Total = _vendorRepository.GetCount();
+
+            return serviceResult;
+        }
+
+        public ServiceResult GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard, int PageIndex, int PageSize)
+        {
+            ServiceResult serviceResult = new ServiceResult();
+            serviceResult.Data = _vendorRepository.GetFilter(VendorCode, VendorName, Address, Debt, TaxCode, PhoneNumber, IdCard, PageIndex, PageSize);
+            serviceResult.Total = _vendorRepository.GetFilterCount(VendorCode, VendorName, Address, Debt, TaxCode, PhoneNumber, IdCard);
 
             return serviceResult;
         }

@@ -20,15 +20,23 @@ namespace MISA.Amis.API.Controllers
             _vendorService = vendorService;
         }
 
-        [HttpGet("filter")]
-        public IActionResult Get(string keywords)
+        [HttpGet("paging")]
+        public IActionResult Get([FromQuery] int PageIndex, [FromQuery] int PageSize )
         {
-            ServiceResult serviceResult = _vendorService.GetFilter(keywords, keywords, keywords, keywords, keywords, keywords, keywords);
+            ServiceResult serviceResult = _vendorService.GetAll(PageIndex, PageSize);
+
+            return Ok(serviceResult);
+        }
+
+        [HttpGet("filter")]
+        public IActionResult Get(string keywords, int PageIndex, int PageSize)
+        {
+            ServiceResult serviceResult = _vendorService.GetFilter(keywords, keywords, keywords, keywords, keywords, keywords, keywords, PageIndex, PageSize);
             return Ok(serviceResult);
         }
 
         [HttpGet("new-code")]
-        public IActionResult Gets()
+        public IActionResult Get()
         {
             ServiceResult serviceResult = _vendorService.GenerateNewCode();
             if (serviceResult.Data != null)

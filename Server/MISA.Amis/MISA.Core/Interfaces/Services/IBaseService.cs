@@ -12,7 +12,7 @@ namespace MISA.Core.Interfaces.Services
         /// CreatedBy: nvcuong (28/05/2021)
         /// </summary>
         /// <returns>Tất cả bản ghi</returns>
-        public ServiceResult GetAll();
+        public  ServiceResult GetAll();
 
         /// <summary>
         /// Lấy ra T theo id

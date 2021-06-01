@@ -27,12 +27,18 @@ namespace MISA.Core.Entities
         /// </summary>
         public object Data { get; set; }
 
+        /// <summary>
+        /// Tổng số rows
+        /// </summary>
+        public int Total { get; set; }
+
         public ServiceResult()
         {
             ResultCode = (int)EnumServiceResult.Success;
             DevMessage = new List<string>();
             UserMessage = new List<string>();
             Data = null;
+            Total = -1;
         }
     }
 }

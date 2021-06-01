@@ -10,6 +10,13 @@ namespace MISA.Core.Interfaces.Repositories
         public Vendor GetByCode(string vendorCode);
 
         /// <summary>
+        /// Lấy ra tất cả các bản ghi
+        /// CreatedBy: nvcuong (28/05/2021)
+        /// </summary>
+        /// <returns>Tất cả bản ghi</returns>
+        public IEnumerable<Vendor> GetAll(int PageIndex, int PageSize);
+
+        /// <summary>
         /// Tìm kiếm qua keywords
         /// CreatedBy: nvcuong (31/05/2021)
         /// </summary>
@@ -21,7 +28,7 @@ namespace MISA.Core.Interfaces.Repositories
         /// <param name="PhoneNumber"></param>
         /// <param name="IdCard"></param>
         /// <returns></returns>
-        public IEnumerable<Vendor> GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard);
+        public IEnumerable<Vendor> GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard, int PageIndex, int PageSize);
 
         /// <summary>
         /// Tạo ra mã NCC mới
@@ -29,5 +36,9 @@ namespace MISA.Core.Interfaces.Repositories
         /// </summary>
         /// <returns>Mã NCC mới</returns>
         public string GetLastestCode();
+
+        public int GetCount();
+        public int GetFilterCount(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard);
+
     }
 }
