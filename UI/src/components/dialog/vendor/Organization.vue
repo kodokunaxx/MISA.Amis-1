@@ -72,6 +72,7 @@
             :numberOfIcons="2"
             :list="this.$store.getters.getEmployee"
             :field="'Employee'"
+            :position="1"
           />
         </div>
       </div>

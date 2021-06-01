@@ -295,7 +295,8 @@ export default {
      */
     async setPageSize(size) {
       await this.$store.commit("setPageSize", size);
-      this.getVendors();
+      this.searchVendor(this.$refs.search.value);
+      this.$store.commit("setPageIndex", 1);
     },
 
     /**
@@ -304,7 +305,7 @@ export default {
      */
     async setPageIndex(index) {
       await this.$store.commit("setPageIndex", index);
-      this.getVendors();
+      this.searchVendor(this.$refs.search.value);
     },
 
     increasePageIndex() {
@@ -313,14 +314,12 @@ export default {
       const max = Math.ceil(
         this.$store.getters.getTotal / this.$store.getters.getPageSize
       );
-      if (currentPageIndex < max)
-        this.$store.commit("setPageIndex", currentPageIndex + 1);
+      if (currentPageIndex < max) this.setPageIndex(currentPageIndex + 1);
     },
 
     decreasePageIndex() {
       const currentPageIndex = parseInt(this.$store.getters.getPageIndex);
-      if (currentPageIndex > 1)
-        this.$store.commit("setPageIndex", currentPageIndex - 1);
+      if (currentPageIndex > 1) this.setPageIndex(currentPageIndex - 1);
     },
 
     /**

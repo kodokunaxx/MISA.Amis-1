@@ -1,17 +1,17 @@
 // Nhóm nhà cung cấp
 export const vendorGroup = {
-    title: ["Mã nhóm KH, NCC", "Tên nhóm KH, NCC"],
+    title: ["Mã nhóm KH, NCC", "Tên nhóm KH"],
     content: [
-        {
-            key: "341-VAY EXIM SHT TG",
-            value: "Vay Exim SHT trả góp",
-        },
-        { key: "341-VAY EXIM PBG TG", value: "Vay ngân hàng Exim SHT" },
-        { key: "341-VAY MB SHT", value: "Vay ngân hàng MB SHT" },
-        { key: "BAO", value: "Bảo - Kênh siêu thị" },
-        { key: "INTERNET", value: "Nhóm Internet" },
-        { key: "Miền Bắc", value: "Nhóm miền Bắc" },
-        { key: "Miền Nam", value: "Nhóm miền Nam" },
+        [
+            "341-VAY EXIM SHT TG",
+            "Vay Exim SHT trả góp"
+        ],
+        ["341-VAY EXIM PBG TG", "Vay ngân hàng Exim SHT"],
+        ["341-VAY MB SHT", "Vay ngân hàng MB SHT"],
+        ["BAO", "Bảo - Kênh siêu thị"],
+        ["INTERNET", "Nhóm Internet"],
+        ["Miền Bắc", "Nhóm miền Bắc"],
+        ["Miền Nam", "Nhóm miền Nam"]
     ],
 }
 
@@ -19,10 +19,10 @@ export const vendorGroup = {
 export const X = {
     title: [],
     content: [
-        { value: "Anh" },
-        { value: "Chị" },
-        { value: "Ông" },
-        { value: "Bà" },
+        ["Anh"],
+        ["Chị"],
+        ["Ông"],
+        ["Bà"],
     ],
 }
 
@@ -30,15 +30,15 @@ export const X = {
 export const employee = {
     title: ['Mã nhân viên', 'Tên nhân viên'],
     content: [
-        { key: '00001', value: 'Nguyễn Văn Cương' },
-        { key: '00002', value: 'Lưu Thủy Bình' },
-        { key: '00003', value: 'Đinh Văn Long' },
-        { key: '00004', value: 'Phan Thị Thơm' },
-        { key: '00005', value: 'Nguyễn Văn Sao' },
-        { key: '00006', value: 'Đặng Tùng Anh' },
-        { key: '00007', value: 'Nguyễn Thùy Linh' },
-        { key: '00008', value: 'Ngô Văn Lô' },
-        { key: '00019', value: 'Nguyễn Thị Luyễn' },
+        ['00001', 'Nguyễn Văn Cương'],
+        ['00002', 'Lưu Thủy Bình'],
+        ['00003', 'Đinh Văn Long'],
+        ['00004', 'Phan Thị Thơm'],
+        ['00005', 'Nguyễn Văn Sao'],
+        ['00006', 'Đặng Tùng Anh'],
+        ['00007', 'Nguyễn Thùy Linh'],
+        ['00008', 'Ngô Văn Lô'],
+        ['00019', 'Nguyễn Thị Luyễn'],
     ]
 }
 
@@ -46,7 +46,7 @@ export const employee = {
 export const rule = {
     title: [],
     content: [
-        { value: 'Không có dữ liệu hiển thị' }
+        ['Không có dữ liệu hiển thị']
     ]
 }
 
@@ -54,10 +54,10 @@ export const rule = {
 export const receive = {
     title: ['Số tài khoản', 'Tên tài khoản'],
     content: [
-        { key: '1312', value: 'Phải thu của khách hàng' },
-        { key: '1399', value: 'Phải thu của khách hàng' },
-        { key: '1367', value: 'Phải thu của khách hàng' },
-        { key: '1432', value: 'Phải thu của khách hàng' },
+        ['1312', 'Phải thu của khách hàng'],
+        ['1399', 'Phải thu của khách hàng'],
+        ['1367', 'Phải thu của khách hàng'],
+        ['1432', 'Phải thu của khách hàng'],
     ]
 }
 
@@ -65,10 +65,10 @@ export const receive = {
 export const payment = {
     title: ['Số tài khoản', 'Tên tài khoản'],
     content: [
-        { key: '3312', value: 'Phải trả cho người bán' },
-        { key: '3399', value: 'Phải trả cho người bán' },
-        { key: '3367', value: 'Phải trả cho người bán' },
-        { key: '3432', value: 'Phải trả cho người bán' },
+        ['3312', 'Phải trả cho người bán'],
+        ['3399', 'Phải trả cho người bán'],
+        ['3367', 'Phải trả cho người bán'],
+        ['3432', 'Phải trả cho người bán'],
     ]
 }
 

@@ -16,7 +16,6 @@
         v-if="this.$store.getters.getIsCustomer"
         :labelName="'Tài khoản công nợ phải thu'"
         :w="'188px'"
-        value="131"
         :field="'ReceiveAccount'"
         :numberOfIcons="1"
         :column="'key'"
@@ -25,7 +24,6 @@
       <Selection
         :labelName="'Tài khoản công nợ phải trả'"
         :w="'188px'"
-        value="331"
         :numberOfIcons="1"
         :column="'key'"
         :field="'PaymentAccount'"

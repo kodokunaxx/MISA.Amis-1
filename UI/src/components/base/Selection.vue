@@ -4,6 +4,7 @@
       >{{ labelName }} <span v-show="isRequired">*</span></label
     >
     <div class="Wrapper">
+      <!------------------------------------------->
       <input
         type="text"
         ref="input"
@@ -11,35 +12,46 @@
         v-bind="$attrs"
         :class="[className]"
         :disabled="this.$store.getters.getIsReadOnly"
+        @keyup="search($event.target.value)"
       />
+      <!------------------------------------------->
       <div class="Icon-1" @click="toggleList()">
         <div class="icon" ref="arrow"></div>
       </div>
+      <!------------------------------------------->
       <div class="Icon-2" v-show="numberOfIcons == 2">
         <div class="icon"></div>
       </div>
+      <!------------------------------------------->
     </div>
-    <ul class="Dropdown" v-if="isShowList && list">
-      <li class="title" v-if="list.title.length">
-        <span :title="list.title[0]">{{ list.title[0] }}</span>
-        <span :title="list.title[1]">{{ list.title[1] }}</span>
+    <ul class="Dropdown" v-if="isShowList && list" :style="dropdownStyle">
+      <!------------------------------------------->
+      <li class="title" v-if="search(keyword).title.length">
+        <span
+          v-for="(title, index) in search(keyword).title"
+          :key="index"
+          :title="title"
+          class="column"
+        >
+          {{ title }}
+        </span>
       </li>
+      <!------------------------------------------->
       <li
-        v-for="(ele, index) in list.content"
+        v-for="(ele, index) in search(keyword).content"
         :key="index"
-        @click="chooseOption(column == null ? ele.value : ele[column])"
+        @click="chooseOption(ele[position])"
       >
-        <span class="key" v-if="ele.key" :title="ele.key">
-          {{ ele.key }}
+        <span v-for="(i, index) in ele" :key="index" :title="i" class="column">
+          {{ i }}
         </span>
-        <span class="value" :title="ele.value" :style="spanStyle">
-          {{ ele.value }}
-        </span>
-
+        <!--------------------------->
         <div class="icon">
           <div></div>
         </div>
+        <!--------------------------->
       </li>
+      <!------------------------------------------->
     </ul>
   </div>
 </template>
@@ -71,6 +83,10 @@ export default {
     column: {
       type: String,
     },
+    position: {
+      type: Number,
+      default: 0,
+    },
   },
   computed: {
     parentStyle() {
@@ -84,19 +100,28 @@ export default {
         paddingRight: this.numberOfIcons == 1 ? "32px" : "64px",
       };
     },
-    spanStyle() {
+    // spanStyle() {
+    //   return {
+    //     width: this.list.content[0].key ? "60%" : "100%",
+    //   };
+    // },
+    dropdownStyle() {
       return {
-        width: this.list.content[0].key ? "60%" : "100%",
+        right:
+          (this.list.content[0] && this.list.content[0].length) == 1 ? 0 : "",
       };
     },
   },
   updated() {
-    this.$refs.input.value = this.valueBeforeUpdate;
+    // if (this.valueBeforeUpdate && this.valueBeforeUpdate.trim() != "")
+    //   this.$refs.input.value = this.valueBeforeUpdate;
   },
   data() {
     return {
       isShowList: false,
       valueBeforeUpdate: null,
+      tmp: this.list,
+      keyword: "",
     };
   },
   methods: {
@@ -114,12 +139,45 @@ export default {
      * CreateBy: nvcuong (28/05/2021)
      */
     chooseOption(value) {
-      this.valueBeforeUpdate = value;
+      // this.valueBeforeUpdate = value;
       this.$refs.input.value = value; // Gán giá trị cho input
       this.closeList(); // Đóng list
     },
+
     closeList() {
       this.isShowList = false;
+    },
+
+    /**
+     * Show dropdown
+     * CreatedBy: nvcuong ( 31/05/2021)
+     */
+    openList() {
+      this.isShowList = true;
+    },
+
+    /**
+     * Tìm kiếm qua từ khóa được nhập
+     * CreatedBy: nvcuong ( 31/05/2021)
+     */
+    search(keyword) {
+      const vm = this;
+      vm.keyword = keyword;
+      const result = [];
+      result.title = this.list.title;
+      result.content = [];
+
+      this.list.content.forEach((element) => {
+        for (let i = 0; i < element.length; i++) {
+          if (element[i].toLowerCase().search(keyword.toLowerCase()) != -1) {
+            result.content.push(element);
+            break;
+          }
+        }
+      });
+      this.openList();
+
+      return result;
     },
   },
 };
@@ -198,7 +256,7 @@ export default {
     position: absolute;
     top: 100%;
     left: 0;
-    right: 0;
+    min-width: 100%;
     max-height: 200px;
     border: 1px solid #babec5;
     border-radius: 2px;
@@ -212,11 +270,18 @@ export default {
       height: 32px;
       padding: 5px 15px;
       cursor: pointer;
+      white-space: nowrap;
       &:hover {
         background-color: #ebedf0;
         span {
           color: #3dc12b;
         }
+      }
+      .column {
+        display: inline-block;
+        width: 120px;
+        margin-right: 20px;
+        overflow: hidden;
       }
       &.title {
         margin-bottom: 3px;
@@ -233,19 +298,7 @@ export default {
           }
         }
       }
-      span {
-        display: inline-block;
-        white-space: nowrap;
-        overflow: hidden;
-        &:nth-child(1) {
-          width: calc(40% - 10px);
-          margin-right: 10px;
-          //   text-transform: uppercase;
-        }
-        &:nth-child(2) {
-          width: 60%;
-        }
-      }
+
       .icon.selected {
         position: absolute;
         top: 0;

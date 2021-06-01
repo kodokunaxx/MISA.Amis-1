@@ -14,7 +14,7 @@ phím tắt trên các form chi tiết
     form, tự động focus vào ô nhập liệu đầu tiên                       |
 
     ● Xóa: Xóa NCC này khỏi danh sách                                  --- XONG
- + Phân trang                                                          --- 
+ + Phân trang                                                          --- XONG
  + Chức năng Thêm                                                      --- XONG
  + Sửa                                                                 --- XONG
  + Xóa                                                                 --- XONG
@@ -33,10 +33,6 @@ phím tắt trên các form chi tiết
     
     ● Sử dụng được phím tắt ESC: để đóng form, Ctrl + S: Cất           --- 
 
-
----------------- AutoComplete                                          --- 
----------------- HỎI KHI XÓA                                           --- XONG
----------------- HỎI KHI ĐÓNG                                          --- XONG
 
 ====================== HỆ THỐNG TÀI KHOẢN ======================
  + 
