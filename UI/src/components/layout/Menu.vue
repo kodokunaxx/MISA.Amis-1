@@ -1,7 +1,12 @@
 <template>
   <div class="body-left" ref="misaMenu">
     <div class="sidebar">
-      <div class="toggle"></div>
+      <div class="toggle" v-if="this.$store.getters.getIsShowMenuDetail"></div>
+      <div
+        class="extend"
+        @click="extendMenu()"
+        v-if="!this.$store.getters.getIsShowMenuDetail"
+      ></div>
       <router-link to="/vendor">
         <div
           class="logo"
@@ -30,6 +35,11 @@ export default {
       this.$refs.misaMenu.style.width = "52px";
     }
   },
+  methods: {
+    extendMenu() {
+      this.$store.commit("setIsShowMenuDetail", true);
+    },
+  },
 };
 </script>
 
@@ -55,13 +65,18 @@ a {
   /* justify-content: center; */
 }
 
-.body-left .sidebar .toggle {
+.body-left .sidebar .toggle,
+.extend {
   width: 24px;
   height: 24px;
   margin-right: 10px;
   background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
   background-position: -424px -86px;
+
   cursor: pointer;
+}
+.extend {
+  background-position: -312px -32px;
 }
 
 .body-left .sidebar .logo {
@@ -93,6 +108,7 @@ a {
     background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
     background-position: -73px -1585px;
     margin-right: 8px;
+    margin-left: 8px;
   }
 }
 

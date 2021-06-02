@@ -1,7 +1,7 @@
 <template>
   <div class="MISAHeader">
     <div class="MISAHeader-Left flex items-center">
-      <div class="MISAHeader-Left-Three-stripes" @click="shortenMenu()"></div>
+      <div class="MISAHeader-Left-Three-stripes" @click="shortenMenu()" v-if="this.$store.getters.getIsShowMenuDetail"></div>
       <div class="MISAHeader-Left-Branch-Name">
         CÔNG TY CỔ PHẦN MISA
       </div>
@@ -58,10 +58,7 @@
 export default {
   methods: {
     shortenMenu() {
-      this.$store.commit(
-        "setIsShowMenuDetail",
-        !this.$store.getters.getIsShowMenuDetail
-      );
+      this.$store.commit("setIsShowMenuDetail", false);
     },
   },
 };

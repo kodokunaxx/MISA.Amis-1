@@ -857,11 +857,7 @@ export default {
 }
 
 .MISAVendor-Content-Body {
-  // position: sticky;
-  // top: 0;
-  // bottom: 48px;
   #Data-Table {
-    // margin: 0 32px 0 16px;
     .Thead,
     .Tbody {
       .Row {

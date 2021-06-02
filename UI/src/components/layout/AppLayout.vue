@@ -3,7 +3,10 @@
     <Menu></Menu>
     <div class="body-right">
       <Header> </Header>
-      <div class="Fixed Left"></div>
+      <div
+        class="Fixed Left"
+        v-show="this.$store.getters.getIsShowMenuDetail"
+      ></div>
       <router-view />
       <div class="Fixed Right"></div>
     </div>

@@ -6,10 +6,12 @@ Vue.use(VueRouter);
 //Views
 import Vendor from "../views/dictionary/Vendor";
 import Overview from '../views/dictionary/Overview';
+import AccountSystem from "../views/dictionary/AccountSystem"
 
 const routes = [
-  { path: "/vendor", component: Vendor },
   { path: "/", component: Overview },
+  { path: "/vendor", component: Vendor },
+  { path: "/account-system", component: AccountSystem },
 ];
 
 const router = new VueRouter({
