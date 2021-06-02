@@ -1,28 +1,28 @@
 <template>
   <ul class="MISANode">
-    <!-- ------------------------------- -->
-    <div
-      class="Parent"
-      v-if="Array.isArray(node) && node.length > 1"
-      @click="toggle()"
-    ></div>
-    <!-- ------------------------------- -->
-
-    <!-- -------------------- -->
-    <li v-if="!Array.isArray(node)" class="Row XYZ">
-      <div class="Column" v-for="(column, index) in node" :key="index">
+    <!------------------------------------------------------------->
+    <li class="Row">
+      <div class="Column" v-for="(column, index) in node.parent" :key="index">
         {{ column }}
       </div>
     </li>
-    <!-- -------------------- -->
+    <!------------------------------------------------------------->
+    
 
-    <!-- -------------------- -->
-    <li v-else v-for="(ele, index) in node" :key="index" ref="test">
-      <node :node="ele"></node>
+    <!------------------------------------------------------------->
+    <li v-if="isShowDetail && node.children && node.children.length">
+      <node v-for="(child, i) in node.children" :key="i" :node="child"></node>
     </li>
-    <!-- -------------------- -->
+    <!------------------------------------------------------------->
+    
 
-    <!-- ------------------------------- -->
+    <!------------------------------------------------------------->
+    <div
+      class="icon"
+      v-if="node.children && node.children.length"
+      @click="toggle()"
+    ></div>
+    <!------------------------------------------------------------->
   </ul>
 </template>
 
@@ -37,8 +37,7 @@ export default {
   },
   methods: {
     toggle() {
-      console.log(this.$refs.test);
-      //   this.$refs.test.style.display = "none";
+      this.isShowDetail = !this.isShowDetail;
     },
   },
 };

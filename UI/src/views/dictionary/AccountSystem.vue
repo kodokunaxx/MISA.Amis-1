@@ -35,10 +35,22 @@
     </div>
     <div class="MISAAccount-System-Content">
       <div class="MISAAccount-System-Content-Table">
-        <div class="Thead"></div>
+        <div class="Thead">
+          <div class="MISANode">
+            <div class="Row">
+              <div class="Column AccountNumber">SỐ TÀI KHOẢN</div>
+              <div class="Column AccountName">TÊN TÀI KHOẢN</div>
+              <div class="Column Kind">TÍNH CHẤT</div>
+              <div class="Column EnglishName">TÊN TIẾNG ANH</div>
+              <div class="Column Explain">DIỄN GIẢI</div>
+              <div class="Column Status">TRẠNG THÁI</div>
+              <div class="Column Feature">CHỨC NĂNG</div>
+            </div>
+          </div>
+        </div>
         <div class="Tbody">
           <div class="Root">
-            <Node :node="ele" v-for="(ele, index) in rows" :key="index" />
+            <Node :node="ele" v-for="(ele, i) in rows" :key="i" />
           </div>
         </div>
       </div>
@@ -56,8 +68,8 @@ export default {
   data() {
     return {
       rows: [
-        [
-          {
+        {
+          parent: {
             AccountNumber: 111,
             AccountName: "Tiền mặt",
             kind: "Dư nợ",
@@ -65,9 +77,9 @@ export default {
             Explain: "",
             Status: "Đang sử dụng",
           },
-        ],
-        [
-          {
+        },
+        {
+          parent: {
             AccountNumber: 112,
             AccountName: "Tiền mặt",
             kind: "Dư nợ",
@@ -75,9 +87,9 @@ export default {
             Explain: "",
             Status: "Đang sử dụng",
           },
-        ],
-        [
-          {
+        },
+        {
+          parent: {
             AccountNumber: 113,
             AccountName: "Tiền mặt",
             kind: "Dư nợ",
@@ -85,35 +97,54 @@ export default {
             Explain: "",
             Status: "Đang sử dụng",
           },
-          [
+
+          children: [
             {
-              AccountNumber: 1131,
-              AccountName: "Tiền mặt",
-              kind: "Dư nợ",
-              EnglishName: "Cash in hand",
-              Explain: "",
-              Status: "Đang sử dụng",
+              parent: {
+                AccountNumber: 1131,
+                AccountName: "Tiền mặt",
+                kind: "Dư nợ",
+                EnglishName: "Cash in hand",
+                Explain: "",
+                Status: "Đang sử dụng",
+              },
+              children: [
+                {
+                  parent: {
+                    AccountNumber: 11311,
+                    AccountName: "Tiền mặt",
+                    kind: "Dư nợ",
+                    EnglishName: "Cash in hand",
+                    Explain: "",
+                    Status: "Đang sử dụng",
+                  },
+                },
+                {
+                  parent: {
+                    AccountNumber: 11312,
+                    AccountName: "Tiền mặt",
+                    kind: "Dư nợ",
+                    EnglishName: "Cash in hand",
+                    Explain: "",
+                    Status: "Đang sử dụng",
+                  },
+                  children: [
+                    {
+                      parent: {
+                        AccountNumber: 113121,
+                        AccountName: "Tiền mặt",
+                        kind: "Dư nợ",
+                        EnglishName: "Cash in hand",
+                        Explain: "",
+                        Status: "Đang sử dụng",
+                      },
+                    },
+                  ],
+                },
+              ],
             },
-            [
-              {
-                AccountNumber: 11311,
-                AccountName: "Tiền mặt",
-                kind: "Dư nợ",
-                EnglishName: "Cash in hand",
-                Explain: "",
-                Status: "Đang sử dụng",
-              },
-              {
-                AccountNumber: 11312,
-                AccountName: "Tiền mặt",
-                kind: "Dư nợ",
-                EnglishName: "Cash in hand",
-                Explain: "",
-                Status: "Đang sử dụng",
-              },
-            ],
           ],
-        ],
+        },
       ],
     };
   },
@@ -274,11 +305,13 @@ export default {
         display: flex;
         margin: 5px 0;
         padding: 5px 0;
+        border: 1px solid black;
         .Column {
           width: 200px;
+          border-right: 1px solid red;
         }
       }
-      .Parent {
+      .icon {
         position: absolute;
         top: 0;
         left: 0;
