@@ -29,6 +29,7 @@ export const store = new Vuex.Store({
     pageIndex: 1,
     pageSize: 20,
     total: 0,
+    deepLevel: 1,
   },
   getters: {
     getApiUrl: state => state.API_URL,
@@ -53,7 +54,7 @@ export const store = new Vuex.Store({
     getIsShowConfirmDelete: state => state.isShowConfirmDelete,
     getIsShowConfirmClose: state => state.isShowConfirmClose,
     getTotal: state => state.total,
-
+    getDeepLevel: state => state.deepLevel,
   },
   mutations: {
     setIsShowMenuDetail: (state, payload) => state.isShowMenuDetail = payload,
@@ -74,6 +75,7 @@ export const store = new Vuex.Store({
     setIsShowConfirmDelete: (state, payload) => state.isShowConfirmDelete = payload,
     setIsShowConfirmClose: (state, payload) => state.isShowConfirmClose = payload,
     setTotal: (state, payload) => state.total = payload,
+    setDeepLevel: (state, payload) => state.deepLevel = payload,
   },
   actions: {
     setVendors: context => {

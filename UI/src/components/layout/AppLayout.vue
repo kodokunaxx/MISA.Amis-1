@@ -45,7 +45,7 @@ div {
     top: 50px;
     bottom: 0;
     background-color: #f4f5f8;
-    z-index: 999;
+    z-index: 1000;
     &.Left {
       left: 178px;
       width: 20px;

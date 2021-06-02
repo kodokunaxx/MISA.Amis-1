@@ -50,7 +50,23 @@
         </div>
         <div class="Tbody">
           <div class="Root">
-            <Node :node="ele" v-for="(ele, i) in rows" :key="i" />
+            <Node
+              :node="ele"
+              :deepLevel="1"
+              v-for="(ele, i) in rows"
+              :key="i"
+            />
+          </div>
+        </div>
+        <div class="Data-Pagenav">
+          <div class="Data-Pagenav-Left">
+            <div class="Total-Row">
+              Tổng số:
+              <span style="font-weight: 600">{{
+                $store.getters.getTotal
+              }}</span>
+              bản ghi
+            </div>
           </div>
         </div>
       </div>
@@ -72,30 +88,33 @@ export default {
           parent: {
             AccountNumber: 111,
             AccountName: "Tiền mặt",
-            kind: "Dư nợ",
+            Kind: "Dư nợ",
             EnglishName: "Cash in hand",
-            Explain: "",
+            Explain: " .",
             Status: "Đang sử dụng",
+            Feature: "1",
           },
         },
         {
           parent: {
             AccountNumber: 112,
             AccountName: "Tiền mặt",
-            kind: "Dư nợ",
+            Kind: "Dư nợ",
             EnglishName: "Cash in hand",
-            Explain: "",
+            Explain: " .",
             Status: "Đang sử dụng",
+            Feature: "1",
           },
         },
         {
           parent: {
             AccountNumber: 113,
             AccountName: "Tiền mặt",
-            kind: "Dư nợ",
+            Kind: "Dư nợ",
             EnglishName: "Cash in hand",
-            Explain: "",
+            Explain: " .",
             Status: "Đang sử dụng",
+            Feature: "1",
           },
 
           children: [
@@ -103,40 +122,168 @@ export default {
               parent: {
                 AccountNumber: 1131,
                 AccountName: "Tiền mặt",
-                kind: "Dư nợ",
+                Kind: "Dư nợ",
                 EnglishName: "Cash in hand",
-                Explain: "",
+                Explain: " .",
                 Status: "Đang sử dụng",
+                Feature: "1",
               },
               children: [
                 {
                   parent: {
                     AccountNumber: 11311,
                     AccountName: "Tiền mặt",
-                    kind: "Dư nợ",
+                    Kind: "Dư nợ",
                     EnglishName: "Cash in hand",
-                    Explain: "",
+                    Explain: " .",
                     Status: "Đang sử dụng",
+                    Feature: "1",
                   },
                 },
                 {
                   parent: {
                     AccountNumber: 11312,
                     AccountName: "Tiền mặt",
-                    kind: "Dư nợ",
+                    Kind: "Dư nợ",
                     EnglishName: "Cash in hand",
-                    Explain: "",
+                    Explain: " .",
                     Status: "Đang sử dụng",
+                    Feature: "1",
                   },
                   children: [
                     {
                       parent: {
                         AccountNumber: 113121,
                         AccountName: "Tiền mặt",
-                        kind: "Dư nợ",
+                        Kind: "Dư nợ",
                         EnglishName: "Cash in hand",
-                        Explain: "",
+                        Explain: " .",
                         Status: "Đang sử dụng",
+                        Feature: "1",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          parent: {
+            AccountNumber: 113,
+            AccountName: "Tiền mặt",
+            Kind: "Dư nợ",
+            EnglishName: "Cash in hand",
+            Explain: " .",
+            Status: "Đang sử dụng",
+            Feature: "1",
+          },
+
+          children: [
+            {
+              parent: {
+                AccountNumber: 1131,
+                AccountName: "Tiền mặt",
+                Kind: "Dư nợ",
+                EnglishName: "Cash in hand",
+                Explain: " .",
+                Status: "Đang sử dụng",
+                Feature: "1",
+              },
+              children: [
+                {
+                  parent: {
+                    AccountNumber: 11311,
+                    AccountName: "Tiền mặt",
+                    Kind: "Dư nợ",
+                    EnglishName: "Cash in hand",
+                    Explain: " .",
+                    Status: "Đang sử dụng",
+                    Feature: "1",
+                  },
+                },
+                {
+                  parent: {
+                    AccountNumber: 11312,
+                    AccountName: "Tiền mặt",
+                    Kind: "Dư nợ",
+                    EnglishName: "Cash in hand",
+                    Explain: " .",
+                    Status: "Đang sử dụng",
+                    Feature: "1",
+                  },
+                  children: [
+                    {
+                      parent: {
+                        AccountNumber: 113121,
+                        AccountName: "Tiền mặt",
+                        Kind: "Dư nợ",
+                        EnglishName: "Cash in hand",
+                        Explain: " .",
+                        Status: "Đang sử dụng",
+                        Feature: "1",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          parent: {
+            AccountNumber: 113,
+            AccountName: "Tiền mặt",
+            Kind: "Dư nợ",
+            EnglishName: "Cash in hand",
+            Explain: " .",
+            Status: "Đang sử dụng",
+            Feature: "1",
+          },
+
+          children: [
+            {
+              parent: {
+                AccountNumber: 1131,
+                AccountName: "Tiền mặt",
+                Kind: "Dư nợ",
+                EnglishName: "Cash in hand",
+                Explain: " .",
+                Status: "Đang sử dụng",
+                Feature: "1",
+              },
+              children: [
+                {
+                  parent: {
+                    AccountNumber: 11311,
+                    AccountName: "Tiền mặt",
+                    Kind: "Dư nợ",
+                    EnglishName: "Cash in hand",
+                    Explain: " .",
+                    Status: "Đang sử dụng",
+                    Feature: "1",
+                  },
+                },
+                {
+                  parent: {
+                    AccountNumber: 11312,
+                    AccountName: "Tiền mặt",
+                    Kind: "Dư nợ",
+                    EnglishName: "Cash in hand",
+                    Explain: " .",
+                    Status: "Đang sử dụng",
+                    Feature: "1",
+                  },
+                  children: [
+                    {
+                      parent: {
+                        AccountNumber: 113121,
+                        AccountName: "Tiền mặt",
+                        Kind: "Dư nợ",
+                        EnglishName: "Cash in hand",
+                        Explain: " .",
+                        Status: "Đang sử dụng",
+                        Feature: "1",
                       },
                     },
                   ],
@@ -298,28 +445,101 @@ export default {
   z-index: 1000;
 
   .MISAAccount-System-Content-Table {
+    height: 2000px;
     .MISANode {
       position: relative;
       padding-left: 20px;
-      .Row {
-        display: flex;
-        margin: 5px 0;
-        padding: 5px 0;
-        border: 1px solid black;
-        .Column {
-          width: 200px;
-          border-right: 1px solid red;
-        }
-      }
+      background-color: #fff;
       .icon {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 20px;
-        height: 20px;
-        background-color: red;
+        top: 15px;
+        left: 28px;
+        width: 16px;
+        height: 16px;
+        background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
+        background-position: -607px -311px;
+        cursor: pointer;
       }
     }
+    .Thead,
+    .Tbody {
+      .Row {
+        // display: flex;
+        white-space: nowrap;
+        height: 34px;
+        .Column {
+          // display: flex;
+          // align-items: center;
+          display: inline-block;
+          line-height: 34px;
+          width: 150px;
+          height: 100% !important;
+          padding: 0 10px;
+          border-right: 1px solid #c7c7c7;
+          border-bottom: 1px solid #c7c7c7;
+          background-color: #eceef1;
+          &.AccountName,
+          &.EnglishName {
+            width: 250px;
+          }
+          &.Kind {
+            width: 100px;
+          }
+          &.Status {
+            width: 140px;
+          }
+          &.Feature {
+            width: 140px;
+            border-left: 1px solid #c7c7c7;
+          }
+          &.Explain {
+            width: 270px;
+          }
+        }
+      }
+    }
+    .Thead {
+      position: sticky;
+      top: 90px;
+      white-space: nowrap;
+      z-index: 1000;
+      .Column {
+        font-size: 12px;
+        font-weight: 600;
+      }
+    }
+    .Tbody {
+      .Row {
+        height: 46.6px;
+        white-space: nowrap;
+        // overflow: hidden;
+        .Column {
+          padding-left: 28px;
+          background-color: #fff;
+          line-height: 46.6px;
+        }
+      }
+    }
+    .Feature {
+      position: sticky;
+      right: 0;
+      z-index: 999;
+    }
+  }
+}
+
+.MISAAccount-System-Content {
+  .Data-Pagenav {
+    position: fixed;
+    bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 245px);
+    height: 48px;
+    padding: 0 16px;
+    background-color: #fff;
+    z-index: 100;
   }
 }
 </style>
