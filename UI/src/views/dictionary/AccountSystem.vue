@@ -81,6 +81,11 @@ export default {
   components: {
     Node,
   },
+  async mounted() {
+    document.title = "Hệ thống tài khoản";
+    await this.$store.dispatch("setAccounts");
+    this.getTreeAccount(this.$store.getters.getAccounts);
+  },
   data() {
     return {
       rows: [
@@ -294,6 +299,27 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    getTreeAccount(accounts) {
+      let arr = [];
+      let tmpObj = this.recursive(accounts, 0, accounts.length);
+      arr.push(tmpObj);
+
+      console.log(arr);
+    },
+    recursive(accounts, index, maxIndex) {
+      if (index == maxIndex) {
+        console.log("Max index", index);
+        return;
+      }
+      console.log("current index:", index);
+      return {
+        parent:
+          accounts[index].rgt - accounts[index].lft == 1 ? accounts[index] : "",
+        children: [this.recursive(accounts, index + 1, maxIndex)],
+      };
+    },
   },
 };
 </script>
@@ -514,9 +540,11 @@ export default {
         white-space: nowrap;
         // overflow: hidden;
         .Column {
-          padding-left: 28px;
           background-color: #fff;
           line-height: 46.6px;
+          &.AccountNumber {
+            padding-left: 28px;
+          }
         }
       }
     }

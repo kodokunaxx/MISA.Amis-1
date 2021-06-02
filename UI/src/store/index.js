@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
     API_URL: 'https://localhost:44354/api/v1',
     MODE: 'ADD',
     vendors: [],
+    accounts: [],
     newVendorCode: null,
     enableSubmit: true,
     isReadOnly: false,
@@ -29,6 +30,7 @@ export const store = new Vuex.Store({
     pageIndex: 1,
     pageSize: 20,
     total: 0,
+    totalAccount: 0,
     deepLevel: 1,
   },
   getters: {
@@ -36,6 +38,7 @@ export const store = new Vuex.Store({
     getMODE: state => state.MODE,
     getIsLoading: state => state.isLoading,
     getVendors: state => state.vendors,
+    getAccounts: state => state.accounts,
     getIsShowMenuDetail: state => state.isShowMenuDetail,
     getIsCustomer: state => state.isCustomer,
     getIsOrganization: state => state.isOrganization,
@@ -64,6 +67,7 @@ export const store = new Vuex.Store({
     setX: (state, payload) => state.X = payload,
     setEmployee: (state, payload) => state.employee = payload,
     setVendors: (state, payload) => state.vendors = payload,
+    setAccounts: (state, payload) => state.accounts = payload,
     setIsLoading: (state, payload) => state.isLoading = payload,
     setMODE: (state, payload) => state.MODE = payload,
     setEnableSubmit: (state, payload) => state.enableSubmit = payload,
@@ -128,6 +132,24 @@ export const store = new Vuex.Store({
       } catch (error) {
         console.log('%c[ERROR][From Vuex]:', 'color: red', error);
       }
-    }
+    },
+
+    setAccounts: context => {
+      const API_URL = context.getters.getApiUrl + `/accounts`;
+
+      try {
+        return axios.get(API_URL)
+          .then(async response => {
+            context.commit('setAccounts', response.data.Data);
+            context.commit('setIsLoading', false); // Tắt hiệu ứng loading
+            // context.commit('setTotal', response.data.Total); // set page size
+          })
+          .catch(error => {
+            console.log('%c[ERROR][From Vuex]:', 'color: red', error);
+          })
+      } catch (error) {
+        console.log('%c[ERROR][From Vuex]:', 'color: red', error);
+      }
+    },
   }
 });
