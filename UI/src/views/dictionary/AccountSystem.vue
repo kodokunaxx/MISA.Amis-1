@@ -37,11 +37,9 @@
       <div class="MISAAccount-System-Content-Table">
         <div class="Thead"></div>
         <div class="Tbody">
-          <ul class="Root">
-            <li v-for="(ele, index) in rows" :key="index">
-              <Node :node="ele" />
-            </li>
-          </ul>
+          <div class="Root">
+            <Node :node="ele" v-for="(ele, index) in rows" :key="index" />
+          </div>
         </div>
       </div>
     </div>
@@ -59,13 +57,60 @@ export default {
     return {
       rows: [
         [
-          { a: "2-a1", b: "2-b1", c: "2-c1" },
-          { a: "2-a2", b: "2-b2", c: "2-c2" },
+          {
+            AccountNumber: 111,
+            AccountName: "Tiền mặt",
+            kind: "Dư nợ",
+            EnglishName: "Cash in hand",
+            Explain: "",
+            Status: "Đang sử dụng",
+          },
+        ],
+        [
+          {
+            AccountNumber: 112,
+            AccountName: "Tiền mặt",
+            kind: "Dư nợ",
+            EnglishName: "Cash in hand",
+            Explain: "",
+            Status: "Đang sử dụng",
+          },
+        ],
+        [
+          {
+            AccountNumber: 113,
+            AccountName: "Tiền mặt",
+            kind: "Dư nợ",
+            EnglishName: "Cash in hand",
+            Explain: "",
+            Status: "Đang sử dụng",
+          },
           [
-            { a: "2-a3-1", b: "2-b3-1", c: "2-c3-1" },
+            {
+              AccountNumber: 1131,
+              AccountName: "Tiền mặt",
+              kind: "Dư nợ",
+              EnglishName: "Cash in hand",
+              Explain: "",
+              Status: "Đang sử dụng",
+            },
             [
-              { a: "2-a3-2", b: "2-b3-2", c: "2-c3-2" },
-              { a: "2-a3-3", b: "2-b3-3", c: "2-c3-3" },
+              {
+                AccountNumber: 11311,
+                AccountName: "Tiền mặt",
+                kind: "Dư nợ",
+                EnglishName: "Cash in hand",
+                Explain: "",
+                Status: "Đang sử dụng",
+              },
+              {
+                AccountNumber: 11312,
+                AccountName: "Tiền mặt",
+                kind: "Dư nợ",
+                EnglishName: "Cash in hand",
+                Explain: "",
+                Status: "Đang sử dụng",
+              },
             ],
           ],
         ],
@@ -222,11 +267,8 @@ export default {
   z-index: 1000;
 
   .MISAAccount-System-Content-Table {
-    .Parent {
-      height: 10px;
-      background-color: red;
-    }
     .MISANode {
+      position: relative;
       padding-left: 20px;
       .Row {
         display: flex;
@@ -235,6 +277,14 @@ export default {
         .Column {
           width: 200px;
         }
+      }
+      .Parent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        background-color: red;
       }
     }
   }

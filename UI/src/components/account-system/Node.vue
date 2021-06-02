@@ -7,22 +7,21 @@
       @click="toggle()"
     ></div>
     <!-- ------------------------------- -->
-    <div v-if="isShowDetail">
-      <!-- -------------------- -->
-      <li v-if="!Array.isArray(node)" class="Row">
-        <div class="Column" v-for="(column, index) in node" :key="index">
-          {{ column }}
-        </div>
-      </li>
-      <!-- -------------------- -->
 
-      <!-- -------------------- -->
-      <li v-else v-for="(ele, index) in node" :key="index">
-        <node :node="ele"></node>
-      </li>
-      <!-- -------------------- -->
-      
-    </div>
+    <!-- -------------------- -->
+    <li v-if="!Array.isArray(node)" class="Row XYZ">
+      <div class="Column" v-for="(column, index) in node" :key="index">
+        {{ column }}
+      </div>
+    </li>
+    <!-- -------------------- -->
+
+    <!-- -------------------- -->
+    <li v-else v-for="(ele, index) in node" :key="index" ref="test">
+      <node :node="ele"></node>
+    </li>
+    <!-- -------------------- -->
+
     <!-- ------------------------------- -->
   </ul>
 </template>
@@ -38,7 +37,8 @@ export default {
   },
   methods: {
     toggle() {
-      this.isShowDetail = !this.isShowDetail;
+      console.log(this.$refs.test);
+      //   this.$refs.test.style.display = "none";
     },
   },
 };
