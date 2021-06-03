@@ -51,10 +51,11 @@
         <div class="Tbody">
           <div class="Root">
             <Node
-              :node="ele"
+              :node="account"
               :deepLevel="1"
-              v-for="(ele, i) in rows"
-              :key="i"
+              :columns="columns"
+              v-for="account in this.$store.getters.getAccounts"
+              :key="account.AccountId"
             />
           </div>
         </div>
@@ -71,254 +72,78 @@
         </div>
       </div>
     </div>
+    <BaseLoading v-if="this.$store.getters.getIsLoading" />
+    <AccountDialog/>
   </div>
 </template>
 
 <script>
 import Node from "../../components/account-system/Node";
+import BaseLoading from "../../components/base/BaseLoading";
+import AccountDialog from "../../components/dialog/account-system/AccountDialog";
 
 export default {
   components: {
     Node,
+    BaseLoading,
+    AccountDialog,
   },
   async mounted() {
     document.title = "Hệ thống tài khoản";
+
+    // Lấy dữ liệu
+    this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
     await this.$store.dispatch("setAccounts");
     this.getTreeAccount(this.$store.getters.getAccounts);
+    this.$store.commit("setIsLoading", false); // Tắt hiệu ứng loading
   },
   data() {
     return {
-      rows: [
-        {
-          parent: {
-            AccountNumber: 111,
-            AccountName: "Tiền mặt",
-            Kind: "Dư nợ",
-            EnglishName: "Cash in hand",
-            Explain: " .",
-            Status: "Đang sử dụng",
-            Feature: "1",
-          },
-        },
-        {
-          parent: {
-            AccountNumber: 112,
-            AccountName: "Tiền mặt",
-            Kind: "Dư nợ",
-            EnglishName: "Cash in hand",
-            Explain: " .",
-            Status: "Đang sử dụng",
-            Feature: "1",
-          },
-        },
-        {
-          parent: {
-            AccountNumber: 113,
-            AccountName: "Tiền mặt",
-            Kind: "Dư nợ",
-            EnglishName: "Cash in hand",
-            Explain: " .",
-            Status: "Đang sử dụng",
-            Feature: "1",
-          },
-
-          children: [
-            {
-              parent: {
-                AccountNumber: 1131,
-                AccountName: "Tiền mặt",
-                Kind: "Dư nợ",
-                EnglishName: "Cash in hand",
-                Explain: " .",
-                Status: "Đang sử dụng",
-                Feature: "1",
-              },
-              children: [
-                {
-                  parent: {
-                    AccountNumber: 11311,
-                    AccountName: "Tiền mặt",
-                    Kind: "Dư nợ",
-                    EnglishName: "Cash in hand",
-                    Explain: " .",
-                    Status: "Đang sử dụng",
-                    Feature: "1",
-                  },
-                },
-                {
-                  parent: {
-                    AccountNumber: 11312,
-                    AccountName: "Tiền mặt",
-                    Kind: "Dư nợ",
-                    EnglishName: "Cash in hand",
-                    Explain: " .",
-                    Status: "Đang sử dụng",
-                    Feature: "1",
-                  },
-                  children: [
-                    {
-                      parent: {
-                        AccountNumber: 113121,
-                        AccountName: "Tiền mặt",
-                        Kind: "Dư nợ",
-                        EnglishName: "Cash in hand",
-                        Explain: " .",
-                        Status: "Đang sử dụng",
-                        Feature: "1",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          parent: {
-            AccountNumber: 113,
-            AccountName: "Tiền mặt",
-            Kind: "Dư nợ",
-            EnglishName: "Cash in hand",
-            Explain: " .",
-            Status: "Đang sử dụng",
-            Feature: "1",
-          },
-
-          children: [
-            {
-              parent: {
-                AccountNumber: 1131,
-                AccountName: "Tiền mặt",
-                Kind: "Dư nợ",
-                EnglishName: "Cash in hand",
-                Explain: " .",
-                Status: "Đang sử dụng",
-                Feature: "1",
-              },
-              children: [
-                {
-                  parent: {
-                    AccountNumber: 11311,
-                    AccountName: "Tiền mặt",
-                    Kind: "Dư nợ",
-                    EnglishName: "Cash in hand",
-                    Explain: " .",
-                    Status: "Đang sử dụng",
-                    Feature: "1",
-                  },
-                },
-                {
-                  parent: {
-                    AccountNumber: 11312,
-                    AccountName: "Tiền mặt",
-                    Kind: "Dư nợ",
-                    EnglishName: "Cash in hand",
-                    Explain: " .",
-                    Status: "Đang sử dụng",
-                    Feature: "1",
-                  },
-                  children: [
-                    {
-                      parent: {
-                        AccountNumber: 113121,
-                        AccountName: "Tiền mặt",
-                        Kind: "Dư nợ",
-                        EnglishName: "Cash in hand",
-                        Explain: " .",
-                        Status: "Đang sử dụng",
-                        Feature: "1",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          parent: {
-            AccountNumber: 113,
-            AccountName: "Tiền mặt",
-            Kind: "Dư nợ",
-            EnglishName: "Cash in hand",
-            Explain: " .",
-            Status: "Đang sử dụng",
-            Feature: "1",
-          },
-
-          children: [
-            {
-              parent: {
-                AccountNumber: 1131,
-                AccountName: "Tiền mặt",
-                Kind: "Dư nợ",
-                EnglishName: "Cash in hand",
-                Explain: " .",
-                Status: "Đang sử dụng",
-                Feature: "1",
-              },
-              children: [
-                {
-                  parent: {
-                    AccountNumber: 11311,
-                    AccountName: "Tiền mặt",
-                    Kind: "Dư nợ",
-                    EnglishName: "Cash in hand",
-                    Explain: " .",
-                    Status: "Đang sử dụng",
-                    Feature: "1",
-                  },
-                },
-                {
-                  parent: {
-                    AccountNumber: 11312,
-                    AccountName: "Tiền mặt",
-                    Kind: "Dư nợ",
-                    EnglishName: "Cash in hand",
-                    Explain: " .",
-                    Status: "Đang sử dụng",
-                    Feature: "1",
-                  },
-                  children: [
-                    {
-                      parent: {
-                        AccountNumber: 113121,
-                        AccountName: "Tiền mặt",
-                        Kind: "Dư nợ",
-                        EnglishName: "Cash in hand",
-                        Explain: " .",
-                        Status: "Đang sử dụng",
-                        Feature: "1",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
+      columns: [
+        "AccountNumber",
+        "AccountName",
+        "Kind",
+        "EnglishName",
+        "Explain",
+        "Status",
       ],
     };
   },
   methods: {
+    /**
+     * Lấy dữ liệu tài khoản theo dạng Tree
+     * CreatedBy: nvcuong (02/06/2021)
+     */
     getTreeAccount(accounts) {
-      let arr = [];
-      let tmpObj = this.recursive(accounts, 0, accounts.length);
-      arr.push(tmpObj);
-
-      console.log(arr);
+      this.$store.commit("setAccounts", this.recursive(accounts, 0));
     },
-    recursive(accounts, index, maxIndex) {
-      if (index == maxIndex) {
-        console.log("Max index", index);
-        return;
+    recursive(accounts, index) {
+      const result = [];
+      const obj = {};
+      while (index < accounts.length) {
+        if (accounts[index].rgt - accounts[index].lft == 1) {
+          obj.parent = accounts[index];
+          obj.children = [];
+          index++;
+        } else {
+          obj.parent = accounts[index];
+          const limit = accounts[index++].rgt;
+          const arr = [];
+
+          while (index < accounts.length && accounts[index].rgt < limit) {
+            arr.push(accounts[index]);
+            index++;
+          }
+          obj.children = this.recursive(arr, 0);
+        }
+        result.push({
+          parent: obj.parent,
+          children: obj.children,
+        });
+        obj.parent = null;
+        obj.children = [];
       }
-      console.log("current index:", index);
-      return {
-        parent:
-          accounts[index].rgt - accounts[index].lft == 1 ? accounts[index] : "",
-        children: [this.recursive(accounts, index + 1, maxIndex)],
-      };
+      return result;
     },
   },
 };
@@ -538,12 +363,23 @@ export default {
       .Row {
         height: 46.6px;
         white-space: nowrap;
+        cursor: pointer;
         // overflow: hidden;
         .Column {
           background-color: #fff;
           line-height: 46.6px;
           &.AccountNumber {
             padding-left: 28px;
+          }
+        }
+        &.selected {
+          .Column {
+            background-color: #f3f8f8;
+          }
+        }
+        &:hover {
+          .Column {
+            background-color: #f3f8f8;
           }
         }
       }

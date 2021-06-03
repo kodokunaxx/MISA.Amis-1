@@ -141,7 +141,6 @@ export const store = new Vuex.Store({
         return axios.get(API_URL)
           .then(async response => {
             context.commit('setAccounts', response.data.Data);
-            context.commit('setIsLoading', false); // Tắt hiệu ứng loading
             // context.commit('setTotal', response.data.Total); // set page size
           })
           .catch(error => {

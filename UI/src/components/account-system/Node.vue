@@ -1,16 +1,19 @@
 <template>
   <ul class="MISANode" :deepLevel="deepLevel">
     <!------------------------------------------------------------->
-    <li class="Row">
+    <li class="Row" >
       <div
         class="Column"
         v-for="(value, key) in node.parent"
         :key="key"
         :class="key"
         :style="parentStyle"
+        v-show="columns.includes(key)"
+        @click="selectRow($event.target.parentElement)"
       >
         {{ value }}
       </div>
+      <div class="Column Feature">1</div>
     </li>
 
     <!------------------------------------------------------------->
@@ -19,6 +22,7 @@
         v-for="(child, i) in node.children"
         :key="i"
         :node="child"
+        :columns="columns"
         :deepLevel="parseInt(deepLevel) + 1"
       ></node>
     </li>
@@ -35,7 +39,7 @@
 <script>
 export default {
   name: "node",
-  props: ["node", "deepLevel"],
+  props: ["node", "deepLevel", "columns"],
   computed: {
     parentStyle() {
       return {
@@ -49,10 +53,19 @@ export default {
     };
   },
   methods: {
+    /**
+     * Đóng, hoặc mở node con
+     * CreatedBy: nvcuong (02/06/2021)
+     */
     toggle() {
       this.isShowDetail = !this.isShowDetail;
       this.refactorTable();
     },
+
+    /**
+     * Refactor lại table sau khi đóng, hoặc mở node con
+     * CreatedBy: nvcuong (02/06/2021)
+     */
     refactorTable() {
       setTimeout(function() {
         const nodes = document.querySelectorAll(".MISANode");
@@ -79,6 +92,20 @@ export default {
           }
         });
       }, 0);
+    },
+    /**
+     * Chọn row
+     * CreatedBy: nvcuong (02/06/2021)
+     */
+    selectRow(target) {
+      const path = ".MISAAccount-System .Root .MISANode .Row.selected";
+      const selectedRows = document.querySelectorAll(path);
+      console.log(selectedRows)
+      selectedRows.forEach((selectedRow) =>
+        selectedRow.classList.remove("selected")
+      );
+
+      target.classList.add("selected");
     },
   },
 };

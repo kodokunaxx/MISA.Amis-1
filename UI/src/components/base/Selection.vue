@@ -11,8 +11,9 @@
         :style="inputStyle"
         v-bind="$attrs"
         :class="[className]"
-        :disabled="this.$store.getters.getIsReadOnly"
+        :disabled="this.$store.getters.getIsReadOnly || isDisable"
         @keyup="search($event.target.value)"
+        @blur="isRequired ? checkEmpty() : null"
       />
       <!------------------------------------------->
       <div class="Icon-1" @click="toggleList()">
@@ -87,6 +88,10 @@ export default {
       type: Number,
       default: 0,
     },
+    isDisable: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     parentStyle() {
@@ -97,7 +102,7 @@ export default {
     inputStyle() {
       return {
         height: this.height,
-        paddingRight: this.numberOfIcons == 1 ? "32px" : "64px",
+        paddingRight: this.numberOfIcons == 1 ? "32px" : "62px",
       };
     },
     // spanStyle() {
@@ -135,6 +140,19 @@ export default {
       }
     },
     /**
+     * Check rỗng
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    checkEmpty() {
+      const input = this.$refs.input;
+      if (!input) return;
+      if (this.isRequired) {
+        if (input.value.trim() == "") input.classList.add("error");
+        else input.classList.remove("error");
+      }
+    },
+
+    /**
      * Chọn dữ liệu
      * CreateBy: nvcuong (28/05/2021)
      */
@@ -164,18 +182,20 @@ export default {
       const vm = this;
       vm.keyword = keyword;
       const result = [];
-      result.title = this.list.title;
-      result.content = [];
+      if (this.list) {
+        result.title = this.list.title;
+        result.content = [];
 
-      this.list.content.forEach((element) => {
-        for (let i = 0; i < element.length; i++) {
-          if (element[i].toLowerCase().search(keyword.toLowerCase()) != -1) {
-            result.content.push(element);
-            break;
+        this.list.content.forEach((element) => {
+          for (let i = 0; i < element.length; i++) {
+            if (element[i].toLowerCase().search(keyword.toLowerCase()) != -1) {
+              result.content.push(element);
+              break;
+            }
           }
-        }
-      });
-      this.openList();
+        });
+        this.openList();
+      }
 
       return result;
     },
@@ -237,6 +257,10 @@ export default {
       width: 32px;
       height: 100%;
       cursor: pointer;
+      &.Icon-1:hover {
+        background-color: #e0e0e0;
+        border-color: #e0e0e0;
+      }
       .icon {
         width: 16px;
         height: 16px;

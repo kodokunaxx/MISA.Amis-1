@@ -582,6 +582,7 @@ export default {
           background-color: #fff;
           outline: none;
           cursor: pointer;
+          font-weight: 600;
           &:hover {
             background-color: #d2d3d6;
           }
