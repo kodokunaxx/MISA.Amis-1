@@ -371,12 +371,14 @@ export default {
           };
 
           // Sửa lại url nếu người dùng nhập tài khoản tổng hợp sau
-          if (
-            account.ParentAccountNumber &&
-            account.ParentAccountNumber.trim() != ""
-          ) {
-            API_URL += "?refer=" + account.ParentAccountNumber;
-            config.url = API_URL;
+          if (account.ParentAccountNumber) {
+            if (
+              account.ParentAccountNumber.trim() != "" &&
+              account.ParentAccountNumber.trim() != parent
+            ) {
+              API_URL += "?refer=" + account.ParentAccountNumber;
+              config.url = API_URL;
+            }
           }
           // to update
 

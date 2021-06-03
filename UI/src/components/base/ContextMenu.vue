@@ -17,6 +17,7 @@ export default {
   name: "CmpContextMenu",
   props: {
     display: Boolean,
+    w: Number,
   },
   data() {
     return {
@@ -43,7 +44,7 @@ export default {
     },
     open(evt) {
       // updates position of context menu
-      this.left = evt.pageX - 100 || evt.clientX - 100;
+      this.left = evt.pageX - this.w || evt.clientX - this.w;
       this.top = evt.pageY + 15 || evt.clientY + 15;
 
       Vue.nextTick(() => this.$el.focus());
@@ -58,7 +59,7 @@ export default {
   position: fixed;
   min-width: 100px;
   background: white;
-  z-index: 999;
+  z-index: 1001;
   outline: none;
   border: 1px solid #babec5;
   cursor: pointer;

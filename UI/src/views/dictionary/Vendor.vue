@@ -210,7 +210,7 @@
       </div>
     </div>
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
-    <ContextMenu ref="menu" v-show="isShowContextMenu">
+    <ContextMenu ref="menu" v-show="isShowContextMenu" :w="100">
       <ul>
         <li @click="closeContextMenu(), viewVendorInfo()">Xem</li>
         <li @click="closeContextMenu(), openDialog(getId(), 'UPDATE')">Sửa</li>

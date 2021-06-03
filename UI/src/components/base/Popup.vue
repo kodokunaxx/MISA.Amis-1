@@ -29,7 +29,7 @@ export default {};
   z-index: 9999;
   .MISAPopup-Content {
     width: 444px;
-    height: 184px;
+    min-height: 184px;
     padding: 32px;
     border-radius: 3px;
     background-color: #fff;

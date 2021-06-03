@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace MISA.Infrastructure.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T>
+    public class BaseRepository<T> : IBaseRepository<T>, IDisposable
     {
         #region Declares
         protected string _tableName;
@@ -37,8 +37,14 @@ namespace MISA.Infrastructure.Repositories
             DynamicParameters dynamicParameters = new DynamicParameters();
             dynamicParameters.Add($"@{_tableName}Id", id.ToString());
 
-            int rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
-            return rowAffects;
+            _dbConnection.Open();
+            using (var transaction = _dbConnection.BeginTransaction())
+            {
+                int rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParameters, transaction, commandType: CommandType.StoredProcedure);
+                transaction.Commit();
+                return rowAffects;
+            }
+
         }
 
         public virtual IEnumerable<T> GetAll()
@@ -68,9 +74,13 @@ namespace MISA.Infrastructure.Repositories
                 var value = prop.GetValue(entity) == "" ? null : prop.GetValue(entity);
                 dynamicParameters.Add($"@{prop.Name}", value);
             }
-
-            int rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
-            return rowAffects;
+            _dbConnection.Open();
+            using (var transaction = _dbConnection.BeginTransaction())
+            {
+                int rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParameters, transaction, commandType: CommandType.StoredProcedure);
+                transaction.Commit();
+                return rowAffects;
+            }
         }
 
         public virtual int Update(Guid id, T entity)
@@ -84,7 +94,13 @@ namespace MISA.Infrastructure.Repositories
             }
             dynamicParameters.Add($"@{_tableName}Id", id.ToString());
 
-            return _dbConnection.Execute(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            _dbConnection.Open();
+            using (var transaction = _dbConnection.BeginTransaction())
+            {
+                int rowAffects = _dbConnection.Execute(sqlCommand, param: dynamicParameters, transaction, commandType: CommandType.StoredProcedure);
+                transaction.Commit();
+                return rowAffects;
+            }
         }
 
         public T GetByProperty(string column, object value)
@@ -96,5 +112,16 @@ namespace MISA.Infrastructure.Repositories
             return _dbConnection.QueryFirstOrDefault<T>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
         }
 
+        /// <summary>
+        /// Đóng connection
+        /// </summary>
+        ///  CreatedBy: nvcuong (31/05/2021)
+        public void Dispose()
+        {
+            if (_dbConnection.State == ConnectionState.Open)
+            {
+                _dbConnection.Close();
+            }
+        }
     }
 }

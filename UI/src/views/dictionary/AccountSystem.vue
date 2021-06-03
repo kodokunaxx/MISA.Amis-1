@@ -60,6 +60,9 @@
               :columns="columns"
               v-for="account in this.$store.getters.getAccounts"
               :key="account.AccountId"
+              @reload="reload()"
+              @showCannotDelete="showCannotDelete()"
+              @showConfirmDelete="showConfirmDelete($event)"
             />
           </div>
         </div>
@@ -78,6 +81,48 @@
     </div>
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
     <AccountDialog @reload="reload()" />
+    <Popup v-if="cannotDeleteRoot">
+      <template v-slot:Head>
+        <div class="icon-popup icon-warning"></div>
+        <div class="text">
+          <span style="font-weight: 600; display: block; margin-bottom: 20px">
+            Xóa không thành công.
+          </span>
+          <span
+            >Không thể xóa danh mục cha nếu chưa xóa tất cả các danh mục
+            con.</span
+          >
+        </div>
+      </template>
+      <template v-slot:Button>
+        <div class="btn-close">
+          <button @click="closeCannotDelete()">Đóng</button>
+        </div>
+      </template>
+    </Popup>
+    <Popup v-if="confirmDelete">
+      <template v-slot:Head>
+        <div class="icon-popup icon-dangerous"></div>
+        <div class="text">
+          Bạn có thực sự muốn xóa Tài khoản {{ accountNumber }} không?
+        </div>
+      </template>
+      <template v-slot:Button>
+        <div class="wrapper">
+          <div class="btn-cancel">
+            <button class="btn" @click="closeConfirmDelete()">Không</button>
+          </div>
+          <div class="btn-confirm">
+            <button
+              class="btn"
+              @click="closeConfirmDelete(), deleteAccount(id)"
+            >
+              Có
+            </button>
+          </div>
+        </div>
+      </template>
+    </Popup>
   </div>
 </template>
 
@@ -85,12 +130,15 @@
 import Node from "../../components/account-system/Node";
 import BaseLoading from "../../components/base/BaseLoading";
 import AccountDialog from "../../components/dialog/account-system/AccountDialog";
+import Popup from "../../components/base/Popup";
+import axios from "axios";
 
 export default {
   components: {
     Node,
     BaseLoading,
     AccountDialog,
+    Popup,
   },
   async mounted() {
     document.title = "Hệ thống tài khoản";
@@ -103,6 +151,7 @@ export default {
   },
   data() {
     return {
+      API_URL: this.$store.getters.getApiUrl,
       columns: [
         "AccountNumber",
         "AccountName",
@@ -111,6 +160,10 @@ export default {
         "Explain",
         "Status",
       ],
+      cannotDeleteRoot: false,
+      confirmDelete: false,
+      id: null,
+      accountNumber: null,
     };
   },
   methods: {
@@ -186,6 +239,69 @@ export default {
       await this.$store.dispatch("setAccounts");
       this.getTreeAccount(this.$store.getters.getAccounts);
       this.$store.commit("setIsLoading", false); // Tắt hiệu ứng loading
+
+      // refresh lại width của <th> số tài khoản
+      const path = ".MISAAccount-System-Content-Table .Thead .AccountNumber";
+      const th = document.querySelector(path);
+      th.style.width = "150px";
+    },
+
+    /**
+     * Hiện popup xác nhận xóa
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    showConfirmDelete(payload) {
+      this.confirmDelete = true;
+      this.id = payload.id;
+      this.accountNumber = payload.accountNumber;
+    },
+
+    /**
+     * Hiện popup không thể xóa
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    showCannotDelete() {
+      this.cannotDeleteRoot = true;
+    },
+
+    /**
+     * Ẩn popup xác nhận xóa
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    closeConfirmDelete() {
+      this.confirmDelete = false;
+    },
+
+    /**
+     * Ẩn popup không thể xóa
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    closeCannotDelete() {
+      this.cannotDeleteRoot = false;
+    },
+
+    /**
+     * Xóa node
+     * CreatedBy: nvcuong (02/06/2021)
+     */
+    deleteAccount(id) {
+      const vm = this;
+      const API_URL = this.API_URL + "/accounts/" + id;
+
+      try {
+        this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+        axios
+          .delete(API_URL)
+          .then(async () => {
+            vm.reload(); // Reload;
+            vm.$store.commit("setIsLoading", false); // Tắt hiệu ứng loading
+          })
+          .catch((error) => {
+            console.log(error.response);
+          });
+      } catch (error) {
+        error;
+      }
     },
 
     /**
@@ -432,6 +548,25 @@ export default {
         &:hover {
           .Column {
             background-color: #f3f8f8;
+          }
+        }
+      }
+      .Feature {
+        .Wrapper {
+          display: flex;
+          align-items: center;
+          padding-left: 16px;
+          .Text {
+            margin-right: 10px;
+            font-weight: 600;
+            color: #0075c0;
+          }
+          .Icon {
+            position: relative;
+            width: 16px;
+            height: 16px;
+            background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
+            background-position: -896px -359px;
           }
         }
       }
