@@ -25,6 +25,17 @@ namespace MISA.Core.Services
             {
 
                 serviceResult = CheckValidate(account);
+
+                if (parentAccountNumber != null)
+                {
+                    Account isExistsParent = _accountRepository.GetByProperty("AccountNumber", parentAccountNumber);
+                    if (isExistsParent == null)
+                    {
+                        serviceResult.ResultCode = (int)EnumServiceResult.Fail;
+                        return serviceResult;
+                    }
+                }
+
                 if (serviceResult.ResultCode != (int)EnumServiceResult.NotValid)
                 {
                     serviceResult.Data = _accountRepository.Insert(parentAccountNumber, account);

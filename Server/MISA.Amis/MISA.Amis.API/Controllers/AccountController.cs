@@ -20,11 +20,11 @@ namespace MISA.Amis.API.Controllers
 
         }
 
-        [HttpPost("{refer}")]
+        [HttpPost("ref")]
         public IActionResult Post(string refer, [FromBody] Account account)
         {
             ServiceResult serviceResult = _accountService.Insert(refer, account);
-            if (serviceResult.ResultCode == (int)EnumServiceResult.NotValid)
+            if (serviceResult.ResultCode == (int)EnumServiceResult.NotValid || serviceResult.ResultCode == (int)EnumServiceResult.Fail)
             {
                 return BadRequest(serviceResult);
             }

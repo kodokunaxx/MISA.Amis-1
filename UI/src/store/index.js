@@ -17,6 +17,7 @@ export const store = new Vuex.Store({
     isLoading: true,
     isShowMenuDetail: true,
     isShowVendorDialog: false,
+    isShowAccountDialog: false,
     isCustomer: false,
     isOrganization: true,
     isShowConfirmDelete: false,
@@ -50,6 +51,7 @@ export const store = new Vuex.Store({
     getPayment: state => state.payment,
     getEnableSubmit: state => state.enableSubmit,
     getIsShowVendorDialog: state => state.isShowVendorDialog,
+    getIsShowAccountDialog: state => state.isShowAccountDialog,
     getIsReadOnly: state => state.isReadOnly,
     getPageIndex: state => state.pageIndex,
     getPageSize: state => state.pageSize,
@@ -57,6 +59,7 @@ export const store = new Vuex.Store({
     getIsShowConfirmDelete: state => state.isShowConfirmDelete,
     getIsShowConfirmClose: state => state.isShowConfirmClose,
     getTotal: state => state.total,
+    getTotalAccount: state => state.totalAccount,
     getDeepLevel: state => state.deepLevel,
   },
   mutations: {
@@ -72,6 +75,7 @@ export const store = new Vuex.Store({
     setMODE: (state, payload) => state.MODE = payload,
     setEnableSubmit: (state, payload) => state.enableSubmit = payload,
     setIsShowVendorDialog: (state, payload) => state.isShowVendorDialog = payload,
+    setIsShowAccountDialog: (state, payload) => state.isShowAccountDialog = payload,
     setIsReadOnly: (state, payload) => state.isReadOnly = payload,
     setPageIndex: (state, payload) => state.pageIndex = payload,
     setPageSize: (state, payload) => state.pageSize = payload,
@@ -79,6 +83,7 @@ export const store = new Vuex.Store({
     setIsShowConfirmDelete: (state, payload) => state.isShowConfirmDelete = payload,
     setIsShowConfirmClose: (state, payload) => state.isShowConfirmClose = payload,
     setTotal: (state, payload) => state.total = payload,
+    setTotalAccount: (state, payload) => state.totalAccount = payload,
     setDeepLevel: (state, payload) => state.deepLevel = payload,
   },
   actions: {
@@ -141,7 +146,7 @@ export const store = new Vuex.Store({
         return axios.get(API_URL)
           .then(async response => {
             context.commit('setAccounts', response.data.Data);
-            // context.commit('setTotal', response.data.Total); // set page size
+            context.commit('setTotalAccount', response.data.Data.length);
           })
           .catch(error => {
             console.log('%c[ERROR][From Vuex]:', 'color: red', error);

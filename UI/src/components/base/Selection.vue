@@ -13,7 +13,7 @@
         :class="[className]"
         :disabled="this.$store.getters.getIsReadOnly || isDisable"
         @keyup="search($event.target.value)"
-        @blur="isRequired ? checkEmpty() : null"
+        @blur="(isRequired ? checkEmpty() : null), closeList()"
       />
       <!------------------------------------------->
       <div class="Icon-1" @click="toggleList()">
@@ -41,7 +41,8 @@
       <li
         v-for="(ele, index) in search(keyword).content"
         :key="index"
-        @click="chooseOption(ele[position])"
+        @click="chooseOption(ele[position], index)"
+        :class="[currentIndex == index ? 'selected' : '']"
       >
         <span v-for="(i, index) in ele" :key="index" :title="i" class="column">
           {{ i }}
@@ -117,6 +118,11 @@ export default {
       };
     },
   },
+  mounted() {
+    if (this.$store.getters.getIsReadOnly) {
+      this.selfDisable = true;
+    }
+  },
   updated() {
     // if (this.valueBeforeUpdate && this.valueBeforeUpdate.trim() != "")
     //   this.$refs.input.value = this.valueBeforeUpdate;
@@ -127,6 +133,9 @@ export default {
       valueBeforeUpdate: null,
       tmp: this.list,
       keyword: "",
+      currentIndex: 0,
+      rotateDeg: 180,
+      selfDisable: this.isDisable,
     };
   },
   methods: {
@@ -135,7 +144,11 @@ export default {
      * CreateBy: nvcuong (28/05/2021)
      */
     toggleList() {
-      if (!this.$store.getters.getIsReadOnly) {
+      if (!this.selfDisable) {
+        const icon = this.$refs.arrow;
+
+        icon.style.transform = "rotate(" + this.rotateDeg + "deg)";
+        this.rotateDeg = Number(this.rotateDeg) + 180;
         this.isShowList = !this.isShowList;
       }
     },
@@ -156,9 +169,11 @@ export default {
      * Chọn dữ liệu
      * CreateBy: nvcuong (28/05/2021)
      */
-    chooseOption(value) {
+    chooseOption(value, index) {
       // this.valueBeforeUpdate = value;
       this.$refs.input.value = value; // Gán giá trị cho input
+      this.currentIndex = index;
+      this.$refs.input.classList.remove("error");
       this.closeList(); // Đóng list
     },
 
@@ -322,8 +337,16 @@ export default {
           }
         }
       }
+      &.selected {
+        background-color: #2ca01c;
+        color: #fff;
+        .icon {
+          visibility: visible;
+        }
+      }
 
-      .icon.selected {
+      .icon {
+        visibility: hidden;
         position: absolute;
         top: 0;
         right: 20px;

@@ -12,7 +12,7 @@
       </div>
       <div class="MISAAccount-System-Head-Button">
         <div class="btn btn-change-account">Chuyển tài khoản hoạch toán</div>
-        <div class="btn btn-add">Thêm</div>
+        <div class="btn btn-add" @click="openDialog()">Thêm</div>
       </div>
     </div>
     <div class="Content-Feature">
@@ -29,7 +29,11 @@
       </div>
       <div class="Feature-Right">
         <div class="Shorten">Thu gọn</div>
-        <div class="Icon Feature-Reload" title="Lấy lại dữ liệu"></div>
+        <div
+          class="Icon Feature-Reload"
+          title="Lấy lại dữ liệu"
+          @click="reload()"
+        ></div>
         <div class="Icon Feature-Export-Excel" title="Xuất ra Excel"></div>
       </div>
     </div>
@@ -64,7 +68,7 @@
             <div class="Total-Row">
               Tổng số:
               <span style="font-weight: 600">{{
-                $store.getters.getTotal
+                $store.getters.getTotalAccount
               }}</span>
               bản ghi
             </div>
@@ -73,7 +77,7 @@
       </div>
     </div>
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
-    <AccountDialog/>
+    <AccountDialog @reload="reload()" />
   </div>
 </template>
 
@@ -143,6 +147,58 @@ export default {
         obj.parent = null;
         obj.children = [];
       }
+      return result;
+    },
+    /**
+     * Mở dialog
+     * CreatedBy: nvcuong(03/06/2021)
+     */
+    async openDialog() {
+      await this.$store.commit("setIsShowAccountDialog", true); // Mở dialog
+      this.focusFirstElement(); // focus first element
+
+      // Bind parent account number
+      const parentAccountNumber = this.getParentAccountNumber();
+      const path =
+        '.MISAAccount-System-Dialog input[field="ParentAccountNumber"]';
+      const target = document.querySelector(path);
+      target.value = parentAccountNumber;
+    },
+    /**
+     * focus vào ô input đầu tiên
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    focusFirstElement() {
+      setTimeout(function() {
+        const path = ".MISAAccount-System-Dialog input[type='text']";
+        const focusInput = document.querySelector(path);
+
+        focusInput.focus();
+      }, 0);
+    },
+    /**
+     * Reload
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    async reload() {
+      // Lấy dữ liệu
+      this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+      await this.$store.dispatch("setAccounts");
+      this.getTreeAccount(this.$store.getters.getAccounts);
+      this.$store.commit("setIsLoading", false); // Tắt hiệu ứng loading
+    },
+
+    /**
+     * Lấy tài khoản cha
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    getParentAccountNumber() {
+      const path = ".MISAAccount-System .Root .Row.selected .AccountNumber";
+      const target = document.querySelector(path);
+      if (!target) {
+        return null;
+      }
+      const result = target.innerHTML.trim();
       return result;
     },
   },
@@ -292,11 +348,7 @@ export default {
 }
 
 .MISAAccount-System-Content {
-  //   background-color: red;
-  z-index: 1000;
-
   .MISAAccount-System-Content-Table {
-    height: 2000px;
     .MISANode {
       position: relative;
       padding-left: 20px;
@@ -403,7 +455,7 @@ export default {
     height: 48px;
     padding: 0 16px;
     background-color: #fff;
-    z-index: 100;
+    z-index: 1000;
   }
 }
 </style>

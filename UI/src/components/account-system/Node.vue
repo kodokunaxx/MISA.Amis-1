@@ -1,7 +1,7 @@
 <template>
   <ul class="MISANode" :deepLevel="deepLevel">
     <!------------------------------------------------------------->
-    <li class="Row" >
+    <li class="Row">
       <div
         class="Column"
         v-for="(value, key) in node.parent"
@@ -100,11 +100,10 @@ export default {
     selectRow(target) {
       const path = ".MISAAccount-System .Root .MISANode .Row.selected";
       const selectedRows = document.querySelectorAll(path);
-      console.log(selectedRows)
+
       selectedRows.forEach((selectedRow) =>
         selectedRow.classList.remove("selected")
       );
-
       target.classList.add("selected");
     },
   },

@@ -1,5 +1,8 @@
 <template>
-  <div class="MISAAccount-System-Dialog">
+  <div
+    class="MISAAccount-System-Dialog"
+    v-if="this.$store.getters.getIsShowAccountDialog"
+  >
     <div class="MISAAccount-System-Dialog-Content">
       <div class="Content-Head">
         <div class="Content-Head-Left">
@@ -7,7 +10,7 @@
         </div>
         <div class="Content-Head-Right">
           <div class="Help"></div>
-          <div class="Close"></div>
+          <div class="Close" @click="closeDialog()"></div>
         </div>
       </div>
       <div class="Content-Body">
@@ -27,24 +30,35 @@
               :w="'calc(50% - 5px)'"
               :field="'AccountName'"
             />
-            <Input :labelName="'Tên tiếng Anh'" :w="'calc(50% - 5px)'" />
+            <Input
+              :labelName="'Tên tiếng Anh'"
+              :w="'calc(50% - 5px)'"
+              :field="'EnglishName'"
+            />
           </div>
           <div class="Row Third-Row">
             <Selection
               :labelName="'Tài khoản tổng hợp'"
               :w="'calc(25% - 10px)'"
+              :field="'ParentAccountNumber'"
             />
             <Selection
               :isRequired="true"
               :labelName="'Tính chất'"
               :w="'calc(25% - 10px)'"
+              :list="kindList"
+              :field="'Kind'"
             />
           </div>
           <div class="Row Fourth-Row">
             <Textarea :labelName="'Diễn giải'" :w="'100%'" :field="'Explain'" />
           </div>
           <div class="Row Fifth-Row">
-            <input type="checkbox" field="IsKeepBusinessAccount" />
+            <input
+              type="checkbox"
+              field="IsKeepBusinessAccount"
+              ref="IsKeepBusinessAccount"
+            />
             <span>Có hạch toán ngoại tệ</span>
           </div>
         </div>
@@ -59,7 +73,12 @@
                 <input type="checkbox" />
                 <label title="Đối tượng tập hợp chi phí">Đối tượng</label>
               </div>
-              <Selection :w="'50%'" :isDisable="true" :list="targetList" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="targetList"
+                :field="'Target'"
+              />
             </div>
             <div class="Row-Right">
               <div>
@@ -70,56 +89,106 @@
           <div class="Row Second-Row">
             <div class="Row-Left">
               <div><input type="checkbox" /> <label>Đối tượng THCP</label></div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'TargetTHCP'"
+              />
             </div>
             <div class="Row-Right">
               <div><input type="checkbox" /> <label>Công trình</label></div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'Construction'"
+              />
             </div>
           </div>
           <div class="Row Third-Row">
             <div class="Row-Left">
               <div><input type="checkbox" /> <label>Đơn đặt hàng</label></div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'Order'"
+              />
             </div>
             <div class="Row-Right">
               <div>
                 <input type="checkbox" /> <label>Hợp đồng bán hàng</label>
               </div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'SellContract'"
+              />
             </div>
           </div>
           <div class="Row Fourth-Row">
             <div class="Row-Left">
               <div><input type="checkbox" /> <label>Hợp đồng mua</label></div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'PurchaseContract'"
+              />
             </div>
             <div class="Row-Right">
               <div>
                 <input type="checkbox" />
                 <label title="Khoản mục chi phí">Khoản mục CP</label>
               </div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'Items'"
+              />
             </div>
           </div>
           <div class="Row Fifth-Row">
             <div class="Row-Left">
               <div><input type="checkbox" /> <label>Đơn vị</label></div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'Unit'"
+              />
             </div>
             <div class="Row-Right">
               <div><input type="checkbox" /> <label>Mã thống kê</label></div>
-              <Selection :w="'50%'" :isDisable="true" :list="list" />
+              <Selection
+                :w="'50%'"
+                :isDisable="true"
+                :list="list"
+                :field="'StatisticalCode'"
+              />
             </div>
           </div>
         </div>
       </div>
       <div class="Content-Button">
         <div class="Cancel">
-          <input class="btn btn-cancel" type="button" value="Hủy" />
+          <input
+            class="btn btn-cancel"
+            type="button"
+            value="Hủy"
+            @click="closeDialog()"
+          />
         </div>
         <div class="Save">
-          <input class="btn btn-save" type="button" value="Cất" />
+          <input
+            class="btn btn-save"
+            type="button"
+            value="Cất"
+            @click="addOrUpdate(getDataInForm(), getParentAccountNumber())"
+          />
           <input
             class="btn btn-save-and-add"
             type="button"
@@ -127,10 +196,25 @@
           />
         </div>
       </div>
-      <div class="toggle">
+      <div class="toggle" @click="resize()">
         <div class="icon"></div>
       </div>
     </div>
+    <div class="Error-Duplicate" v-if="isDuplicate">
+      <div class="icon-popup icon-warning"></div>
+      <div class="text-popup">{{ errorDuplicateMsg }}</div>
+    </div>
+    <Popup v-if="isShowErrorPopup">
+      <template v-slot:Head>
+        <div class="icon-popup icon-warning"></div>
+        <div class="text">{{ emptyFieldName }} không được để trống</div>
+      </template>
+      <template v-slot:Button>
+        <div class="btn-close">
+          <button @click="closePopup()">Đóng</button>
+        </div>
+      </template>
+    </Popup>
   </div>
 </template>
 
@@ -138,15 +222,33 @@
 import Input from "../../base/Input";
 import Textarea from "../../base/Textarea";
 import Selection from "../../base/Selection";
+import Popup from "../../base/Popup";
+import axios from "axios";
 
 export default {
   components: {
     Input,
     Textarea,
     Selection,
+    Popup,
+  },
+  mounted() {
+    window.onresize = function() {
+      const form = document.querySelector(".MISAAccount-System-Dialog-Content");
+      if (!form) {
+        return;
+      }
+
+      if (document.body.offsetWidth < 1366) {
+        form.style.width = "75%";
+      } else {
+        form.style.width = "52%";
+      }
+    };
   },
   data() {
     return {
+      API_URL: this.$store.getters.getApiUrl,
       targetList: {
         title: [],
         content: [["Nhà cung cấp"], ["Khách hàng"], ["Nhân viên"]],
@@ -155,16 +257,251 @@ export default {
         title: [],
         content: [["Chỉ cảnh báo"], ["Bắt buộc nhập"]],
       },
+      kindList: {
+        title: [],
+        content: [["Dư nợ"], ["Dư có"], ["Lưỡng tính"], ["Không có số dư"]],
+      },
+      rotateDeg: "180",
+      isShowErrorPopup: false,
+      emptyFieldName: null,
+      errorDuplicateMsg: null,
+      isDuplicate: false,
     };
+  },
+  methods: {
+    resize() {
+      const form = document.querySelector(".MISAAccount-System-Dialog-Content");
+      const icon = document.querySelector(
+        ".MISAAccount-System-Dialog-Content .toggle .icon"
+      );
+      const ratio = form.offsetWidth / document.body.offsetWidth;
+
+      icon.style.transform = `rotate(${this.rotateDeg}deg)`;
+      this.rotateDeg = Number(this.rotateDeg) + 180;
+      if (ratio > 0.51 && ratio < 0.98) {
+        form.style.width = "99%";
+      } else {
+        if (document.body.offsetWidth <= 1366) {
+          form.style.width = "75%";
+        } else {
+          form.style.width = "52%";
+        }
+      }
+    },
+
+    /**
+     * Đóng dialog
+     * CreatedBy: nvcuong(03/06/2021)
+     */
+    closeDialog() {
+      this.$store.commit("setIsShowAccountDialog", false); // Đóng dialog
+    },
+
+    /**
+     * Lấy dữ liệu từ form
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    getDataInForm() {
+      try {
+        const inputPath = ".MISAAccount-System-Dialog .MISAInput input";
+        const textareaPath =
+          ".MISAAccount-System-Dialog .MISATextarea textarea";
+        const selectionPath = ".MISAAccount-System-Dialog .MISASelection input";
+        const isKeepBusinessAccount = this.$refs.IsKeepBusinessAccount;
+        const info = {};
+
+        const inputs = document.querySelectorAll(inputPath);
+        const textareas = document.querySelectorAll(textareaPath);
+        const selections = document.querySelectorAll(selectionPath);
+
+        info.IsKeepBusinessAccount = isKeepBusinessAccount.checked ? 1 : 0;
+        info.Status = "Đang sử dụng";
+        inputs.forEach((input) => {
+          const key = input.attributes.field.value;
+          info[[key]] = input.value == "" ? null : input.value;
+        });
+        // debugger;
+        textareas.forEach((textarea) => {
+          const key = textarea.attributes.field.value;
+          info[[key]] = textarea.value == "" ? null : textarea.value;
+        });
+        selections.forEach((input) => {
+          const key = input.attributes.field.value;
+          info[[key]] = input.value == "" ? null : input.value;
+        });
+        return info;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    /**
+     * focus vào ô input đầu tiên
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    focusFirstElement() {
+      const path = ".MISAAccount-System-Dialog input[type='text']";
+      const focusInput = document.querySelector(path);
+
+      focusInput.focus();
+    },
+
+    /**
+     * Thêm hoặc sửa thông tin tài khoản
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    async addOrUpdate(account, parent) {
+      const vm = this;
+      const endpoint = "/accounts/ref" + (parent ? `?refer=${parent}` : "");
+      let API_URL = this.API_URL + endpoint;
+
+      this.checkValidate();
+      const enableSubmit = this.$store.getters.getEnableSubmit;
+
+      if (enableSubmit) {
+        try {
+          // Config
+          const config = {
+            url: API_URL,
+            method: "POST",
+            data: JSON.stringify(account),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          };
+
+          // Sửa lại url nếu người dùng nhập tài khoản tổng hợp sau
+          if (
+            account.ParentAccountNumber &&
+            account.ParentAccountNumber.trim() != ""
+          ) {
+            API_URL += "?refer=" + account.ParentAccountNumber;
+            config.url = API_URL;
+          }
+          // to update
+
+          axios // Send request
+            .request(config)
+            .then(() => {
+              vm.closeDialog(); // Đóng form khi thêm thành công
+              vm.$emit("reload"); // Load lại dữ liệu
+            })
+            .catch((error) => {
+              console.log(error.response);
+              if (error.response.data.ResultCode != 20) {
+                // Set error
+                vm.isDuplicate = true;
+                if (error.response.data.ResultCode == 41) {
+                  vm.errorDuplicateMsg = `Tài khoản '${account.AccountNumber}' đã tồn tại.`;
+                } else if (error.response.data.ResultCode == 40) {
+                  vm.errorDuplicateMsg =
+                    "Dữ liệu <Tài khoản tổng hợp> không có trong danh mục.";
+                }
+                vm.focusFirstElement(); // focus
+                document
+                  .querySelector(
+                    '.MISAAccount-System-Dialog input[field="AccountNumber"]'
+                  )
+                  .classList.add("error");
+                // xóa error duplicate msg đi sau 4s hiển thị
+                setTimeout(function() {
+                  vm.isDuplicate = false;
+                }, 4000);
+              }
+            });
+        } catch (error) {
+          console.log("%c[ERROR][From VendorDialog]:", "color: red", error);
+        }
+      }
+    },
+
+    /**
+     * Lấy tài khoản cha
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    getParentAccountNumber() {
+      const path = ".MISAAccount-System .Root .Row.selected .AccountNumber";
+      const target = document.querySelector(path);
+      if (!target) {
+        return null;
+      }
+      const result = target.innerHTML.trim();
+      return result;
+    },
+
+    /**
+     * Check validate
+     * nvcuong (28/05/2021)
+     */
+    checkValidate() {
+      const vm = this;
+      const requiredInputs = document.querySelectorAll(
+        ".MISAAccount-System-Dialog input.Required"
+      );
+      let isValid = true;
+
+      // Check empty
+      requiredInputs.forEach((requiredInput) => {
+        if (!vm.checkEmpty(requiredInput)) {
+          requiredInput.classList.add("error"); // Gán class error cho input
+          vm.$store.commit("setEnableSubmit", false); // Disable submit
+          isValid = false;
+          vm.isShowErrorPopup = true; // Hiển thị popup thông báo lỗi
+
+          let errorField = requiredInput.parentElement.children[0].innerHTML;
+          vm.emptyFieldName = errorField.slice(0, errorField.length - 15); // Gán tên trường bị lỗi
+        } else {
+          requiredInput.classList.remove("error"); // Xóa class error cho input
+        }
+      });
+      // Check số tài khoản chứa số tài khoản cha ở đầu
+      const child = document.querySelector(
+        '.MISAAccount-System-Dialog input[field="AccountNumber"]'
+      );
+      const parent = document.querySelector(
+        '.MISAAccount-System-Dialog input[field="ParentAccountNumber"]'
+      );
+      if (child && parent) {
+        const foundIndex = child.value.indexOf(parent.value);
+        if (foundIndex == -1 || foundIndex != 0) {
+          vm.$store.commit("setEnableSubmit", false);
+          isValid = false;
+          vm.isDuplicate = true;
+          vm.errorDuplicateMsg =
+            "Số tài khoản không hợp lệ. Số tài khoản chi tiết phải bắt đầu bằng số của Tài khoản tổng hợp";
+          // xóa error duplicate msg đi sau 4s hiển thị
+          setTimeout(function() {
+            vm.isDuplicate = false;
+          }, 4000);
+        }
+      }
+
+      if (isValid) {
+        vm.$store.commit("setEnableSubmit", true); // Enable submit
+      }
+    },
+
+    /**
+     * Check rỗng
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    checkEmpty(input) {
+      if (input.value.trim() == "") return false;
+      return true;
+    },
+    /**
+     * Close popup
+     * CreatedBy: nvcuong(29/05/2021)
+     */
+    closePopup() {
+      this.isShowErrorPopup = false; // đóng popup
+      this.focusFirstElement();
+    },
   },
 };
 </script>
 
 <style lang="scss">
-:root {
-  --w: 52%;
-}
-
 .MISAAccount-System-Dialog {
   position: fixed;
   top: 0;
@@ -177,7 +514,7 @@ export default {
   z-index: 1001;
   .MISAAccount-System-Dialog-Content {
     position: relative;
-    width: var(--w);
+    width: 52%;
     height: 100%;
     background-color: #fff;
     .Content-Head {
@@ -335,11 +672,20 @@ export default {
     }
   }
 }
-@media screen and (max-width: 1366px) {
-  .MISAAccount-System-Dialog-Content {
-    --w: 70%;
-  }
+.Error-Duplicate {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+  padding: 10px 20px;
+  border: 1px solid rgb(241, 57, 57);
+  border-radius: 5px;
+  background-color: #fff;
+  z-index: 9999;
 }
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

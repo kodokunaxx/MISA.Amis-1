@@ -127,7 +127,11 @@
         <div class="Data-Pagenav">
           <div class="Data-Pagenav-Left">
             <div class="Total-Row">
-              Tổng số: <span style="font-weight: 600">{{ $store.getters.getTotal }}</span> bản ghi
+              Tổng số:
+              <span style="font-weight: 600">{{
+                $store.getters.getTotal
+              }}</span>
+              bản ghi
             </div>
           </div>
           <div class="Data-Pagenav-Right">
@@ -633,6 +637,7 @@ export default {
 
 .MISAVendor-Head-Button {
   display: flex;
+  margin-right: 8px;
   .btn {
     display: flex;
     align-items: center;

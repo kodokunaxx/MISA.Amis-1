@@ -43,6 +43,10 @@ export default {};
       padding-bottom: 10px;
     }
     .Content-Button {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      height: 60px;
       padding: 0 !important;
       .btn-close {
         width: 100%;
