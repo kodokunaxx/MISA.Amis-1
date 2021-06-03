@@ -7,11 +7,17 @@ namespace MISA.Core.Entities
     public class Account : BaseEntity
     {
         public Guid AccountId { get; set; }
+        
+        [Required]
+        [Duplication]
         public string AccountNumber { get; set; }
+
+        [Required]
         public string AccountName { get; set; }
-        public string EnglishName { get; set; }
         public string Kind { get; set; }
+        public string EnglishName { get; set; }
         public string Explain { get; set; }
+        public string Status { get; set; }
         public int IsKeepBusinessAccount { get; set; }
         public string Target { get; set; }
         public string TargetTHCP { get; set; }
@@ -23,6 +29,7 @@ namespace MISA.Core.Entities
         public string SellContract { get; set; }
         public string Items { get; set; }
         public string StatisticalCode { get; set; }
+
         public int lft { get; set; }
         public int rgt { get; set; }
     }

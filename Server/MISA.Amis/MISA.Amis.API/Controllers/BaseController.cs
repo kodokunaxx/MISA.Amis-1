@@ -50,14 +50,14 @@ namespace MISA.Amis.API.Controllers
 
         // POST api/<BaseController>
         [HttpPost]
-        public IActionResult Post([FromBody] T enitty)
+        public virtual IActionResult Post([FromBody] T enitty)
         {
             ServiceResult serviceResult = _baseService.Insert(enitty);
-            if( serviceResult.ResultCode == (int)EnumServiceResult.NotValid)
+            if (serviceResult.ResultCode == (int)EnumServiceResult.NotValid)
             {
                 return BadRequest(serviceResult);
             }
-            return Ok(serviceResult);
+            return StatusCode(201, serviceResult);
         }
 
         // PUT api/<BaseController>/5
@@ -78,7 +78,7 @@ namespace MISA.Amis.API.Controllers
         public IActionResult Delete(Guid id)
         {
             ServiceResult serviceResult = _baseService.Delete(id);
-            if( (int) serviceResult.Data > 0)
+            if ((int)serviceResult.Data > 0)
             {
                 return Ok(serviceResult);
             }
