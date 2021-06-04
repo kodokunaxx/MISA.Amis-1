@@ -124,8 +124,7 @@ export default {
     }
   },
   updated() {
-    // if (this.valueBeforeUpdate && this.valueBeforeUpdate.trim() != "")
-    //   this.$refs.input.value = this.valueBeforeUpdate;
+    this.selfDisable = this.isDisable;
   },
   data() {
     return {
@@ -164,7 +163,6 @@ export default {
         else input.classList.remove("error");
       }
     },
-
     /**
      * Chọn dữ liệu
      * CreateBy: nvcuong (28/05/2021)
@@ -175,12 +173,15 @@ export default {
       this.currentIndex = index;
       this.$refs.input.classList.remove("error");
       this.closeList(); // Đóng list
-    },
 
+      const icon = this.$refs.arrow;
+
+      icon.style.transform = "rotate(" + this.rotateDeg + "deg)";
+      this.rotateDeg = Number(this.rotateDeg) + 180;
+    },
     closeList() {
       this.isShowList = false;
     },
-
     /**
      * Show dropdown
      * CreatedBy: nvcuong ( 31/05/2021)
@@ -188,7 +189,6 @@ export default {
     openList() {
       this.isShowList = true;
     },
-
     /**
      * Tìm kiếm qua từ khóa được nhập
      * CreatedBy: nvcuong ( 31/05/2021)

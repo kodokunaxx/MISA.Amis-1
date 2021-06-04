@@ -70,12 +70,12 @@
           <div class="Row First-Row">
             <div class="Row-Left">
               <div>
-                <input type="checkbox" />
+                <input type="checkbox" @click="toggleDisable(0)" />
                 <label title="Đối tượng tập hợp chi phí">Đối tượng</label>
               </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[0].value"
                 :list="targetList"
                 :field="'Target'"
               />
@@ -88,19 +88,25 @@
           </div>
           <div class="Row Second-Row">
             <div class="Row-Left">
-              <div><input type="checkbox" /> <label>Đối tượng THCP</label></div>
+              <div>
+                <input type="checkbox" @click="toggleDisable(1)" />
+                <label>Đối tượng THCP</label>
+              </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[1].value"
                 :list="list"
                 :field="'TargetTHCP'"
               />
             </div>
             <div class="Row-Right">
-              <div><input type="checkbox" /> <label>Công trình</label></div>
+              <div>
+                <input type="checkbox" @click="toggleDisable(2)" />
+                <label>Công trình</label>
+              </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[2].value"
                 :list="list"
                 :field="'Construction'"
               />
@@ -108,21 +114,25 @@
           </div>
           <div class="Row Third-Row">
             <div class="Row-Left">
-              <div><input type="checkbox" /> <label>Đơn đặt hàng</label></div>
+              <div>
+                <input type="checkbox" @click="toggleDisable(3)" />
+                <label>Đơn đặt hàng</label>
+              </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[3].value"
                 :list="list"
                 :field="'Order'"
               />
             </div>
             <div class="Row-Right">
               <div>
-                <input type="checkbox" /> <label>Hợp đồng bán hàng</label>
+                <input type="checkbox" @click="toggleDisable(4)" />
+                <label>Hợp đồng bán hàng</label>
               </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[4].value"
                 :list="list"
                 :field="'SellContract'"
               />
@@ -130,22 +140,25 @@
           </div>
           <div class="Row Fourth-Row">
             <div class="Row-Left">
-              <div><input type="checkbox" /> <label>Hợp đồng mua</label></div>
+              <div>
+                <input type="checkbox" @click="toggleDisable(5)" />
+                <label>Hợp đồng mua</label>
+              </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[5].value"
                 :list="list"
                 :field="'PurchaseContract'"
               />
             </div>
             <div class="Row-Right">
               <div>
-                <input type="checkbox" />
+                <input type="checkbox" @click="toggleDisable(6)" />
                 <label title="Khoản mục chi phí">Khoản mục CP</label>
               </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[6].value"
                 :list="list"
                 :field="'Items'"
               />
@@ -153,19 +166,25 @@
           </div>
           <div class="Row Fifth-Row">
             <div class="Row-Left">
-              <div><input type="checkbox" /> <label>Đơn vị</label></div>
+              <div>
+                <input type="checkbox" @click="toggleDisable(7)" />
+                <label>Đơn vị</label>
+              </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[7].value"
                 :list="list"
                 :field="'Unit'"
               />
             </div>
             <div class="Row-Right">
-              <div><input type="checkbox" /> <label>Mã thống kê</label></div>
+              <div>
+                <input type="checkbox" @click="toggleDisable(8)" />
+                <label>Mã thống kê</label>
+              </div>
               <Selection
                 :w="'50%'"
-                :isDisable="true"
+                :isDisable="disables[8].value"
                 :list="list"
                 :field="'StatisticalCode'"
               />
@@ -281,6 +300,17 @@ export default {
       emptyFieldName: null,
       errorDuplicateMsg: null,
       isDuplicate: false,
+      disables: [
+        { value: true },
+        { value: true },
+        { value: true },
+        { value: true },
+        { value: true },
+        { value: true },
+        { value: true },
+        { value: true },
+        { value: true },
+      ],
     };
   },
   methods: {
@@ -304,12 +334,18 @@ export default {
       }
     },
 
+    toggleDisable(index) {
+      this.disables[index].value = !this.disables[index].value;
+      console.log(index, this.disables[index]);
+    },
+
     /**
      * Đóng dialog
      * CreatedBy: nvcuong(03/06/2021)
      */
     closeDialog() {
       this.$store.commit("setIsShowAccountDialog", false); // Đóng dialog
+      this.disables.forEach((disable) => (disable.value = true));
     },
 
     /**
@@ -418,7 +454,7 @@ export default {
               }
             })
             .catch((error) => {
-              console.log(error.response);
+              console.log("[ERROR]:", error.response);
               if (error.response.data.ResultCode != 20) {
                 // Set error
                 vm.isDuplicate = true;

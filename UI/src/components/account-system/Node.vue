@@ -30,14 +30,17 @@
         :node="child"
         :columns="columns"
         :deepLevel="parseInt(deepLevel) + 1"
+        :parent="self"
         @reload="reload()"
         @showCannotDelete="showCannotDelete()"
         @showConfirmDelete="showConfirmDelete($event)"
+        @giveMeData="sendToChild()"
       ></node>
     </li>
     <!------------------------------------------------------------->
     <div
       class="icon"
+      ref="icon"
       v-if="node.children && node.children.length"
       @click="toggle()"
     ></div>
@@ -107,7 +110,7 @@ import axios from "axios";
 
 export default {
   name: "node",
-  props: ["node", "deepLevel", "columns"],
+  props: ["node", "deepLevel", "columns", "parent"],
   computed: {
     parentStyle() {
       return {
@@ -128,9 +131,13 @@ export default {
       confirmDelete: false,
       id: null,
       accountNumber: null,
+      self: this.parent,
     };
   },
   methods: {
+    sendToChild() {
+      this.self = this.node.parent.AccountNumber;
+    },
     /**
      * Đóng, hoặc mở node con
      * CreatedBy: nvcuong (02/06/2021)
@@ -138,6 +145,16 @@ export default {
     toggle() {
       this.isShowDetail = !this.isShowDetail;
       this.refactorTable();
+
+      const icon = this.$refs.icon;
+      const rect = window
+        .getComputedStyle(icon)
+        .getPropertyValue("background-position");
+      if (rect == "-607px -311px") {
+        icon.style.backgroundPosition = "-559px -312px";
+      } else {
+        icon.style.backgroundPosition = "-607px -311px";
+      }
     },
 
     /**
@@ -254,6 +271,7 @@ export default {
     async openDialog(id) {
       let API_URL = this.API_URL + "/accounts";
       let account = null;
+      this.$emit("giveMeData");
 
       if (id) {
         this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
@@ -271,6 +289,10 @@ export default {
       // Bind dữ liệu
       if (account) {
         this.bindDataToForm(account);
+        const parentPath =
+          ".MISAAccount-System-Dialog input[field='ParentAccountNumber']";
+        const parent = document.querySelector(parentPath);
+        parent.value = this.parent || "";
       }
     },
 
@@ -279,6 +301,7 @@ export default {
      * CreatedBy: nvcuong (03/06/2021)
      */
     bindDataToForm(account) {
+      // const vm = this;
       const inputPath = ".MISAAccount-System-Dialog .MISAInput input";
       const textareaPath = ".MISAAccount-System-Dialog .MISATextarea textarea";
       const selectionPath = ".MISAAccount-System-Dialog .MISASelection input";
