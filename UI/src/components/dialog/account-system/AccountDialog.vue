@@ -187,12 +187,27 @@
             class="btn btn-save"
             type="button"
             value="Cất"
-            @click="addOrUpdate(getDataInForm(), getParentAccountNumber())"
+            @click="
+              addOrUpdate(
+                getDataInForm(),
+                getParentAccountNumber(),
+                getId(),
+                'save'
+              )
+            "
           />
           <input
             class="btn btn-save-and-add"
             type="button"
             value="Cất và thêm"
+            @click="
+              addOrUpdate(
+                getDataInForm(),
+                getParentAccountNumber(),
+                getId(),
+                'save-and-add'
+              )
+            "
           />
         </div>
       </div>
@@ -350,20 +365,29 @@ export default {
      * Thêm hoặc sửa thông tin tài khoản
      * CreatedBy: nvcuong (03/06/2021)
      */
-    async addOrUpdate(account, parent) {
+    async addOrUpdate(account, parent, id, type) {
       const vm = this;
-      const endpoint = "/accounts/ref" + (parent ? `?refer=${parent}` : "");
-      let API_URL = this.API_URL + endpoint;
+      const MODE = this.$store.getters.getMODE;
+      const method = MODE == "ADD" ? "POST" : "PUT";
+      let endpoint = "";
+      let API_URL = this.API_URL;
 
       this.checkValidate();
       const enableSubmit = this.$store.getters.getEnableSubmit;
+
+      if (MODE == "ADD") {
+        endpoint = "/accounts/ref" + (parent ? `?refer=${parent}` : "");
+      } else if (MODE == "UPDATE") {
+        endpoint = `/accounts/${id}`;
+      }
+      API_URL += endpoint;
 
       if (enableSubmit) {
         try {
           // Config
           const config = {
             url: API_URL,
-            method: "POST",
+            method: method,
             data: JSON.stringify(account),
             headers: {
               "Content-Type": "application/json",
@@ -385,8 +409,13 @@ export default {
           axios // Send request
             .request(config)
             .then(() => {
-              vm.closeDialog(); // Đóng form khi thêm thành công
               vm.$emit("reload"); // Load lại dữ liệu
+              if (type == "save") {
+                vm.closeDialog(); // Đóng form khi thêm thành công
+              } else {
+                vm.clearForm(); // clear form
+                vm.$store.commit("setMODE", "ADD"); // sửa lại MODE là ADD
+              }
             })
             .catch((error) => {
               console.log(error.response);
@@ -450,7 +479,12 @@ export default {
           isValid = false;
           vm.isShowErrorPopup = true; // Hiển thị popup thông báo lỗi
 
-          let errorField = requiredInput.parentElement.children[0].innerHTML;
+          let lab = requiredInput.parentElement.children[0];
+          if (lab.tagName == "INPUT") {
+            lab = lab.parentElement.parentElement.children[0];
+          }
+          let errorField = lab.innerHTML;
+
           vm.emptyFieldName = errorField.slice(0, errorField.length - 15); // Gán tên trường bị lỗi
         } else {
           requiredInput.classList.remove("error"); // Xóa class error cho input
@@ -498,6 +532,41 @@ export default {
     closePopup() {
       this.isShowErrorPopup = false; // đóng popup
       this.focusFirstElement();
+    },
+
+    clearForm() {
+      try {
+        const inputPath = ".MISAAccount-System-Dialog .MISAInput input";
+        const textareaPath =
+          ".MISAAccount-System-Dialog .MISATextarea textarea";
+        const selectionPath = ".MISAAccount-System-Dialog .MISASelection input";
+        const isKeepBusinessAccount = this.$refs.IsKeepBusinessAccount;
+
+        const inputs = document.querySelectorAll(inputPath);
+        const textareas = document.querySelectorAll(textareaPath);
+        const selections = document.querySelectorAll(selectionPath);
+
+        isKeepBusinessAccount.checked = false;
+        inputs.forEach((input) => (input.value = ""));
+        textareas.forEach((textarea) => (textarea.value = ""));
+        selections.forEach((input) => (input.value = ""));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    /**
+     * Get id
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    getId() {
+      const path = ".MISAAccount-System .Root .Row.selected .AccountId";
+      const target = document.querySelector(path);
+      if (!target) {
+        return null;
+      }
+      const result = target.innerHTML.trim();
+      return result;
     },
   },
 };

@@ -10,6 +10,7 @@
         :style="parentStyle"
         v-show="columns.includes(key)"
         @click="selectRow($event.target.parentElement)"
+        @dblclick="openDialog(node.parent.AccountId)"
       >
         {{ value }}
       </div>
@@ -41,6 +42,7 @@
       @click="toggle()"
     ></div>
     <!------------------------------------------------------------->
+
     <ContextMenu ref="menu" v-show="isShowContextMenu" :w="170">
       <ul>
         <li @click="closeContextMenu()">Nhân bản</li>
@@ -51,6 +53,7 @@
         <li @click="closeContextMenu()">Ngừng sử dụng</li>
       </ul>
     </ContextMenu>
+
     <Popup v-if="cannotDeleteRoot">
       <template v-slot:Head>
         <div class="icon-popup icon-warning"></div>
@@ -70,6 +73,7 @@
         </div>
       </template>
     </Popup>
+
     <Popup v-if="confirmDelete">
       <template v-slot:Head>
         <div class="icon-popup icon-dangerous"></div>
@@ -171,6 +175,7 @@ export default {
       }
       return result;
     },
+
     /**
      * Reload
      * CreatedBy: nvcuong (03/06/2021)
@@ -241,6 +246,80 @@ export default {
         selectedRow.classList.remove("selected")
       );
       target.classList.add("selected");
+    },
+    /**
+     * Mở dialog
+     * CreatedBy: nvcuong(03/06/2021)
+     */
+    async openDialog(id) {
+      let API_URL = this.API_URL + "/accounts";
+      let account = null;
+
+      if (id) {
+        this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+        this.$store.commit("setMODE", "UPDATE");
+        const response = await axios.get(API_URL + `/${id}`); // Lấy account theo id
+        account = response.data.Data;
+      } else {
+        this.$store.commit("setMODE", "ADD");
+      }
+
+      this.$store.commit("setIsLoading", false); // Tắt hiệu ứng loading
+      await this.$store.commit("setIsShowAccountDialog", true); // Mở dialog
+      this.focusFirstElement(); // focus first element
+
+      // Bind dữ liệu
+      if (account) {
+        this.bindDataToForm(account);
+      }
+    },
+
+    /**
+     * Bind dữ liệu lên form
+     * CreatedBy: nvcuong (03/06/2021)
+     */
+    bindDataToForm(account) {
+      const inputPath = ".MISAAccount-System-Dialog .MISAInput input";
+      const textareaPath = ".MISAAccount-System-Dialog .MISATextarea textarea";
+      const selectionPath = ".MISAAccount-System-Dialog .MISASelection input";
+
+      const inputs = document.querySelectorAll(inputPath);
+      const textareas = document.querySelectorAll(textareaPath);
+      const selections = document.querySelectorAll(selectionPath);
+      const isKeepBusinessAccountCheckBox = document.querySelector(
+        '.MISAAccount-System-Dialog input[field="IsKeepBusinessAccount"]'
+      );
+
+      isKeepBusinessAccountCheckBox.checked = account["IsKeepBusinessAccount"]
+        ? true
+        : false;
+
+      inputs.forEach((input) => {
+        const key = input.attributes.field.value;
+        input.value = account[key] || "";
+      });
+      // debugger;
+      textareas.forEach((textarea) => {
+        const key = textarea.attributes.field.value;
+        textarea.value = account[key] || "";
+      });
+      selections.forEach((input) => {
+        const key = input.attributes.field.value;
+        input.value = account[key] || "";
+      });
+    },
+
+    /**
+     * focus vào ô input đầu tiên
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    focusFirstElement() {
+      setTimeout(function() {
+        const path = ".MISAAccount-System-Dialog input[type='text']";
+        const focusInput = document.querySelector(path);
+
+        focusInput.focus();
+      }, 0);
     },
 
     /**

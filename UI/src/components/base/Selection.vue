@@ -10,10 +10,10 @@
         ref="input"
         :style="inputStyle"
         v-bind="$attrs"
-        :class="[className]"
+        :class="[className, isRequired ? 'Required' : '']"
         :disabled="this.$store.getters.getIsReadOnly || isDisable"
         @keyup="search($event.target.value)"
-        @blur="(isRequired ? checkEmpty() : null), closeList()"
+        @blur="isRequired ? checkEmpty() : null, closeList()"
       />
       <!------------------------------------------->
       <div class="Icon-1" @click="toggleList()">

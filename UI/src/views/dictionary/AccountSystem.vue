@@ -79,8 +79,11 @@
         </div>
       </div>
     </div>
+
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
+
     <AccountDialog @reload="reload()" />
+
     <Popup v-if="cannotDeleteRoot">
       <template v-slot:Head>
         <div class="icon-popup icon-warning"></div>
@@ -100,6 +103,7 @@
         </div>
       </template>
     </Popup>
+
     <Popup v-if="confirmDelete">
       <template v-slot:Head>
         <div class="icon-popup icon-dangerous"></div>
@@ -206,7 +210,13 @@ export default {
      * Mở dialog
      * CreatedBy: nvcuong(03/06/2021)
      */
-    async openDialog() {
+    async openDialog(id) {
+      if (id) {
+        this.$store.commit("setMODE", "UPDATE");
+      } else {
+        this.$store.commit("setMODE", "ADD");
+      }
+
       await this.$store.commit("setIsShowAccountDialog", true); // Mở dialog
       this.focusFirstElement(); // focus first element
 
