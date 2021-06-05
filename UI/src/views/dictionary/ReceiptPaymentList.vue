@@ -1,16 +1,19 @@
 <template>
-  <div class="MISAVendor">
-    <div class="MISAVendor-Head flex items-center">
-      <div class="MISAVendor-Head-VendorList">
-        <div class="title">Danh sách nhà cung cấp</div>
-        <div class="back-to-all">
-          <span class="icon"></span>
-          <a href="#">
-            Tất cả các danh mục
-          </a>
-        </div>
+  <div class="MISARPL">
+    <div class="MISARPL-Head flex items-center">
+      <ul class="MISARPL-Head-Nav">
+        <li><router-link to="/"> Quy trình</router-link></li>
+        <li class="active">
+          <router-link to="/receipt-payment"> Thu, chi tiền</router-link>
+        </li>
+        <li><router-link to="/#"> Kiểm kê</router-link></li>
+        <li><router-link to="/#"> Dự báo dòng tiền</router-link></li>
+        <li><router-link to="/#"> Báo cáo</router-link></li>
+      </ul>
+      <div class="MISARPL-Head-RPL">
+        <div class="title">Thu chi tiền mặt</div>
       </div>
-      <div class="MISAVendor-Head-Button">
+      <div class="MISARPL-Head-Button">
         <div class="btn">
           <span class="icon guide"></span>
           <a href="#">Hướng dẫn</a>
@@ -20,30 +23,30 @@
           <span class="icon utility"></span>
         </div>
         <div class="btn" @click="openDialog()">
-          Thêm
+          Thêm chi tiền
           <div class="line"></div>
           <span class="icon add"></span>
         </div>
       </div>
     </div>
 
-    <div class="MISAVendor-Content-Head" v-show="isShowContenHead">
+    <div class="MISARPL-Content-Head" v-show="isShowContenHead">
       <div class="Out-of-date">
         <div class="wrapper">
-          <div>0</div>
-          <div>Nợ quá hạn</div>
+          <div>270.100.644,0</div>
+          <div>Tổng thu đầu năm đến hiện tại</div>
         </div>
       </div>
       <div class="Total">
         <div class="wrapper">
-          <div>0</div>
-          <div>Tổng nợ phải trả</div>
+          <div>185.100.644,0</div>
+          <div>Tổng chi đầu năm đến hiện tại</div>
         </div>
       </div>
       <div class="Paid">
         <div class="wrapper">
-          <div>0</div>
-          <div>Đã thanh toán (30 ngày gần đây)</div>
+          <div style="color: red">(899.800.000,0)</div>
+          <div>Tồn quỹ hiện tại</div>
         </div>
       </div>
     </div>
@@ -66,7 +69,6 @@
             class="Search-input"
             placeholder="Nhập để tìm kiếm"
             ref="search"
-            @keyup="searchVendor($event.target.value)"
           />
           <div class="icon"></div>
         </div>
@@ -82,43 +84,45 @@
         <div class="icon" ref="arrow"></div>
       </div>
     </div>
-    <div class="MISAVendor-Content-Body">
+    <div class="MISARPL-Content-Body">
       <div id="Data-Table">
         <div class="Thead">
           <div class="Row">
             <div class="Column Checkbox"><input type="checkbox" /></div>
-            <div class="Column VendorCode">Mã nhà cung cấp</div>
-            <div class="Column VendorName">Tên nhà cung cấp</div>
-            <div class="Column Address">Địa chỉ</div>
-            <div class="Column Debt text-right">Công nợ</div>
-            <div class="Column TaxCode">Mã số thuế</div>
-            <div class="Column PhoneNumber">Điện thoại</div>
-            <div class="Column IdCard">Số CMND</div>
-            <div class="Column Feature">Chức năng</div>
+            <div class="Column KBADate text-center">NGÀY HẠCH TOÁN</div>
+            <div class="Column VoucherDate text-center">NGÀY CHỨNG TỪ</div>
+            <div class="Column VoucherNumber">SỐ CHỨNG TỪ</div>
+            <div class="Column Explain">DIỄN GIẢI</div>
+            <div class="Column Money text-right">SỐ TIỀN</div>
+            <div class="Column VendorName">ĐỐI TƯỢNG</div>
+            <div class="Column VendorCode">MÃ ĐỐI TƯỢNG</div>
+            <div class="Column Address">ĐỊA CHỈ</div>
+            <div class="Column Feature">CHỨC NĂNG</div>
           </div>
         </div>
         <div class="Tbody">
           <div
-            v-for="vendor in this.$store.getters.getVendors"
-            :key="vendor.VendorId"
-            @dblclick="openDialog(vendor.VendorId, 'UPDATE')"
-            @click="handleSelectRow(vendor.VendorId)"
-            :id="vendor.VendorId"
+            v-for="rp in this.$store.getters.getRPL"
+            :key="rp.ReceiptPaymentId"
+            @dblclick="openDialog(rp.ReceiptPaymentId, 'UPDATE')"
+            @click="handleSelectRow(rp.ReceiptPaymentId)"
+            :id="rp.ReceiptPaymentId"
             class="Row"
           >
             <div class="Column Checkbox"><input type="checkbox" /></div>
-            <div class="Column VendorCode">{{ vendor.VendorCode }}</div>
-            <div class="Column VendorName">{{ vendor.VendorName }}</div>
-            <div class="Column Address">{{ vendor.Address }}</div>
-            <div class="Column Debt text-right">
-              {{ vendor.Debt | formatMoney }}
+            <div class="Column KBADate">{{ rp.KBADate }}</div>
+            <div class="Column VoucherDate">{{ rp.VoucherDate }}</div>
+            <div class="Column VoucherNumber">{{ rp.VoucherNumber }}</div>
+            <div class="Column Explain">{{ rp.Explain }}</div>
+            <div class="Column Money text-right">
+              {{ rp.Money | formatMoney }}
             </div>
-            <div class="Column TaxCode">{{ vendor.TaxCode }}</div>
-            <div class="Column PhoneNumber">{{ vendor.PhoneNumber }}</div>
-            <div class="Column IdCard">{{ vendor.IdCard }}</div>
+            <div class="Column VendorName">{{ rp.VendorName }}</div>
+            <div class="Column VendorCode">{{ rp.VendorCode }}</div>
+            <div class="Column Address">{{ rp.Address }}</div>
             <div class="Column Feature ">
               <div class="wrapper">
-                <div class="text">Lập CT mua hàng</div>
+                <div class="text">Xem</div>
                 <div class="icon" @click="openContextMenu($event)"></div>
               </div>
             </div>
@@ -129,7 +133,7 @@
             <div class="Total-Row">
               Tổng số:
               <span style="font-weight: 600">{{
-                $store.getters.getTotal
+                $store.getters.getTotalRPL
               }}</span>
               bản ghi
             </div>
@@ -209,27 +213,22 @@
         </div>
       </div>
     </div>
+    <!-- <BaseLoading v-if="!this.$store.getters.getIsLoading" /> -->
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
-    
+
     <ContextMenu ref="menu" v-show="isShowContextMenu" :w="100">
       <ul>
-        <li @click="closeContextMenu(), viewVendorInfo()">Xem</li>
-        <li @click="closeContextMenu(), openDialog(getId(), 'UPDATE')">Sửa</li>
-        <li @click="closeContextMenu(), confirmDelete()">Xóa</li>
+        <li @click="closeContextMenu()">Xem</li>
+        <li @click="closeContextMenu()">Xóa</li>
+        <li @click="closeContextMenu()">Nhân bản</li>
       </ul>
     </ContextMenu>
 
-    <VendorDialog
-      v-if="this.$store.getters.getIsShowVendorDialog"
-      @closeDialog="closeDialog()"
-      @rebind="bindDataToForm(vendor.data.Data)"
-      @reloadData="reload()"
-    />
     <Popup v-if="this.$store.getters.getIsShowConfirmDelete">
       <template v-slot:Head>
         <div class="icon-popup icon-dangerous"></div>
         <div class="text">
-          Bạn có thực sự muốn xóa Nhà cung cấp {{ getVendorCode() }} không?
+          Bạn có thực sự muốn xóa Nhà cung cấp 1 không?
         </div>
       </template>
       <template v-slot:Button>
@@ -248,83 +247,38 @@
         </div>
       </template>
     </Popup>
+
+    <ReceiptPaymentDialog
+      v-if="this.$store.getters.getIsShowRPDialog"
+      @reload="reload()"
+    />
   </div>
 </template>
 
 <script>
+import ReceiptPaymentDialog from "../../components/dialog/receipt-payment/ReceiptPaymenDialog";
 import ContextMenu from "../../components/base/ContextMenu";
 import BaseLoading from "../../components/base/BaseLoading";
-import VendorDialog from "../../components/dialog/vendor/VendorDialog";
 import Popup from "../../components/base/Popup";
-import axios from "axios";
 
 export default {
   components: {
+    ReceiptPaymentDialog,
     ContextMenu,
     BaseLoading,
-    VendorDialog,
     Popup,
+    // isShowContextMenu: false,
   },
   async created() {
-    document.title = "Nhà cung cấp";
-    await this.$store.commit('resetState');
-    this.getVendors(); // Lấy dữ liệu vendors
-  },
-  mounted() {
-    // Bắt sự kiện shortcuts
-    let keysPressed = {};
-    try {
-      document.addEventListener("keydown", (event) => {
-        if (keysPressed["Control"]) {
-          if (
-            event.key == "1" ||
-            event.key == "d" ||
-            event.key == "D" ||
-            event.key == "y" ||
-            event.key == "Y"
-          ) {
-            event.preventDefault(); // hủy sự kiện mặc định
-          }
-        }
-        keysPressed[event.key] = true;
-        // Mở dialog
-        if (keysPressed["Control"]) {
-          if (event.key == "1") {
-            this.openDialog();
-          }
-        }
-        // Xóa
-        if (keysPressed["Control"]) {
-          if (event.key == "d" || event.key == "D") {
-            this.confirmDelete();
-          }
-        }
-
-        // Reload
-        if (keysPressed["Control"]) {
-          if (event.key == "y" || event.key == "Y") {
-            this.reload();
-          }
-        }
-
-        // Đóng confirm xóa
-        if (event.key == "Escape") {
-          this.closeConfirmDelete();
-        }
-      });
-      // xóa sự kiện keydown
-      document.addEventListener("keyup", (event) => {
-        delete keysPressed[event.key];
-      });
-    } catch (ex) {
-      console.log(ex);
-    }
+    document.title = "Tiền mặt";
+    await this.$store.commit("resetState"); // reset state
+    this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+    this.$store.dispatch("setRPL"); // Lấy dữ liệu thu chi
   },
   data() {
     return {
       isShowContenHead: true,
-      API_URL: this.$store.getters.getApiUrl + "/vendors",
-      vendor: null,
+      API_URL: this.$store.getters.getApiUrl + "/rpl",
       isShowContextMenu: false,
       delayTimer: null,
       pageSize: 20,
@@ -340,91 +294,6 @@ export default {
   },
   methods: {
     /**
-     * Lấy dữ liệu nhà cung cấp
-     * CreateBy: nvcuong(29/05/2021)
-     */
-    getVendors() {
-      this.$store.dispatch("setVendors");
-    },
-    /**
-     * Cài đặt page size
-     * CreatedBy: nvcuong (31/05/2021)
-     */
-    async setPageSize(size) {
-      await this.$store.commit("setPageSize", size);
-      this.searchVendor(this.$refs.search.value);
-      this.$store.commit("setPageIndex", 1);
-    },
-
-    /**
-     * Cài đặt page index
-     * CreatedBy: nvcuong (31/05/2021)
-     */
-    async setPageIndex(index) {
-      await this.$store.commit("setPageIndex", index);
-      this.searchVendor(this.$refs.search.value);
-    },
-
-    increasePageIndex() {
-      const currentPageIndex = parseInt(this.$store.getters.getPageIndex);
-
-      const max = Math.ceil(
-        this.$store.getters.getTotal / this.$store.getters.getPageSize
-      );
-      if (currentPageIndex < max) this.setPageIndex(currentPageIndex + 1);
-    },
-
-    decreasePageIndex() {
-      const currentPageIndex = parseInt(this.$store.getters.getPageIndex);
-      if (currentPageIndex > 1) this.setPageIndex(currentPageIndex - 1);
-    },
-
-    /**
-     * Hiện thông báo confirm trước khi xóa
-     * CreatedBy: nvcuong (31/05/2021)
-     */
-    confirmDelete() {
-      this.$store.commit("setIsShowConfirmDelete", true);
-    },
-
-    /**
-     * Đóng thông báo confirm sau khi xóa
-     * CreatedBy: nvcuong (31/05/2021)
-     */
-    closeConfirmDelete() {
-      this.$store.commit("setIsShowConfirmDelete", false);
-    },
-
-    /**
-     * Tìm kiếm qua keywords
-     * CreateBy: nvcuong(31/05/2021)
-     */
-    searchVendor(keywords) {
-      const vm = this;
-      clearTimeout(this.delayTimer);
-
-      this.delayTimer = setTimeout(function() {
-        vm.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
-        vm.$store.dispatch("setVendorFilter", keywords); // Tìm kiếm
-      }, 500);
-    },
-
-    /**
-     * Xử lí khi chọn 1 row
-     * CreateBy: nvcuong(29/05/2021)
-     */
-    handleSelectRow(id) {
-      let path = ".MISAVendor #Data-Table .selected";
-      const currentRowSelected = document.querySelector(path);
-
-      if (currentRowSelected) {
-        currentRowSelected.classList.remove("selected");
-      }
-      path = `.MISAVendor #Data-Table div[id="${id}"]`;
-      document.querySelector(path).classList.add("selected");
-    },
-
-    /**
      * Handle click ẩn/hiện Content head
      * CreateBy: nvcuong(26/05/2021)
      */
@@ -435,6 +304,44 @@ export default {
       } else {
         this.$refs.arrow.style.backgroundPosition = "-179px -356px";
       }
+    },
+    /**
+     * Mở dialog
+     * CreatedBy: nvcuong(26/05/2021)
+     */
+    async openDialog(id, MODE) {
+      this.$store.commit("setIsLoading", true); // Bật loading effect
+      await this.$store.dispatch("setVendors"); // Lấy dữ liệu NCC
+      await this.$store.dispatch("setAccounts"); // Lấy dữ liệu tài khoản
+
+      if (MODE == null || MODE == "ADD") {
+        // null nếu mở bằng nút thêm
+        this.$store.commit("setMODE", "ADD"); // set MODE là ADD
+        // this.$store.dispatch("setNewVendorCode");
+      } else {
+        this.$store.commit("setMODE", "UPDATE");
+      }
+
+      // const vm = this;
+      if (id != null) {
+        this.$store.commit("setIsShowRPDialog", true); // Mở dialog
+
+        // this.vendor = await this.getReceiptPaymentById(id);
+        // const data = this.vendor.data.Data;
+
+        // this.bindDataToForm(data); // Đẩy dữ liệu lên form
+        this.$store.commit("setIsLoading", false); // Tắt loading effect
+      } else {
+        this.$store.commit("setIsShowRPDialog", true);
+      }
+    },
+    /**
+     * Reload lại dữ liệu
+     * CreatedBy: nvcuong (05/06/2021)
+     */
+    async reload() {
+      this.$store.commit("setIsLoading", true);
+      await this.$store.dispatch("setRPL");
     },
     /**
      * Hiện context menu
@@ -450,153 +357,25 @@ export default {
     },
 
     /**
-     * Mở dialog
-     * CreatedBy: nvcuong(26/05/2021)
+     * Xử lí khi chọn 1 row
+     * CreateBy: nvcuong(29/05/2021)
      */
-    async openDialog(id, MODE) {
-      if (MODE == null) {
-        // null nếu mở bằng nút thêm
-        this.$store.commit("setMODE", "ADD"); // set MODE là ADD
-        this.$store.dispatch("setNewVendorCode");
-      } else {
-        this.$store.commit("setMODE", "UPDATE");
+    handleSelectRow(id) {
+      let path = ".MISARPL .Row.selected";
+      const currentRowSelected = document.querySelector(path);
+
+      if (currentRowSelected) {
+        currentRowSelected.classList.remove("selected");
       }
-
-      // const vm = this;
-      if (id != null) {
-        this.$store.commit("setIsShowVendorDialog", true); // Mở dialog
-        this.$store.commit("setIsLoading", true); // Bật loading effect
-        this.$store.commit("setIsOrganization", true); // Mặc định là mode tổ chức
-
-        this.vendor = await this.getVendorById(id);
-        const data = this.vendor.data.Data;
-
-        this.bindDataToForm(data); // Đẩy dữ liệu lên form
-        this.$store.commit("setIsLoading", false); // Tắt loading effect
-      } else {
-        await this.$store.commit("setIsOrganization", true); // mặc định là mode tổ chức
-        this.$store.commit("setIsShowVendorDialog", true); // Mở dialog
-      }
-    },
-    /**
-     * Đóng dialog
-     * CreatedBy: nvcuong(26/05/2021)
-     */
-    closeDialog() {
-      this.$store.commit("setIsShowVendorDialog", false); // Mở dialog
-      this.$store.commit("setIsReadOnly", false);
-    },
-
-    /**
-     * Lấy dữ liệu qua id
-     * CreatedBy: nvcuong(29/05/2021)
-     */
-    async getVendorById(id) {
-      console.log("%c[MSG][From Vendor]: GET BY ID", "color: blue");
-      try {
-        return axios.get(this.API_URL + `/${id}`);
-      } catch (error) {
-        console.log("%c[ERROR][From Vendor]:", "color: red", error);
-      }
-    },
-
-    /**
-     * Bind dữ liệu lên form
-     * CreatedBy: nvcuong(29/05/2021)
-     */
-    bindDataToForm(data) {
-      const keys = Object.keys(data);
-
-      keys.forEach((key) => {
-        const path = `.MISAVendor-Dialog input[field="${key}"], textarea[field="${key}"]`;
-        const input = document.querySelector(path);
-        if (input) {
-          input.value = data[key];
-        }
-      });
-    },
-    /**
-     * Reload lại dữ liệu
-     * CreatedBy: nvcuong(29/05/2021)
-     */
-    reload() {
-      const searchInput = this.$refs.search;
-
-      this.$store.commit("setIsLoading", true);
-      if (searchInput.value != "") {
-        this.searchVendor(searchInput.value);
-      } else {
-        this.getVendors();
-      }
-    },
-
-    /**
-     * Xóa NCC
-     * CreatedBy: nvcuong(31/05/2021)
-     */
-    deleteVendor(id) {
-      const vm = this;
-      try {
-        this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
-        if (!id) {
-          const path = ".MISAVendor #Data-Table .Row.selected";
-          id = document.querySelector(path).attributes.id.value;
-        }
-        const API_URL = this.API_URL + "/" + id;
-        axios
-          .delete(API_URL)
-          .then(() => {
-            vm.reload(); // Load lại khi xóa thành công
-          })
-          .catch((error) => console.log(error.response));
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    /**
-     * Đóng context menu
-     * CreatedBy: nvcuong(31/05/2021)
-     */
-    closeContextMenu() {
-      this.isShowContextMenu = false;
-    },
-
-    getId() {
-      const path = ".MISAVendor #Data-Table .Row.selected";
-      const selectedInput = document.querySelector(path);
-      if (selectedInput) {
-        return selectedInput.attributes.id.value;
-      }
-    },
-
-    getVendorCode() {
-      const path = ".MISAVendor #Data-Table .Row.selected .VendorCode";
-      const selectedInput = document.querySelector(path);
-      if (selectedInput) {
-        return selectedInput.innerHTML;
-      }
-    },
-
-    /**
-     * Read only
-     * CreatedBy: nvcuong(31/05/2021)
-     */
-    async viewVendorInfo() {
-      await this.$store.commit("setIsReadOnly", true);
-      this.openDialog(this.getId());
-    },
-
-    renderPageIndex(value) {
-      let currentIndex = this.$store.getters.getPageIndex;
-      if (currentIndex + value <= 0);
+      path = `.MISARPL div[id="${id}"]`;
+      document.querySelector(path).classList.add("selected");
     },
   },
 };
 </script>
 
 <style lang="scss">
-.MISAVendor {
+.MISARPL {
   position: relative;
   overflow: scroll;
   flex-direction: column;
@@ -604,108 +383,127 @@ export default {
   padding: 0px 30px 0px 20px;
 }
 
-.MISAVendor-Head {
+.MISARPL-Head {
   position: sticky;
   top: 0;
   left: 0;
+  flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
-  height: 83px;
-  padding: 15px 0px 15px 0px;
-  margin-bottom: 20px;
+  height: 144px;
+  padding: 10px 0px 15px 0px;
+  margin-bottom: 10px;
   background-color: #f4f5f6;
   z-index: 10;
-}
-
-.MISAVendor-Head-VendorList {
-  .title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #111;
-  }
-  .back-to-all {
-    .icon {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
-      background-position: -226px -357px;
-      cursor: pointer;
-    }
-    a {
-      color: #0075c0;
-    }
-  }
-}
-
-.MISAVendor-Head-Button {
-  display: flex;
-  margin-right: 8px;
-  .btn {
+  .MISARPL-Head-Nav {
+    flex-basis: 100%;
     display: flex;
-    align-items: center;
-    width: 100px;
-    height: 36px;
-    margin-right: 10px;
-    cursor: pointer;
-    &:first-child:hover {
-      a {
-        text-decoration: underline;
-      }
-    }
-    &:nth-child(2) {
-      display: flex;
-      justify-content: center;
-      border: 2px solid #3b3c3f;
-      border-radius: 30px;
-      padding-left: 10px;
-      &:hover {
-        background-color: #d2d3d6;
-      }
-    }
-    &:last-child {
-      width: 120px;
-      display: flex;
-      justify-content: center;
-      padding-left: 10px;
-      margin-right: 0;
-      border-radius: 30px;
-      background-color: #2ca01c;
-      color: #fff;
-      .line {
-        width: 1px;
-        height: 20px;
-        background-color: #fff;
-        margin: 0 10px 0 20px;
-      }
-      &:hover {
-        background-color: #35bf22;
-      }
-    }
-    a {
-      color: #0075c0;
-    }
-    .icon {
+    align-items: flex-end;
+    height: 58px;
+    border-bottom: 2px solid #d4d7dc;
+    li {
       display: inline-block;
-      width: 24px;
-      height: 24px;
-      background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
-      &.guide {
-        margin-right: 6px;
-        background-position: -984px -144px;
+      padding: 0 20px 10px 20px;
+      cursor: pointer;
+      border-bottom: 4px solid transparent;
+      a {
+        color: #111;
       }
-      &.utility {
-        margin-left: 10px;
-        background-position: -560px -356px;
+      &.active {
+        border-bottom-color: #2ca01c;
+        a {
+          color: #111;
+          font-weight: 700;
+          font-size: 13px;
+        }
       }
-      &.add {
-        background-position: -848px -356px;
+      &:hover {
+        a {
+          color: #2ca01c;
+        }
+      }
+    }
+  }
+
+  .MISARPL-Head-RPL {
+    padding-top: 15px;
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #212121;
+    }
+  }
+
+  .MISARPL-Head-Button {
+    display: flex;
+    padding-top: 15px;
+    margin-right: 8px;
+    .btn {
+      display: flex;
+      align-items: center;
+      width: 100px;
+      height: 36px;
+      margin-right: 10px;
+      cursor: pointer;
+      &:first-child:hover {
+        a {
+          text-decoration: underline;
+        }
+      }
+      &:nth-child(2) {
+        display: flex;
+        justify-content: center;
+        border: 2px solid #3b3c3f;
+        border-radius: 30px;
+        padding-left: 10px;
+        &:hover {
+          background-color: #d2d3d6;
+        }
+      }
+      &:last-child {
+        width: 158px;
+        display: flex;
+        justify-content: center;
+        padding-left: 10px;
+        margin-right: 0;
+        border-radius: 30px;
+        background-color: #2ca01c;
+        color: #fff;
+        .line {
+          width: 1px;
+          height: 20px;
+          background-color: #fff;
+          margin: 0 10px 0 20px;
+        }
+        &:hover {
+          background-color: #35bf22;
+        }
+      }
+      a {
+        color: #0075c0;
+      }
+      .icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
+        &.guide {
+          margin-right: 6px;
+          background-position: -984px -144px;
+        }
+        &.utility {
+          margin-left: 10px;
+          background-position: -560px -356px;
+        }
+        &.add {
+          background-position: -848px -356px;
+        }
       }
     }
   }
 }
 
-.MISAVendor-Content-Head {
+.MISARPL-Content-Head {
   position: sticky;
   left: 0;
   display: flex;
@@ -732,7 +530,7 @@ export default {
     }
     &.Total {
       .wrapper {
-        background-color: #b8bcc3;
+        background-color: #00a9f2;
       }
     }
     &.Out-of-date {
@@ -845,7 +643,7 @@ export default {
   .Arrow {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 5px;
     transform: translateY(-50%);
     width: 30px;
     height: 28px;
@@ -864,8 +662,9 @@ export default {
   }
 }
 
-.MISAVendor-Content-Body {
+.MISARPL-Content-Body {
   #Data-Table {
+    height: 2000px;
     .Thead,
     .Tbody {
       .Row {
@@ -888,19 +687,23 @@ export default {
               height: 16px;
             }
           }
+          &.KBADate,
+          &.VoucherDate,
+          &.Money,
           &.VendorCode {
-            width: 180px;
-          }
-          &.VendorName,
-          &.Address {
-            width: 250px;
-          }
-          &.Debt,
-          &.TaxCode,
-          &.PhoneNumber,
-          &.IdCard {
             width: 150px;
           }
+          &.VendorName {
+            width: 230px;
+          }
+          &.VoucherNumber {
+            width: 125px;
+          }
+          &.Explain,
+          &.Address {
+            width: 320px;
+          }
+
           &.Feature {
             position: sticky;
             right: 0;
@@ -914,7 +717,7 @@ export default {
     .Thead {
       white-space: nowrap;
       position: sticky;
-      top: 83px;
+      top: 130px;
       z-index: 998;
       .Column {
         line-height: 26.6px;
@@ -926,6 +729,7 @@ export default {
         }
         &.Feature {
           padding-right: 22px;
+          border-left: 2px solid #e0e0e0 !important;
         }
       }
     }
@@ -953,7 +757,7 @@ export default {
       }
 
       .Feature {
-        border-left: 1px solid #e0e0e0 !important;
+        border-left: 2px solid #e0e0e0 !important;
         font-family: inherit;
         font-weight: 600;
         .wrapper {

@@ -16,7 +16,7 @@
       </div>
       <div class="Column Feature">
         <div class="Wrapper">
-          <div class="Text">Sửa</div>
+          <div class="Text" @click="openDialog(node.parent.AccountId)">Sửa</div>
           <div class="Icon" @click="openContextMenu($event)"></div>
         </div>
       </div>

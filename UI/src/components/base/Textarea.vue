@@ -12,7 +12,7 @@
       :style="inputStyle"
       :class="[className]"
       @blur="checkEmpty()"
-       :disabled="this.$store.getters.getIsReadOnly"
+      :disabled="this.$store.getters.getIsReadOnly"
     ></textarea>
   </div>
 </template>
@@ -97,6 +97,9 @@ export default {
     }
     &.error {
       border-color: red;
+    }
+    &.error:focus {
+      border-color: red !important;
     }
     &::placeholder {
       font-style: italic;

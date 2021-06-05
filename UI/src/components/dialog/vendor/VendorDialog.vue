@@ -66,6 +66,7 @@
         </div>
       </div>
       <BaseLoading v-if="this.$store.getters.getIsLoading" />
+
       <Popup v-if="isShowErrorPopup">
         <template v-slot:Head>
           <div class="icon-popup icon-warning"></div>
@@ -77,6 +78,7 @@
           </div>
         </template>
       </Popup>
+
       <Popup v-if="this.$store.getters.getIsShowConfirmClose">
         <template v-slot:Head>
           <div class="icon-popup icon-question"></div>
@@ -206,7 +208,6 @@ export default {
      * Hiện thông báo confirm trước khi đóng form
      * CreatedBy: nvcuong (31/05/2021)
      * */
-
     confirmClose() {
       this.$store.commit("setIsShowConfirmClose", true);
     },
@@ -215,7 +216,6 @@ export default {
      * Đóng thông báo confirm đóng form
      * CreatedBy: nvcuong (31/05/2021)
      * */
-
     closeConfirmClose() {
       this.$store.commit("setIsShowConfirmClose", false);
     },
@@ -401,6 +401,11 @@ export default {
         }
       }
     },
+
+    /**
+     * Check validte
+     * CreatedBy: nvcuong (05/06/2021)
+     */
     async checkValidate() {
       const vm = this;
       const requiredInputs = document.querySelectorAll(

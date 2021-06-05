@@ -144,6 +144,9 @@ export default {
     AccountDialog,
     Popup,
   },
+  async created() {
+    await this.$store.commit("resetState");
+  },
   async mounted() {
     document.title = "Hệ thống tài khoản";
 

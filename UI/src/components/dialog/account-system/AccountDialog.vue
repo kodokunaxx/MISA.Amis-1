@@ -10,7 +10,7 @@
         </div>
         <div class="Content-Head-Right">
           <div class="Help"></div>
-          <div class="Close" @click="closeDialog()"></div>
+          <div class="Close" @click="confirmClose()"></div>
         </div>
       </div>
       <div class="Content-Body">
@@ -249,6 +249,41 @@
         </div>
       </template>
     </Popup>
+
+    <Popup v-if="this.$store.getters.getIsShowConfirmClose">
+      <template v-slot:Head>
+        <div class="icon-popup icon-question"></div>
+        <div class="text">
+          Dữ liệu đã bị thay đổi. Bạn có muốn cất không?
+        </div>
+      </template>
+      <template v-slot:Button>
+        <div class="wrapper">
+          <div class="btn-cancel">
+            <button class="btn" @click="closeConfirmClose()">Hủy</button>
+          </div>
+          <div class="btn-confirm">
+            <button class="btn" @click="closeConfirmClose(), closeDialog()">
+              Không
+            </button>
+            <button
+              class="btn"
+              @click="
+                closeConfirmClose(),
+                  addOrUpdate(
+                    getDataInForm(),
+                    getParentAccountNumber(),
+                    getId(),
+                    'save'
+                  )
+              "
+            >
+              Có
+            </button>
+          </div>
+        </div>
+      </template>
+    </Popup>
   </div>
 </template>
 
@@ -314,6 +349,10 @@ export default {
     };
   },
   methods: {
+    /**
+     * resize
+     * CreatedBy: nvcuong (28/05/2021)
+     */
     resize() {
       const form = document.querySelector(".MISAAccount-System-Dialog-Content");
       const icon = document.querySelector(
@@ -346,6 +385,22 @@ export default {
     closeDialog() {
       this.$store.commit("setIsShowAccountDialog", false); // Đóng dialog
       this.disables.forEach((disable) => (disable.value = true));
+    },
+    /**
+     * Hiện thông báo confirm trước khi đóng form
+     * CreatedBy: nvcuong (31/05/2021)
+     * */
+    confirmClose() {
+      this.$store.commit("setIsShowConfirmClose", true);
+    },
+
+    /**
+     * Đóng thông báo confirm đóng form
+     * CreatedBy: nvcuong (31/05/2021)
+     * */
+
+    closeConfirmClose() {
+      this.$store.commit("setIsShowConfirmClose", false);
     },
 
     /**

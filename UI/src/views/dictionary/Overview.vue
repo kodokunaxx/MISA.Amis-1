@@ -1,8 +1,12 @@
 <template>
   <div class="MISAOverview">
     <div class="MISAOverview-Head">
-      <div class="Element Process active">Quy trình</div>
-      <div class="Element Money">Thu, chi tiền</div>
+      <div class="Element Process active">
+        <router-link to="/">Quy trình</router-link>
+      </div>
+      <div class="Element Money">
+        <router-link to="/receipt-payment">Thu, chi tiền</router-link>
+      </div>
     </div>
     <div class="MISAOverview-Content">
       <div class="MISAOverview-Content-Business">
@@ -80,11 +84,20 @@ export default {};
       align-items: flex-end;
       padding: 10px 20px;
       border-bottom: 4px solid transparent;
+      cursor: pointer;
+      a {
+        color: #111;
+      }
       &.active {
         border-bottom-color: #2ca01c;
         color: #111;
         font-weight: 700;
         font-size: 13px;
+      }
+      &:hover {
+        a {
+          color: #2ca01c;
+        }
       }
     }
   }

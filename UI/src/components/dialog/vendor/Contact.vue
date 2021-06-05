@@ -11,7 +11,11 @@
             :list="this.$store.getters.getX"
             :field="'ContactXungHo'"
           />
-          <Input :w="'260px'" placeholder="Họ và tên" :field="'ContactFullName'" />
+          <Input
+            :w="'260px'"
+            placeholder="Họ và tên"
+            :field="'ContactFullName'"
+          />
         </div>
         <div class="Row Second-Row">
           <Input :w="'100%'" placeholder="Email" :field="'ContactEmail'" />
@@ -109,13 +113,12 @@
           />
         </div>
         <div class="Row Second">
-          <!-- <Input :w="'50%'" placeholder="Ngày cấp'" /> -->
           <div class="MISAInput Date">
-            <input type="date" :field="'IssuedOn'"/>
+            <input type="date" :field="'IssuedOn'" />
           </div>
         </div>
         <div class="Row First">
-          <Input :w="'100%'" placeholder="Nơi cấp" :field="'Place'"/>
+          <Input :w="'100%'" placeholder="Nơi cấp" :field="'Place'" />
         </div>
       </div>
     </div>

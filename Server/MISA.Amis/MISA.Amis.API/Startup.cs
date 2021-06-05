@@ -41,6 +41,8 @@ namespace MISA.Amis.API
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IReceiptPaymentRepository,  ReceiptPaymentRepository>();
+            services.AddScoped<IReceiptPaymentService,  ReceiptPaymentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

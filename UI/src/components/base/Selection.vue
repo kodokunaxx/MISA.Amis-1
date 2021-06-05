@@ -41,7 +41,7 @@
       <li
         v-for="(ele, index) in search(keyword).content"
         :key="index"
-        @click="chooseOption(ele[position], index)"
+        @click="chooseOption(ele[position], index, ele)"
         :class="[currentIndex == index ? 'selected' : '']"
       >
         <span v-for="(i, index) in ele" :key="index" :title="i" class="column">
@@ -93,6 +93,9 @@ export default {
       type: Boolean,
       default: false,
     },
+    defaultIndex: {
+      type: Number,
+    },
   },
   computed: {
     parentStyle() {
@@ -143,7 +146,7 @@ export default {
      * CreateBy: nvcuong (28/05/2021)
      */
     toggleList() {
-      if (!this.selfDisable) {
+      if (!this.isDisable && !this.$store.getters.getIsReadOnly) {
         const icon = this.$refs.arrow;
 
         icon.style.transform = "rotate(" + this.rotateDeg + "deg)";
@@ -167,7 +170,7 @@ export default {
      * Chọn dữ liệu
      * CreateBy: nvcuong (28/05/2021)
      */
-    chooseOption(value, index) {
+    chooseOption(value, index, ele) {
       // this.valueBeforeUpdate = value;
       this.$refs.input.value = value; // Gán giá trị cho input
       this.currentIndex = index;
@@ -178,6 +181,10 @@ export default {
 
       icon.style.transform = "rotate(" + this.rotateDeg + "deg)";
       this.rotateDeg = Number(this.rotateDeg) + 180;
+
+      if (ele) {
+        this.$emit("sendPayload", ele);
+      }
     },
     closeList() {
       this.isShowList = false;
@@ -203,7 +210,10 @@ export default {
 
         this.list.content.forEach((element) => {
           for (let i = 0; i < element.length; i++) {
-            if (element[i].toLowerCase().search(keyword.toLowerCase()) != -1) {
+            if (
+              element[i] &&
+              element[i].toLowerCase().search(keyword.toLowerCase()) != -1
+            ) {
               result.content.push(element);
               break;
             }
@@ -255,6 +265,9 @@ export default {
       }
       &.error {
         border-color: red;
+      }
+      &.error:focus {
+        border-color: red !important;
       }
       &::placeholder {
         font-style: italic;

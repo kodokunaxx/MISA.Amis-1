@@ -58,7 +58,6 @@ export default {
      * CreatedBy: nvcuong (28/05/2021)
      */
     checkEmpty() {
-      
       const input = this.$refs.input;
       if (!input) return;
       if (this.isRequired) {
@@ -104,6 +103,9 @@ export default {
     }
     &.error {
       border-color: red;
+    }
+    &.error:focus {
+      border-color: red !important;
     }
     &::placeholder {
       font-style: italic;
