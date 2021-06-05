@@ -60,7 +60,9 @@
             </div>
             <div class="Total-Money">
               <label>Tổng tiền</label>
-              <div class="Value">0,0</div>
+              <div class="Value Money-Binding">
+                {{ moneyValue | formatMoney }}
+              </div>
             </div>
           </div>
           <div class="Row Second-Row">
@@ -179,7 +181,9 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="Money">0,0</td>
+                <td class="Money-Binding" style="font-weight: 600">
+                  {{ moneyValue | formatMoney }}
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -238,6 +242,20 @@
       <template v-slot:Head>
         <div class="icon-popup icon-warning"></div>
         <div class="text">{{ emptyFieldName }} không được để trống</div>
+      </template>
+      <template v-slot:Button>
+        <div class="btn-close">
+          <button @click="closePopup()">Đóng</button>
+        </div>
+      </template>
+    </Popup>
+
+    <Popup v-if="isShowErrorDate">
+      <template v-slot:Head>
+        <div class="icon-popup icon-warning"></div>
+        <div class="text">
+          Ngày hạch toán phải lớn hơn hoặc bằng ngày chứng từ.
+        </div>
       </template>
       <template v-slot:Button>
         <div class="btn-close">
@@ -334,6 +352,7 @@ export default {
   async mounted() {
     const vm = this;
     this.focusFirstElement();
+    // ----------------------------------
     const reasonPayment = document.querySelector(
       '.MISARP-Dialog input[field="ReasonPayment"]'
     );
@@ -343,6 +362,9 @@ export default {
     const dates = document.querySelectorAll(
       '.MISARP-Dialog input[type="date"]'
     );
+    const money = document.querySelector('.MISARP-Dialog input[field="Money"]');
+    const KBADate = dates[0];
+    const VoucherDate = dates[1];
 
     reasonPayment.oninput = function() {
       if (!vm.stopBinding) {
@@ -355,9 +377,27 @@ export default {
       vm.voucherNum = voucherNumber.value;
     };
 
+    money.oninput = function() {
+      vm.moneyValue = money.value;
+    };
+
     dates.forEach((date) => {
       date.valueAsDate = new Date();
     });
+
+    vm.oldDate = KBADate.value;
+    KBADate.onchange = function() {
+      if (!vm.stopChangeDate) {
+        if (VoucherDate.value != vm.oldDate) {
+          vm.stopChangeDate = true;
+        } else {
+          VoucherDate.valueAsDate = new Date(KBADate.value);
+          vm.oldDate = KBADate.value;
+        }
+      }
+    };
+
+    // ----------------------------------
 
     await this.getNewVoucherNumber(); // Lấy mã phiếu chi mới
     const voucherNumberField = document.querySelector(
@@ -403,11 +443,23 @@ export default {
       employees: this.$store.getters.getEmployee,
       oldValue: "",
       stopBinding: false,
+      oldDate: null,
+      stopChangeDate: false,
       isShowErrorPopup: false,
+      isShowErrorDate: false,
       isDuplicate: false,
       voucherNumberDuplicate: null,
       voucherNum: null,
+      moneyValue: "0,0",
     };
+  },
+  filters: {
+    formatMoney(value) {
+      if (!value) return "";
+
+      const regex = /\B(?=(\d{3})+(?!\d))/g;
+      return value.toString().replace(regex, ".");
+    },
   },
   methods: {
     /**
@@ -513,7 +565,14 @@ export default {
       const requiredInputs = document.querySelectorAll(
         ".MISARP-Dialog input.Required"
       );
+      const dates = document.querySelectorAll(
+        '.MISARP-Dialog input[type="date"]'
+      );
+      const KBADate = dates[0];
+      const VoucherDate = dates[1];
+
       let isValid = true;
+      await vm.$store.commit("setEnableSubmit", false); // Enable submit
 
       requiredInputs.forEach((requiredInput) => {
         if (!vm.checkEmpty(requiredInput)) {
@@ -529,6 +588,14 @@ export default {
           requiredInput.classList.remove("error"); // Xóa class error cho input
         }
       });
+
+      const KBA = new Date(KBADate.value).getDate();
+      const Voucher = new Date(VoucherDate.value).getDate();
+      if (KBA - Voucher < 0) {
+        this.isShowErrorDate = true;
+        isValid = false;
+        console.log(isValid);
+      }
       if (isValid) {
         vm.$store.commit("setEnableSubmit", true); // Enable submit
       }
@@ -566,6 +633,7 @@ export default {
     closePopup() {
       // const firstErrorField = document.querySelector('.MISAVendor-Dialog input.error');
       this.isShowErrorPopup = false; // đóng popup
+      this.isShowErrorDate = false;
       this.focusFirstElement();
     },
 
@@ -605,6 +673,7 @@ export default {
           }
 
           // Config
+          voucher.Quantity = parseInt(voucher.Quantity);
           const config = {
             url: url,
             method: method,
@@ -659,7 +728,6 @@ export default {
 
       this.addOrUpdate(this.getDataInForm()); // Thêm dữ liệu
       this.isDuplicate = false; // Đóng popup lỗi duplicate
-      this.reload(); // reload
     },
   },
 };
@@ -753,7 +821,7 @@ export default {
     .Content-Info {
       display: flex;
       flex-wrap: wrap;
-      padding: 14px 30px 24px 30px;
+      padding: 4px 30px 24px 30px;
       .Content-Info-Left,
       .Content-Info-Right {
         .Row {
@@ -772,6 +840,7 @@ export default {
         padding-right: 10px;
         border-right: 1px solid #e0e0e0;
         .First-Row {
+          height: 70px;
           .MISASelection {
             margin-right: 10px;
           }
@@ -786,9 +855,12 @@ export default {
         }
         .First-Row {
           justify-content: space-between;
-          height: 54px;
+          height: 70px;
           .Total-Money {
             height: 100%;
+            max-width: 250px;
+            overflow-x: hidden;
+            text-align: right;
             .Value {
               color: #111;
               font-size: 36px;
@@ -911,8 +983,9 @@ export default {
                   background-color: #f8f9fe !important;
                   border: none;
                 }
-                .Money {
+                .Money-Binding {
                   padding-right: 15px;
+                  text-align: right;
                 }
               }
             }
