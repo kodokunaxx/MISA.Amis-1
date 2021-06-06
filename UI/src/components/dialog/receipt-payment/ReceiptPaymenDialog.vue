@@ -5,7 +5,12 @@
         <div class="Icon"></div>
         <div class="Name">Phiếu chi {{ voucherNum }}</div>
         <div class="Option">
-          <Selection :w="'350px'" :list="options" :field="'type'" />
+          <Selection
+            :w="'350px'"
+            :list="options"
+            :field="'type'"
+            :value="'5. Chi khác'"
+          />
         </div>
       </div>
       <div class="Head-Right">
@@ -117,7 +122,7 @@
           </div>
           <div class="Currency-Type">
             <span>Loại tiền</span>
-            <Selection :w="'100px'" :field="'CurrencyType'" />
+            <Selection :w="'110px'" :field="'CurrencyType'" :value="'VND'"/>
           </div>
         </div>
         <div class="Row Second-Row">
@@ -223,27 +228,49 @@
       </div>
     </div>
     <div class="MISARP-Dialog-Button">
-      <div class="Cancel">
-        <button class="btn btn-cancel" @click="closeDialog()">Hủy</button>
-      </div>
-      <div class="Save">
-        <button
-          class="btn btn-save"
-          title="Cất (Ctrl + S)"
-          @click="addOrUpdate(getDataInForm())"
-          :disabled="this.$store.getters.getIsReadOnly"
-        >
-          Cất
-        </button>
+      <div v-if="!addSuccess" class="Wait">
+        <div class="Cancel">
+          <button class="btn btn-cancel" @click="closeDialog()">Hủy</button>
+        </div>
+        <div class="Save">
+          <button
+            class="btn btn-save"
+            title="Cất (Ctrl + S)"
+            @click="addOrUpdate(getDataInForm())"
+            :disabled="this.$store.getters.getIsReadOnly"
+          >
+            Cất
+          </button>
 
-        <div
-          class="btn btn-save-and-print"
-          title="Cất và In (Ctrl + Alt + P)"
-          :disabled="this.$store.getters.getIsReadOnly"
-        >
-          Cất và In
-          <div class="line"></div>
-          <span class="icon add"></span>
+          <div
+            class="btn btn-save-and-print"
+            title="Cất và In (Ctrl + Alt + P)"
+            :disabled="this.$store.getters.getIsReadOnly"
+          >
+            Cất và In
+            <div class="line"></div>
+            <span class="icon add"></span>
+          </div>
+        </div>
+      </div>
+      <div v-if="addSuccess" class="Success">
+        <div class="Success-Arrow">
+          <button class="btn Prev"></button>
+          <button class="btn Next"></button>
+        </div>
+        <div class="Success-Print">
+          <div class="print">
+            <div class="icon icon-print"></div>
+            <div>In</div>
+            <div class="icon icon-arrow"></div>
+          </div>
+          <div class="utility">
+            <div class="icon"></div>
+            <div>Tiện ích</div>
+          </div>
+        </div>
+        <div class="Success-Cancel">
+          <button class="btn">Bỏ ghi</button>
         </div>
       </div>
     </div>
@@ -471,6 +498,7 @@ export default {
       voucherNumberDuplicate: null,
       voucherNum: null,
       moneyValue: "0,0",
+      addSuccess: false,
     };
   },
   filters: {
@@ -556,10 +584,13 @@ export default {
       try {
         const inputPath = ".MISARP-Dialog .MISAInput input";
         const selectionPath = ".MISARP-Dialog .MISASelection input";
+        const vendorCodeGridPath =
+          ".MISARP-Dialog input[field='VendorCodeGrid']";
         const info = {};
 
         const inputs = document.querySelectorAll(inputPath);
         const selections = document.querySelectorAll(selectionPath);
+        const vendorCodeGrid = document.querySelector(vendorCodeGridPath);
 
         inputs.forEach((input) => {
           const key = input.attributes.field.value;
@@ -570,6 +601,8 @@ export default {
           const key = input.attributes.field.value;
           info[[key]] = input.value == "" ? null : input.value;
         });
+        info["VendorCode"] = vendorCodeGrid.value;
+
         return info;
       } catch (error) {
         console.log(error);
@@ -693,7 +726,9 @@ export default {
           }
 
           // Config
-          voucher.Quantity = parseInt(voucher.Quantity);
+          if (voucher) {
+            voucher.Quantity = parseInt(voucher.Quantity);
+          }
           const config = {
             url: url,
             method: method,
@@ -709,6 +744,7 @@ export default {
               vm.$store.commit("setMODE", "ADD"); // Sửa lại method thành POST
               vm.$emit("reload"); // Load lại dữ liệu
               vm.$store.commit("setIsReadOnly", true);
+              vm.addSuccess = true;
             })
             .catch((error) => {
               console.log("%c[ERROR]:", "color: red", error.response);
@@ -1075,39 +1111,118 @@ export default {
     }
   }
   .MISARP-Dialog-Button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 50px;
-    padding: 8px 16px;
-    background-color: #38393d;
-    .btn {
-      height: 34px;
-      padding: 6px 20px;
-      margin-left: 8px;
-      border: 1px solid #6b6c72;
-      border-radius: 3px;
-      background-color: transparent;
-      color: #fff;
-      cursor: pointer;
-    }
-    .Save {
+    .Wait,
+    .Success {
       display: flex;
-      .btn-save-and-print {
+      align-items: center;
+      justify-content: space-between;
+      height: 50px;
+      padding: 8px 16px;
+      background-color: #38393d;
+    }
+    .Wait {
+      .btn {
+        height: 34px;
+        padding: 6px 20px;
+        margin-left: 8px;
+        border: 1px solid #6b6c72;
+        border-radius: 3px;
+        background-color: transparent;
+        color: #fff;
+        cursor: pointer;
+      }
+      .Save {
+        display: flex;
+        .btn-save-and-print {
+          display: flex;
+          align-items: center;
+          background-color: #35bf22;
+          .line {
+            width: 1px;
+            height: 20px;
+            background-color: #fff;
+            margin: 0 10px 0 20px;
+          }
+          .icon {
+            width: 16px;
+            height: 16px;
+            background: url("../../../assets/img/Sprites.64af8f61.svg")
+              no-repeat;
+            background-position: -848px -359px;
+          }
+        }
+      }
+    }
+    .Success {
+      .btn {
+        height: 34px;
+        padding: 6px 20px;
+        border: 1px solid #6b6c72;
+        border-radius: 3px;
+        background-color: transparent;
+        cursor: pointer;
+      }
+      .Success-Arrow {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .Prev,
+        .Next {
+          background: url("../../../assets/img/Sprites.64af8f61.svg") no-repeat;
+        }
+        .Prev {
+          background-position: -21px -400px;
+        }
+        .Next {
+          margin-left: 8px;
+          background-position: -68px -400px;
+        }
+      }
+      .Success-Print {
         display: flex;
         align-items: center;
-        background-color: #35bf22;
-        .line {
-          width: 1px;
-          height: 20px;
-          background-color: #fff;
-          margin: 0 10px 0 20px;
-        }
         .icon {
-          width: 16px;
-          height: 16px;
           background: url("../../../assets/img/Sprites.64af8f61.svg") no-repeat;
-          background-position: -848px -359px;
+          margin: 0 8px;
+        }
+        .print {
+          display: flex;
+          align-items: center;
+          padding-right: 15px;
+          border-right: 1px solid #b8bcc3;
+          color: #b8bcc3;
+          .icon-print {
+            width: 24px;
+            height: 24px;
+            background-position: -33px -200px;
+          }
+          .icon-arrow {
+            width: 16px;
+            height: 16px;
+            margin-top: 4px;
+            background-position: -847px -360px;
+          }
+        }
+        .utility {
+          display: flex;
+          align-items: center;
+          padding-left: 15px;
+          color: #b8bcc3;
+          .icon {
+            width: 24px;
+            height: 24px;
+            background-position: -200px -199px;
+          }
+        }
+      }
+      .Success-Cancel {
+        button {
+          display: flex;
+          align-items: center;
+          background-color: #35bf22;
+          height: 34px;
+          padding: 6px 20px;
+          color: #fff;
         }
       }
     }

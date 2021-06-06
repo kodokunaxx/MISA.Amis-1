@@ -135,27 +135,7 @@
             </div>
           </div>
           <div class="Data-Pagenav-Right">
-            <select
-              class="Selection"
-              @change="setPageSize(pageSize)"
-              v-model="pageSize"
-            >
-              <option :value="20" @change="setPageSize(20)">
-                20 bản ghi trên 1 trang
-              </option>
-              <option :value="10" @change="setPageSize(10)">
-                10 bản ghi trên 1 trang
-              </option>
-              <option :value="30" @change="setPageSize(30)">
-                30 bản ghi trên 1 trang
-              </option>
-              <option :value="50" @change="setPageSize(50)">
-                50 bản ghi trên 1 trang
-              </option>
-              <option :value="100" @change="setPageSize(100)">
-                100 bản ghi trên 1 trang
-              </option>
-            </select>
+            <Pagenav @setPageSize="setPageSize($event)" />
             <div
               class="Prev"
               @click="decreasePageIndex()"
@@ -210,7 +190,7 @@
       </div>
     </div>
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
-    
+
     <ContextMenu ref="menu" v-show="isShowContextMenu" :w="100">
       <ul>
         <li @click="closeContextMenu(), viewVendorInfo()">Xem</li>
@@ -256,6 +236,7 @@ import ContextMenu from "../../components/base/ContextMenu";
 import BaseLoading from "../../components/base/BaseLoading";
 import VendorDialog from "../../components/dialog/vendor/VendorDialog";
 import Popup from "../../components/base/Popup";
+import Pagenav from "../../components/base/Pagenav";
 import axios from "axios";
 
 export default {
@@ -263,11 +244,12 @@ export default {
     ContextMenu,
     BaseLoading,
     VendorDialog,
+    Pagenav,
     Popup,
   },
   async created() {
     document.title = "Nhà cung cấp";
-    await this.$store.commit('resetState');
+    await this.$store.commit("resetState");
     this.getVendors(); // Lấy dữ liệu vendors
   },
   mounted() {
@@ -351,6 +333,7 @@ export default {
      * CreatedBy: nvcuong (31/05/2021)
      */
     async setPageSize(size) {
+      console.log("size:", size);
       await this.$store.commit("setPageSize", size);
       this.searchVendor(this.$refs.search.value);
       this.$store.commit("setPageIndex", 1);
@@ -991,14 +974,6 @@ export default {
     z-index: 100;
     .Data-Pagenav-Right {
       display: flex;
-      .Selection {
-        height: 36px;
-        outline: none;
-        padding: 0 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 3px;
-        cursor: pointer;
-      }
       .Page-Index,
       .Prev,
       .Next {

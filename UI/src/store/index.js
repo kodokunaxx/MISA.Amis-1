@@ -179,11 +179,11 @@ export const store = new Vuex.Store({
         console.log('%c[ERROR][From Vuex]:', 'color: red', error);
       }
     },
+
     setRPL: context => {
-      // const pageIndex = context.getters.getPageIndex;
-      // const pageSize = context.getters.getPageSize;
-      // const API_URL = context.getters.getApiUrl + `/receiptpayments/paging?pageIndex=${pageIndex}&pageSize=${pageSize}`;
-      const API_URL = context.getters.getApiUrl + `/receiptpayments`;
+      const pageIndex = context.getters.getPageIndex;
+      const pageSize = context.getters.getPageSize;
+      const API_URL = context.getters.getApiUrl + `/receiptpayments/paging?pageIndex=${pageIndex}&pageSize=${pageSize}`;
       try {
         return axios.get(API_URL)
           .then(async response => {
@@ -196,6 +196,25 @@ export const store = new Vuex.Store({
           })
       } catch (error) {
         console.log('%c[ERROR][From Vuex]:', 'color: red', error);
+      }
+    },
+
+    setRPFilter: (context, keywords) => {
+      try {
+        const pageIndex = context.getters.getPageIndex;
+        const pageSize = context.getters.getPageSize;
+        const API_URL = context.getters.getApiUrl + `/receiptpayments/filter?keywords=${keywords}&pageIndex=${pageIndex}&pageSize=${pageSize}`;
+        axios.get(API_URL)
+          .then(async response => {
+            context.commit('setTotalRPL', response.data.Total); // set page size
+            context.commit('setRPL', response.data.Data);
+            context.commit('setIsLoading', false); // Tắt hiệu ứng loading
+          })
+          .catch(error => {
+            console.log('%c[ERROR]:', 'color: red', error);
+          })
+      } catch (error) {
+        console.log('%c[ERROR]:', 'color: red', error);
       }
     },
 

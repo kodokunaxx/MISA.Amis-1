@@ -127,6 +127,7 @@
         </div>
       </template>
     </Popup>
+    <div class="Fixed-Left"></div>
   </div>
 </template>
 
@@ -603,6 +604,17 @@ export default {
     height: 48px;
     padding: 0 16px;
     background-color: #fff;
+    z-index: 1000;
+  }
+}
+.MISAAccount-System {
+  .Fixed-Left {
+    position: fixed;
+    top: 144px;
+    left: 178px;
+    bottom: 0;
+    width: 24px;
+    background-color: #F4F5F6;
     z-index: 1000;
   }
 }

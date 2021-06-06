@@ -2,7 +2,7 @@
   <div class="BankAccount">
     <div class="Thead">
       <div class="Row">
-        <div class="Ele AccountNumber">SỐ TÀI KHOẢN</div>
+        <div class="Ele BankAccount">SỐ TÀI KHOẢN</div>
         <div class="Ele BankName">TÊN NGÂN HÀNG</div>
         <div class="Ele Branch">CHI NHÁNH</div>
         <div class="Ele City">TỈNH/TP CỦA NGÂN HÀNG</div>
@@ -13,8 +13,8 @@
       <div v-for="i in rows" :key="i" class="Row">
         <Input
           :w="'150px'"
-          :field="'AccountNumber'"
-          :class="['AccountNumber', 'Ele']"
+          :field="'BankAccount'"
+          :class="['BankAccount', 'Ele']"
         />
         <Input :w="'200px'" :field="'BankName'" :class="['BankName', 'Ele']" />
         <Input :w="'180px'" :field="'Branch'" :class="['Branch', 'Ele']" />

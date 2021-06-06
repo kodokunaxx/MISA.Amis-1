@@ -69,6 +69,7 @@
             class="Search-input"
             placeholder="Nhập để tìm kiếm"
             ref="search"
+            @keyup="searchRP($event.target.value)"
           />
           <div class="icon"></div>
         </div>
@@ -110,8 +111,12 @@
             class="Row"
           >
             <div class="Column Checkbox"><input type="checkbox" /></div>
-            <div class="Column KBADate">{{ rp.KBADate }}</div>
-            <div class="Column VoucherDate">{{ rp.VoucherDate }}</div>
+            <div class="Column KBADate text-center">
+              {{ rp.KBADate | formatDate }}
+            </div>
+            <div class="Column VoucherDate text-center">
+              {{ rp.VoucherDate | formatDate }}
+            </div>
             <div class="Column VoucherNumber">{{ rp.VoucherNumber }}</div>
             <div class="Column Explain">{{ rp.Explain }}</div>
             <div class="Column Money text-right">
@@ -139,27 +144,7 @@
             </div>
           </div>
           <div class="Data-Pagenav-Right">
-            <select
-              class="Selection"
-              @change="setPageSize(pageSize)"
-              v-model="pageSize"
-            >
-              <option :value="20" @change="setPageSize(20)">
-                20 bản ghi trên 1 trang
-              </option>
-              <option :value="10" @change="setPageSize(10)">
-                10 bản ghi trên 1 trang
-              </option>
-              <option :value="30" @change="setPageSize(30)">
-                30 bản ghi trên 1 trang
-              </option>
-              <option :value="50" @change="setPageSize(50)">
-                50 bản ghi trên 1 trang
-              </option>
-              <option :value="100" @change="setPageSize(100)">
-                100 bản ghi trên 1 trang
-              </option>
-            </select>
+            <Pagenav @setPageSize="setPageSize($event)" />
             <div
               class="Prev"
               @click="decreasePageIndex()"
@@ -185,7 +170,7 @@
               <div
                 v-show="
                   Math.ceil(
-                    this.$store.getters.getTotal /
+                    this.$store.getters.getTotalRPL /
                       this.$store.getters.getPageSize
                   ) >=
                     parseInt(this.$store.getters.getPageIndex) + 1
@@ -201,7 +186,8 @@
               :class="[
                 this.$store.getters.getPageIndex ==
                 Math.ceil(
-                  this.$store.getters.getTotal / this.$store.getters.getPageSize
+                  this.$store.getters.getTotalRPL /
+                    this.$store.getters.getPageSize
                 )
                   ? 'disable'
                   : '',
@@ -219,7 +205,7 @@
       <ul>
         <li @click="closeContextMenu(), viewRPInfo()">Xem</li>
         <li @click="closeContextMenu(), confirmDelete()">Xóa</li>
-        <li @click="closeContextMenu()">Nhân bản</li>
+        <li @click="closeContextMenu(), duplicateRP()">Nhân bản</li>
       </ul>
     </ContextMenu>
 
@@ -259,6 +245,7 @@ import ReceiptPaymentDialog from "../../components/dialog/receipt-payment/Receip
 import ContextMenu from "../../components/base/ContextMenu";
 import BaseLoading from "../../components/base/BaseLoading";
 import Popup from "../../components/base/Popup";
+import Pagenav from "../../components/base/Pagenav";
 import axios from "axios";
 
 export default {
@@ -267,13 +254,14 @@ export default {
     ContextMenu,
     BaseLoading,
     Popup,
+    Pagenav,
     // isShowContextMenu: false,
   },
   async created() {
     document.title = "Tiền mặt";
     await this.$store.commit("resetState"); // reset state
     this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
-    this.$store.dispatch("setRPL"); // Lấy dữ liệu thu chi
+    await this.$store.dispatch("setRPL"); // Lấy dữ liệu thu chi
   },
   data() {
     return {
@@ -291,6 +279,23 @@ export default {
 
       const regex = /\B(?=(\d{3})+(?!\d))/g;
       return value.toString().replace(regex, ".");
+    },
+    formatDate(date) {
+      let dob = new Date(date);
+      if (dob.toString() === "Invalid Date") {
+        /* nếu ngày tháng không hợp lệ, return ""*/
+        return "";
+      }
+
+      let day = dob.getDate(),
+        month = dob.getMonth() + 1,
+        year = dob.getFullYear();
+
+      /*format lại day và month nếu < 10, example: 4 => 04 */
+      day = day < 10 ? "0" + day : day;
+      month = month < 10 ? "0" + month : month;
+
+      return day + "/" + month + "/" + year;
     },
   },
   methods: {
@@ -311,31 +316,83 @@ export default {
      * CreatedBy: nvcuong(26/05/2021)
      */
     async openDialog(id, MODE) {
-      this.$store.commit("setIsLoading", true); // Bật loading effect
-      await this.$store.dispatch("setVendors"); // Lấy dữ liệu NCC
-      await this.$store.dispatch("setAccounts"); // Lấy dữ liệu tài khoản
+      try {
+        this.$store.commit("setIsLoading", true); // Bật loading effect
+        await this.$store.dispatch("setVendors"); // Lấy dữ liệu NCC
+        await this.$store.dispatch("setAccounts"); // Lấy dữ liệu tài khoản
 
-      if (MODE == null || MODE == "ADD") {
-        // null nếu mở bằng nút thêm
-        this.$store.commit("setMODE", "ADD"); // set MODE là ADD
-        // this.$store.dispatch("setNewVendorCode");
-      } else {
-        this.$store.commit("setMODE", "UPDATE");
-      }
+        if (MODE == null || MODE == "ADD") {
+          // null nếu mở bằng nút thêm
+          this.$store.commit("setMODE", "ADD"); // set MODE là ADD
+        } else {
+          this.$store.commit("setMODE", "UPDATE");
+        }
 
-      // const vm = this;
-      if (id != null) {
-        this.$store.commit("setIsShowRPDialog", true); // Mở dialog
+        // const vm = this;
+        if (id != null) {
+          this.$store.commit("setIsShowRPDialog", true); // Mở dialog
+          this.$store.commit("setIsLoading", false); // Tắt loading effect
+          const RP = await this.getRPById(id);
+          const data = RP.data.Data;
 
-        // this.vendor = await this.getReceiptPaymentById(id);
-        // const data = this.vendor.data.Data;
-
-        // this.bindDataToForm(data); // Đẩy dữ liệu lên form
-        this.$store.commit("setIsLoading", false); // Tắt loading effect
-      } else {
-        this.$store.commit("setIsShowRPDialog", true);
+          this.bindDataToForm(data); // Đẩy dữ liệu lên form
+        } else {
+          this.$store.commit("setIsShowRPDialog", true);
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
+    /**
+     * Bind dữ liệu lên form
+     * CreatedBy: nvcuong(29/05/2021)
+     */
+    bindDataToForm(data) {
+      const keys = Object.keys(data);
+
+      keys.forEach((key) => {
+        const path = `.MISARP-Dialog input[field="${key}"], textarea[field="${key}"]`;
+        const input = document.querySelector(path);
+        if (input) {
+          input.value = data[key];
+        }
+      });
+      const KBADate = document.querySelector(
+        '.MISARP-Dialog input[field="KBADate"]'
+      );
+      const VoucherDate = document.querySelector(
+        '.MISARP-Dialog input[field="VoucherDate"]'
+      );
+
+      data["KBADate"] = new Date(data["KBADate"]);
+      data["VoucherDate"] = new Date(data["VoucherDate"]);
+      data["KBADate"].setDate(data["KBADate"].getDate() + 1);
+      data["VoucherDate"].setDate(data["VoucherDate"].getDate() + 1);
+
+      KBADate.valueAsDate = new Date(data["KBADate"]);
+      VoucherDate.valueAsDate = new Date(data["VoucherDate"]);
+
+      const accountNumbers = document.querySelectorAll(
+        '.MISARP-Dialog input[field="AccountNumber"]'
+      );
+      accountNumbers.forEach(
+        (accountNumber) => (accountNumber.value = data["AccountNumber"])
+      );
+    },
+
+    /**
+     * Lấy dữ liệu qua id
+     * CreatedBy: nvcuong(29/05/2021)
+     */
+    async getRPById(id) {
+      console.log("%c[MSG]: GET BY ID", "color: blue");
+      try {
+        return axios.get(this.API_URL + `/receiptpayments/${id}`);
+      } catch (error) {
+        console.log("%c[ERROR]:", "color: red", error);
+      }
+    },
+
     /**
      * Reload lại dữ liệu
      * CreatedBy: nvcuong (05/06/2021)
@@ -344,6 +401,7 @@ export default {
       this.$store.commit("setIsLoading", true);
       await this.$store.dispatch("setRPL");
     },
+
     /**
      * Hiện context menu
      * @param e Event
@@ -438,6 +496,65 @@ export default {
     async viewRPInfo() {
       await this.$store.commit("setIsReadOnly", true);
       this.openDialog(this.getId());
+    },
+
+    /**
+     * Nhân bản
+     * CreatedBy: nvcuong (05/06/2021)
+     */
+    async duplicateRP() {
+      await this.openDialog(this.getId(), "ADD");
+      await this.$store.dispatch("setNewVoucherNumber");
+      const voucherNumberField = document.querySelector(
+        '.MISARP-Dialog input[field="VoucherNumber"]'
+      );
+      voucherNumberField.value = this.$store.getters.getNewVoucherNumber;
+    },
+    /**
+     * Cài đặt page size
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    async setPageSize(size) {
+      await this.$store.commit("setPageSize", size);
+      this.searchRP(this.$refs.search.value);
+      this.$store.commit("setPageIndex", 1);
+    },
+
+    /**
+     * Cài đặt page index
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    async setPageIndex(index) {
+      await this.$store.commit("setPageIndex", index);
+      this.searchRP(this.$refs.search.value);
+    },
+
+    increasePageIndex() {
+      const currentPageIndex = parseInt(this.$store.getters.getPageIndex);
+
+      const max = Math.ceil(
+        this.$store.getters.getTotalRPL / this.$store.getters.getPageSize
+      );
+      if (currentPageIndex < max) this.setPageIndex(currentPageIndex + 1);
+    },
+
+    decreasePageIndex() {
+      const currentPageIndex = parseInt(this.$store.getters.getPageIndex);
+      if (currentPageIndex > 1) this.setPageIndex(currentPageIndex - 1);
+    },
+
+    /**
+     * Tìm kiếm qua keywords
+     * CreateBy: nvcuong(31/05/2021)
+     */
+    searchRP(keywords) {
+      const vm = this;
+      clearTimeout(this.delayTimer);
+
+      this.delayTimer = setTimeout(function() {
+        vm.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+        vm.$store.dispatch("setRPFilter", keywords); // Tìm kiếm
+      }, 500);
     },
   },
 };
@@ -733,7 +850,6 @@ export default {
 
 .MISARPL-Content-Body {
   #Data-Table {
-    height: 2000px;
     .Thead,
     .Tbody {
       .Row {

@@ -352,8 +352,10 @@ export default {
         }
       }
       &.selected {
-        background-color: #2ca01c;
-        color: #fff;
+        background-color: #2ca01c !important;
+        span {
+          color: #fff !important;
+        }
         .icon {
           visibility: visible;
         }
