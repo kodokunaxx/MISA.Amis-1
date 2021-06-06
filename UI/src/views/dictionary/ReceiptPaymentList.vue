@@ -213,13 +213,12 @@
         </div>
       </div>
     </div>
-    <!-- <BaseLoading v-if="!this.$store.getters.getIsLoading" /> -->
     <BaseLoading v-if="this.$store.getters.getIsLoading" />
 
     <ContextMenu ref="menu" v-show="isShowContextMenu" :w="100">
       <ul>
-        <li @click="closeContextMenu()">Xem</li>
-        <li @click="closeContextMenu()">Xóa</li>
+        <li @click="closeContextMenu(), viewRPInfo()">Xem</li>
+        <li @click="closeContextMenu(), confirmDelete()">Xóa</li>
         <li @click="closeContextMenu()">Nhân bản</li>
       </ul>
     </ContextMenu>
@@ -228,7 +227,7 @@
       <template v-slot:Head>
         <div class="icon-popup icon-dangerous"></div>
         <div class="text">
-          Bạn có thực sự muốn xóa Nhà cung cấp 1 không?
+          Bạn có thực sự muốn xóa Phiếu thu chi {{ VoucherNum }} không?
         </div>
       </template>
       <template v-slot:Button>
@@ -239,7 +238,7 @@
           <div class="btn-confirm">
             <button
               class="btn"
-              @click="deleteVendor(getId()), closeConfirmDelete()"
+              @click="deleteRP(getId()), closeConfirmDelete()"
             >
               Có
             </button>
@@ -260,6 +259,7 @@ import ReceiptPaymentDialog from "../../components/dialog/receipt-payment/Receip
 import ContextMenu from "../../components/base/ContextMenu";
 import BaseLoading from "../../components/base/BaseLoading";
 import Popup from "../../components/base/Popup";
+import axios from "axios";
 
 export default {
   components: {
@@ -278,10 +278,11 @@ export default {
   data() {
     return {
       isShowContenHead: true,
-      API_URL: this.$store.getters.getApiUrl + "/rpl",
+      API_URL: this.$store.getters.getApiUrl,
       isShowContextMenu: false,
       delayTimer: null,
       pageSize: 20,
+      VoucherNum: null,
     };
   },
   filters: {
@@ -355,6 +356,13 @@ export default {
       this.isShowContextMenu = true;
       this.$refs.menu.open(e);
     },
+    /**
+     * Đóng context menu
+     * CreatedBy: nvcuong(31/05/2021)
+     */
+    closeContextMenu() {
+      this.isShowContextMenu = false;
+    },
 
     /**
      * Xử lí khi chọn 1 row
@@ -369,6 +377,67 @@ export default {
       }
       path = `.MISARPL div[id="${id}"]`;
       document.querySelector(path).classList.add("selected");
+
+      this.VoucherNum = document.querySelector(
+        path + " .VoucherNumber"
+      ).innerHTML;
+    },
+
+    getId() {
+      const path = ".MISARPL .Row.selected";
+      const selectedInput = document.querySelector(path);
+      if (selectedInput) {
+        return selectedInput.attributes.id.value;
+      }
+    },
+
+    /**
+     * Xóa phiếu thu, chi
+     * CreatedBy: nvcuong(31/05/2021)
+     */
+    deleteRP(id) {
+      const vm = this;
+      try {
+        this.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
+        if (!id) {
+          const path = ".MISARP .Row.selected";
+          id = document.querySelector(path).attributes.id.value;
+        }
+        const API_URL = this.API_URL + "/receiptpayments/" + id;
+        axios
+          .delete(API_URL)
+          .then(() => {
+            vm.reload(); // Load lại khi xóa thành công
+          })
+          .catch((error) => console.log(error.response));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    /**
+     * Hiện thông báo confirm trước khi xóa
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    confirmDelete() {
+      this.$store.commit("setIsShowConfirmDelete", true);
+    },
+
+    /**
+     * Đóng thông báo confirm sau khi xóa
+     * CreatedBy: nvcuong (31/05/2021)
+     */
+    closeConfirmDelete() {
+      this.$store.commit("setIsShowConfirmDelete", false);
+    },
+
+    /**
+     * Read only
+     * CreatedBy: nvcuong(31/05/2021)
+     */
+    async viewRPInfo() {
+      await this.$store.commit("setIsReadOnly", true);
+      this.openDialog(this.getId());
     },
   },
 };

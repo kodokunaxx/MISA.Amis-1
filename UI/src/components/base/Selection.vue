@@ -16,7 +16,13 @@
         @blur="isRequired ? checkEmpty() : null, closeList()"
       />
       <!------------------------------------------->
-      <div class="Icon-1" @click="toggleList()">
+      <div
+        class="Icon-1"
+        @click="toggleList()"
+        :class="[
+          isDisable || this.$store.getters.getIsReadOnly ? '' : 'enable',
+        ]"
+      >
         <div class="icon" ref="arrow"></div>
       </div>
       <!------------------------------------------->
@@ -109,11 +115,6 @@ export default {
         paddingRight: this.numberOfIcons == 1 ? "32px" : "62px",
       };
     },
-    // spanStyle() {
-    //   return {
-    //     width: this.list.content[0].key ? "60%" : "100%",
-    //   };
-    // },
     dropdownStyle() {
       return {
         right:
@@ -285,7 +286,7 @@ export default {
       width: 32px;
       height: 100%;
       cursor: pointer;
-      &.Icon-1:hover {
+      &.Icon-1.enable:hover {
         background-color: #e0e0e0;
         border-color: #e0e0e0;
       }

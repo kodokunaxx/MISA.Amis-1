@@ -85,6 +85,7 @@ export default {};
           }
         }
         .btn-confirm {
+          width: auto;
           .btn:first-child {
             font-weight: 600;
             &:hover {

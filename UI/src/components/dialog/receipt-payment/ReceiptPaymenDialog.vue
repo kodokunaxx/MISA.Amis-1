@@ -163,7 +163,11 @@
                 <td class="Money"><Input :w="'100%'" :field="'Money'" /></td>
 
                 <td class="VendorCodeGrid">
-                  <Selection :w="'100%'" :field="'VendorCodeGrid'" />
+                  <Selection
+                    :w="'100%'"
+                    :field="'VendorCodeGrid'"
+                    :list="vendorsGrid"
+                  />
                 </td>
 
                 <td class="VendorNameGrid">
@@ -227,10 +231,16 @@
           class="btn btn-save"
           title="Cất (Ctrl + S)"
           @click="addOrUpdate(getDataInForm())"
+          :disabled="this.$store.getters.getIsReadOnly"
         >
           Cất
         </button>
-        <div class="btn btn-save-and-print" title="Cất và In (Ctrl + Alt + P)">
+
+        <div
+          class="btn btn-save-and-print"
+          title="Cất và In (Ctrl + Alt + P)"
+          :disabled="this.$store.getters.getIsReadOnly"
+        >
           Cất và In
           <div class="line"></div>
           <span class="icon add"></span>
@@ -335,10 +345,15 @@ export default {
 
     vendors.forEach((vendor) => {
       const row = [];
+      const rowGrid = [];
       vm.vendors.columns.forEach((column) => {
         row.push(vendor[column]);
+        if (column == "VendorCode" || column == "VendorName") {
+          rowGrid.push(vendor[column]);
+        }
       });
       vm.vendors.content.push(row);
+      vm.vendorsGrid.content.push(rowGrid);
     });
 
     accounts.forEach((account) => {
@@ -435,6 +450,11 @@ export default {
         ],
         content: [],
       },
+      vendorsGrid: {
+        columns: ["VendorCode", "VendorName"],
+        title: ["Đối tượng", "Tên đối tượng"],
+        content: [],
+      },
       accounts: {
         columns: ["AccountNumber", "AccountName"],
         title: ["Số tài khoản", "Tên tài khoản"],
@@ -483,7 +503,7 @@ export default {
         '.MISARP-Dialog input[field="Explain"]'
       );
 
-      vendorCodeGrid.value = payload[1];
+      vendorCodeGrid.value = payload[0];
       address.value = payload[3];
       reasonPayment.value = explain.value = this.oldValue =
         "Chi tiền cho " + payload[1];

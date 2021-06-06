@@ -100,6 +100,7 @@
                 @click="
                   closeConfirmClose(), addOrUpdate(getDataInForm(), 'save')
                 "
+                :disabled="$store.getters.getIsReadOnly"
               >
                 Có
               </button>
