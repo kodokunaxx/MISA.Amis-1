@@ -17,6 +17,21 @@ namespace MISA.Amis.API.Controllers
             _receiptPaymentService = receiptPaymentService;
         }
 
+        [HttpGet("paging")]
+        public IActionResult Get([FromQuery] int PageIndex, [FromQuery] int PageSize)
+        {
+            ServiceResult serviceResult = _receiptPaymentService.GetAll(PageIndex, PageSize);
+
+            return Ok(serviceResult);
+        }
+
+        [HttpGet("filter")]
+        public IActionResult Get(string keywords, int PageIndex, int PageSize)
+        {
+            ServiceResult serviceResult = _receiptPaymentService.GetFilter(keywords, keywords, keywords, PageIndex, PageSize);
+            return Ok(serviceResult);
+        }
+
         [HttpGet("new-code")]
         public IActionResult Get()
         {

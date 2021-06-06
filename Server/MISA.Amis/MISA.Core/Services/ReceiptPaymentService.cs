@@ -14,6 +14,28 @@ namespace MISA.Core.Services
         {
             _receiptPaymentRepository = receiptPaymentRepository;
         }
+
+        public ServiceResult GetAll(int PageIndex, int PageSize)
+        {
+            ServiceResult serviceResult = new ServiceResult();
+            if (PageIndex <= 0) PageIndex = 1;
+            if (PageSize <= 0) PageSize = 20;
+
+            serviceResult.Data = _receiptPaymentRepository.GetAll(PageIndex, PageSize);
+            serviceResult.Total = _receiptPaymentRepository.GetCount();
+
+            return serviceResult;
+        }
+
+        public ServiceResult GetFilter(string VoucherNumber, string VendorName, string VendorCode, int PageIndex, int PageSize)
+        {
+            ServiceResult serviceResult = new ServiceResult();
+            serviceResult.Data = _receiptPaymentRepository.GetFilter(VoucherNumber, VendorName, VendorCode, PageIndex, PageSize);
+            serviceResult.Total = _receiptPaymentRepository.GetFilterCount(VoucherNumber, VendorName, VendorCode);
+
+            return serviceResult;
+        }
+
         public ServiceResult GenerateNewCode()
         {
             ServiceResult serviceResult = new ServiceResult();

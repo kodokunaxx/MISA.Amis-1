@@ -99,6 +99,15 @@ namespace MISA.Core.Entities
 
         #endregion
 
+        #region Bank
+        public string BankAccount { get; set; }
+
+        public string BankName { get; set; }
+
+        public string Branch { get; set; }
+        public string City { get; set; }
+
+        #endregion
 
         #endregion
     }
