@@ -5,9 +5,9 @@
         <div class="title">Danh sách nhà cung cấp</div>
         <div class="back-to-all">
           <span class="icon"></span>
-          <a href="#">
+          <router-link to="/">
             Tất cả các danh mục
-          </a>
+          </router-link>
         </div>
       </div>
       <div class="MISAVendor-Head-Button">
@@ -86,7 +86,9 @@
       <div id="Data-Table">
         <div class="Thead">
           <div class="Row">
-            <div class="Column Checkbox"><input type="checkbox" /></div>
+            <div class="Column Checkbox">
+              <input type="checkbox" @click="selectAll()" />
+            </div>
             <div class="Column VendorCode">Mã nhà cung cấp</div>
             <div class="Column VendorName">Tên nhà cung cấp</div>
             <div class="Column Address">Địa chỉ</div>
@@ -333,7 +335,6 @@ export default {
      * CreatedBy: nvcuong (31/05/2021)
      */
     async setPageSize(size) {
-      console.log("size:", size);
       await this.$store.commit("setPageSize", size);
       this.searchVendor(this.$refs.search.value);
       this.$store.commit("setPageIndex", 1);
@@ -573,6 +574,32 @@ export default {
     renderPageIndex(value) {
       let currentIndex = this.$store.getters.getPageIndex;
       if (currentIndex + value <= 0);
+    },
+
+    /**
+     * Chọn tất cả
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    selectAll() {
+      const path = ".MISAVendor .Column.Checkbox input";
+      const checkBoxes = document.querySelectorAll(path);
+      let isChecked = false;
+
+      for (let i = 1; i < checkBoxes.length; i++) {
+        if (checkBoxes[i].checked) {
+          isChecked = true;
+          break;
+        }
+      }
+      if (isChecked) {
+        for (let i = 0; i < checkBoxes.length; i++) {
+          checkBoxes[i].checked = false;
+        }
+      } else {
+        for (let i = 0; i < checkBoxes.length; i++) {
+          checkBoxes[i].checked = true;
+        }
+      }
     },
   },
 };
@@ -897,7 +924,7 @@ export default {
     .Thead {
       white-space: nowrap;
       position: sticky;
-      top: 83px;
+      top: 82px;
       z-index: 998;
       .Column {
         line-height: 26.6px;
@@ -908,6 +935,7 @@ export default {
           z-index: 6;
         }
         &.Feature {
+          border-left: 1px solid #e0e0e0 !important;
           padding-right: 22px;
         }
       }

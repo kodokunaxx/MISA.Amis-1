@@ -107,6 +107,7 @@
                   :field="'Quantity'"
                   placeholder="Số lượng"
                   :disabled="this.$store.getters.getIsReadOnly"
+                  @keypress="isNumber($event)"
                 />
                 chứng từ gốc
               </div>
@@ -122,7 +123,7 @@
           </div>
           <div class="Currency-Type">
             <span>Loại tiền</span>
-            <Selection :w="'110px'" :field="'CurrencyType'" :value="'VND'"/>
+            <Selection :w="'110px'" :field="'CurrencyType'" :value="'VND'" />
           </div>
         </div>
         <div class="Row Second-Row">
@@ -784,6 +785,20 @@ export default {
 
       this.addOrUpdate(this.getDataInForm()); // Thêm dữ liệu
       this.isDuplicate = false; // Đóng popup lỗi duplicate
+    },
+
+    /**
+     * Check chỉ cho nhập số
+     * CreatedBy: nvcuong (05/06/2021)
+     */
+    isNumber: function(evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
     },
   },
 };

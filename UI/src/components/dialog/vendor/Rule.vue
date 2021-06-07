@@ -42,14 +42,6 @@ export default {
     Input,
     Selection,
   },
-  // filters: {
-  //   formatMoney(value) {
-  //     if (!value) return "";
-
-  //     const regex = /\B(?=(\d{3})+(?!\d))/g;
-  //     return value.toString().replace(regex, ".");
-  //   },
-  // },
 };
 </script>
 

@@ -1,7 +1,7 @@
 <template>
-  <div class="MISAPagenav">
+  <div class="MISAPagenav" @click="toggleList()">
     <div class="Text">{{ items[index - 1].value }}</div>
-    <div class="Icon" @click="toggleList()">
+    <div class="Icon">
       <div class="icon-arrow" ref="arrow"></div>
     </div>
     <div class="Page-List" v-show="isShow">
@@ -84,7 +84,6 @@ export default {
       this.rotateDeg = Number(this.rotateDeg) + 180;
     },
     hideList(index, value) {
-      this.isShow = false;
       this.index = index;
       this.$emit("setPageSize", value);
     },
@@ -101,6 +100,7 @@ export default {
   border: 1px solid #babec5;
   border-radius: 2px;
   background-color: #fff;
+  cursor: pointer;
   .Text {
     width: 168px;
     height: 100%;
@@ -112,7 +112,6 @@ export default {
     align-items: center;
     width: 32px;
     height: 100%;
-    cursor: pointer;
     .icon-arrow {
       width: 16px;
       height: 16px;

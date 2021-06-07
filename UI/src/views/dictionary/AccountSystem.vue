@@ -5,9 +5,9 @@
         <div class="title">Hệ thống tài khoản</div>
         <div class="back-to-all">
           <span class="icon"></span>
-          <a href="#">
+          <router-link to="/">
             Tất cả các danh mục
-          </a>
+          </router-link>
         </div>
       </div>
       <div class="MISAAccount-System-Head-Button">
@@ -127,7 +127,7 @@
         </div>
       </template>
     </Popup>
-    <div class="Fixed-Left"></div>
+    <div class="Fixed-Left" :style="fixLeftStyle"></div>
   </div>
 </template>
 
@@ -144,6 +144,13 @@ export default {
     BaseLoading,
     AccountDialog,
     Popup,
+  },
+  computed: {
+    fixLeftStyle() {
+      return {
+        left: this.$store.getters.getIsShowMenuDetail ? '178px' : '52px'
+      }
+    }
   },
   async created() {
     await this.$store.commit("resetState");
@@ -614,7 +621,7 @@ export default {
     left: 178px;
     bottom: 0;
     width: 24px;
-    background-color: #F4F5F6;
+    background-color: #f4f5f6;
     z-index: 1000;
   }
 }

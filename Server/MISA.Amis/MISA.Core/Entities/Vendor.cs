@@ -18,7 +18,7 @@ namespace MISA.Core.Entities
         [Duplication]
         public string VendorCode { get; set; }
         
-        [Required]
+        //[Required]
         public string VendorName { get; set; }
         
         public string Address { get; set; }

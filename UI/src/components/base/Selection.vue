@@ -172,7 +172,6 @@ export default {
      * CreateBy: nvcuong (28/05/2021)
      */
     chooseOption(value, index, ele) {
-      // this.valueBeforeUpdate = value;
       this.$refs.input.value = value; // Gán giá trị cho input
       this.currentIndex = index;
       this.$refs.input.classList.remove("error");

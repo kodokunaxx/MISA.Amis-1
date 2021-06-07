@@ -7,7 +7,7 @@
         @click="extendMenu()"
         v-if="!this.$store.getters.getIsShowMenuDetail"
       ></div>
-      <router-link to="/vendor">
+      <router-link to="/">
         <div
           class="logo"
           v-show="this.$store.getters.getIsShowMenuDetail"

@@ -72,12 +72,12 @@ export const store = new Vuex.Store({
   },
   mutations: {
     resetState: state => {
-      console.log('reset state')
+      console.log('Reset states...');
       state.MODE = 'ADD';
       state.enableSubmit = true;
       state.isReadOnly = false,
-        state.isLoading = true,
-        state.isShowConfirmDelete = false;
+      state.isLoading = true,
+      state.isShowConfirmDelete = false;
       state.isShowConfirmClose = false;
       state.pageIndex = 1;
       state.pageSize = 20;

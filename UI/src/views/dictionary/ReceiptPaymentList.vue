@@ -89,7 +89,9 @@
       <div id="Data-Table">
         <div class="Thead">
           <div class="Row">
-            <div class="Column Checkbox"><input type="checkbox" /></div>
+            <div class="Column Checkbox">
+              <input type="checkbox" @click="selectAll()"/>
+            </div>
             <div class="Column KBADate text-center">NGÀY HẠCH TOÁN</div>
             <div class="Column VoucherDate text-center">NGÀY CHỨNG TỪ</div>
             <div class="Column VoucherNumber">SỐ CHỨNG TỪ</div>
@@ -555,6 +557,32 @@ export default {
         vm.$store.commit("setIsLoading", true); // Bật hiệu ứng loading
         vm.$store.dispatch("setRPFilter", keywords); // Tìm kiếm
       }, 500);
+    },
+
+    /**
+     * Chọn tất cả
+     * CreatedBy: nvcuong (28/05/2021)
+     */
+    selectAll() {
+      const path = ".MISARPL .Column.Checkbox input";
+      const checkBoxes = document.querySelectorAll(path);
+      let isChecked = false;
+
+      for (let i = 1; i < checkBoxes.length; i++) {
+        if (checkBoxes[i].checked) {
+          isChecked = true;
+          break;
+        }
+      }
+      if (isChecked) {
+        for (let i = 0; i < checkBoxes.length; i++) {
+          checkBoxes[i].checked = false;
+        }
+      } else {
+        for (let i = 0; i < checkBoxes.length; i++) {
+          checkBoxes[i].checked = true;
+        }
+      }
     },
   },
 };
