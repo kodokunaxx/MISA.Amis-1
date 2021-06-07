@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using MISA.Core.Entities;
 using MISA.Core.Interfaces.Repositories;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,20 +19,26 @@ namespace MISA.Infrastructure.Repositories
         {
             string sqlCommand = "Proc_GetLastestVendorCode";
             return _dbConnection.QueryFirstOrDefault<string>(sqlCommand, commandType: CommandType.StoredProcedure);
+            //string sqlCommand = "SELECT GetLastestVendorCode()";
+            //return _dbConnection.QueryFirstOrDefault<string>(sqlCommand);
         }
 
         public Vendor GetByCode(string vendorCode)
         {
             string sqlCommand = "Proc_GetVendorByCode";
+            //string sqlCommand = $"GetVendorByVendorCode('{vendorCode}')";
+
             DynamicParameters dynamicParameters = new DynamicParameters();
             //dynamicParameters
 
             return _dbConnection.QueryFirstOrDefault<Vendor>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            //return _dbConnection.QueryFirstOrDefault<Vendor>(sqlCommand);
         }
 
         public IEnumerable<Vendor> GetFilter(string VendorCode, string VendorName, string Address, string Debt, string TaxCode, string PhoneNumber, string IdCard, int PageIndex, int PageSize)
         {
             string sqlCommand = "Proc_GetVendorFilter";
+            //string sqlCommand = $"SELECT * FROM GetVendorFilter('{VendorCode}', '{VendorName}', '{Address}', '{Debt}', '{TaxCode}', '{PhoneNumber}', '{IdCard}', {PageIndex},{PageSize})"; // postgres
             DynamicParameters dynamicParameters = new DynamicParameters();
 
             dynamicParameters.Add("@VendorCode", VendorCode);
@@ -45,16 +52,21 @@ namespace MISA.Infrastructure.Repositories
             dynamicParameters.Add("@PageSize", PageSize);
 
             return _dbConnection.Query<Vendor>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            //var vendors = _dbConnection.Query<Vendor>(sqlCommand); // postgres
+            //return vendors;
         }
 
         public IEnumerable<Vendor> GetAll(int PageIndex, int PageSize)
         {
             string sqlCommand = "Proc_GetVendorPaging";
+            //string sqlCommand = $"Select * from GetVendorPaging({PageIndex}, {PageSize})"; // postgres
             DynamicParameters dynamicParameters = new DynamicParameters();
             dynamicParameters.Add("@PageIndex", PageIndex);
             dynamicParameters.Add("@PageSize", PageSize);
 
             return _dbConnection.Query<Vendor>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            //var vendors = _dbConnection.Query<Vendor>(sqlCommand); // postgres
+            //return vendors;
         }
 
         public int GetCount()
@@ -62,8 +74,10 @@ namespace MISA.Infrastructure.Repositories
             try
             {
                 string sqlCommand = "Proc_GetVendorCount";
+                //string sqlCommand = "SELECT GetVendorCount()";
 
                 int count = _dbConnection.QueryFirstOrDefault<int>(sqlCommand, commandType: CommandType.StoredProcedure);
+                //int count = _dbConnection.QueryFirstOrDefault<int>(sqlCommand);
                 return count;
             }
             catch (Exception ex)
@@ -77,6 +91,8 @@ namespace MISA.Infrastructure.Repositories
             try
             {
                 string sqlCommand = "Proc_GetVendorFilterCount";
+                //string sqlCommand = $"SELECT GetVendorFilterCount('{VendorCode}', '{VendorName}', '{Address}', '{Debt}', '{TaxCode}', '{PhoneNumber}', '{IdCard}')";
+                
                 DynamicParameters dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("@VendorCode", VendorCode);
                 dynamicParameters.Add("@VendorName", VendorName);
@@ -87,6 +103,7 @@ namespace MISA.Infrastructure.Repositories
                 dynamicParameters.Add("@IdCard", IdCard);
 
                 int count = _dbConnection.QueryFirst<int>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                //int count = _dbConnection.QueryFirst<int>(sqlCommand); // postgres
                 return count;
             }
             catch (Exception ex)

@@ -52,3 +52,4 @@ D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Amis.API\obj\Debug\netcoreapp3.1\scopedc
 D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Amis.API\obj\Debug\netcoreapp3.1\MISA.Amis.API.RazorTargetAssemblyInfo.cache
 D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Amis.API\obj\Debug\netcoreapp3.1\MISA.Amis.API.csproj.CopyComplete
 D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Amis.API\obj\Debug\netcoreapp3.1\MISA.Amis.API.genruntimeconfig.cache
+D:\MISA\MISA.Amis\Server\MISA.Amis\MISA.Amis.API\bin\Debug\netcoreapp3.1\Npgsql.dll
