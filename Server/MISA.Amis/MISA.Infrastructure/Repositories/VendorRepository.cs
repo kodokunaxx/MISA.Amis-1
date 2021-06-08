@@ -52,21 +52,19 @@ namespace MISA.Infrastructure.Repositories
             dynamicParameters.Add("@PageSize", PageSize);
 
             return _dbConnection.Query<Vendor>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
-            //var vendors = _dbConnection.Query<Vendor>(sqlCommand); // postgres
-            //return vendors;
+            //return _dbConnection.Query<Vendor>(sqlCommand);
         }
 
         public IEnumerable<Vendor> GetAll(int PageIndex, int PageSize)
         {
             string sqlCommand = "Proc_GetVendorPaging";
-            //string sqlCommand = $"Select * from GetVendorPaging({PageIndex}, {PageSize})"; // postgres
+            //string sqlCommand = $"Select * from GetVendorPaging({PageIndex}, {PageSize})";
             DynamicParameters dynamicParameters = new DynamicParameters();
             dynamicParameters.Add("@PageIndex", PageIndex);
             dynamicParameters.Add("@PageSize", PageSize);
 
             return _dbConnection.Query<Vendor>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
-            //var vendors = _dbConnection.Query<Vendor>(sqlCommand); // postgres
-            //return vendors;
+            //return _dbConnection.Query<Vendor>(sqlCommand); 
         }
 
         public int GetCount()
@@ -103,7 +101,7 @@ namespace MISA.Infrastructure.Repositories
                 dynamicParameters.Add("@IdCard", IdCard);
 
                 int count = _dbConnection.QueryFirst<int>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
-                //int count = _dbConnection.QueryFirst<int>(sqlCommand); // postgres
+                //int count = _dbConnection.QueryFirst<int>(sqlCommand);
                 return count;
             }
             catch (Exception ex)

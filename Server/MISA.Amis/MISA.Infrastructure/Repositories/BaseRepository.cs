@@ -64,12 +64,12 @@ namespace MISA.Infrastructure.Repositories
         public T GetById(Guid id)
         {
             string sqlCommand = $"Proc_Get{_tableName}ById";
-            //string sqlCommand = $"SELECT * FROM Get{_tableName}ById('{id.ToString()}')"; // postgres
+            //string sqlCommand = $"SELECT * FROM Get{_tableName}ById('{id.ToString()}')";
             DynamicParameters dynamicParameters = new DynamicParameters();
             dynamicParameters.Add($"@{_tableName}Id", id.ToString());
 
             return _dbConnection.QueryFirstOrDefault<T>(sqlCommand, param: dynamicParameters, commandType: CommandType.StoredProcedure);
-            //return _dbConnection.QueryFirstOrDefault<T>(sqlCommand); // postgres
+            //return _dbConnection.QueryFirstOrDefault<T>(sqlCommand);
         }
 
         public virtual int Insert(T entity)
@@ -84,13 +84,6 @@ namespace MISA.Infrastructure.Repositories
                 var value = prop.GetValue(entity) == "" ? null : prop.GetValue(entity);
                 dynamicParameters.Add($"@{prop.Name}", value);
             }
-            //foreach (PropertyInfo prop in entity.GetType().GetProperties())
-            //{
-            //    var value = prop.GetValue(entity) == "" ? null : prop.GetValue(entity);
-            //    sqlCommand += $"'{value}', ";
-            //}
-            //sqlCommand = sqlCommand.Substring(0, sqlCommand.Length - 2);
-            //sqlCommand += ")";
 
             _dbConnection.Open();
             using (var transaction = _dbConnection.BeginTransaction())

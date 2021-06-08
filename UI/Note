@@ -25,7 +25,7 @@ phím tắt trên các form chi tiết
     và mã tự động tăng theo cấu trúc NCC00001. Lần thêm tiếp theo
     NCC00002
 
-    ● Nhóm Nhà cung cấp cho phép chọn nhiều (Dấu + chỉ cần vẽ          --- 
+    ● Nhóm Nhà cung cấp cho phép chọn nhiều (Dấu + chỉ cần vẽ          
     không cần làm tính năng)
 
     ● Nhân viên mua hàng: Load từ danh mục nhân viên chỉ được chọn     --- XONG
@@ -34,12 +34,9 @@ phím tắt trên các form chi tiết
     ● Sử dụng được phím tắt ESC: để đóng form, Ctrl + S: Cất           --- XONG
 
 
---- auto complete
 
-====================== HỆ THỐNG TÀI KHOẢN ======================
- + 
+- xem, sửa, xóa. phân trang, tìm kiếm, form ẩn hiện, sinh mã, phím tắt, validate
+- sửa, xóa, co giãn, validate
+- xem, nhân bản, xóa, phân trang, tìm kiếm, sinh mã, validate
 
- Vendor: 11 - DONE: 4
- Account: 6   - DONE: 0
- RP: 10  - DONE: 0
- Bank:   - DONE:
+
